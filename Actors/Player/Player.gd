@@ -2,25 +2,39 @@ extends KinematicBody2D
 
 
 const RUN_SPEED_MAX = 90.0
-const RUN_ACC = 350.0
-const GRAVITY = 600.0
+const RUN_ACC = 380.0
+const GRAVITY = 620.0
 const JUMP_FORCE = -220.0
 const JUMP_TIME = .1
 const COYOTE_TIME = .1
-const JUMP_SPBOOST_MULTIPLIER = 1.5
-const JUMP_SPBOOST_MAX = 1000.0
+const JUMP_SPBOOST_MULTIPLIER = 1.3
+const JUMP_SPBOOST_MAX = RUN_SPEED_MAX * JUMP_SPBOOST_MULTIPLIER
 const STICKY_LANDING_MIN = 20.0
 const STICKY_LANDING_FORCE = 70.0
-const GRAVMOD_SHORTHOP_MULTIPLIER = 4.0
+const GRAVMOD_SHORTHOP_MULTIPLIER = 4.8
 const GRAVMOD_SHORTHOP_BEGIN = JUMP_FORCE
-const GRAVMOD_SHORTHOP_END = JUMP_FORCE * .35
-const GRAVMOD_BIGLEAP_MULTIPLIER = .75
-const GRAVMOD_BIGLEAP_BEGIN = JUMP_FORCE * .25
+const GRAVMOD_SHORTHOP_END = JUMP_FORCE * .28
+const GRAVMOD_BIGLEAP_MULTIPLIER = .6
+const GRAVMOD_BIGLEAP_BEGIN = JUMP_FORCE * .2
 const GRAVMOD_BIGLEAP_END = -GRAVMOD_BIGLEAP_BEGIN
+const WALLJUMP_FORCE = JUMP_FORCE * .8
+const WALLJUMP_PUSH = 100.0
+const WALLJUMP_MARGIN = 1.5
+const WALLJUMP_CONTROL_REMOVED_TIME = .2
+const VELOCITY_CONSERVATION_TIME = .07
 
 const RUN_FRIC_TEMP = .75
-const AIR_FRIC_TEMP = .9
+const AIR_FRIC_TEMP = .8
 const CORRECTION_FRIC_TEMP = .95
+
+var in_control_x: bool = true
+var in_control_y: bool = true
+var no_control_x_timer: float
+var no_control_y_timer: float
+var apply_gravity: bool = true
+var no_gravity_timer: float
+
+var velocity_conservation_timer = Vector2(VELOCITY_CONSERVATION_TIME, VELOCITY_CONSERVATION_TIME)
 
 var velocity: Vector2
 var direction: int
@@ -28,6 +42,7 @@ var jump_timer: float
 var coyote_timer: float
 
 var grounded: bool
+var last_ground_y: int
 
 
 func _physics_process(delta):
@@ -36,36 +51,49 @@ func _physics_process(delta):
 		int(Input.is_action_pressed("ui_left"))
 	)
 	
+	if no_control_x_timer:
+		no_control_x_timer -= delta
+		if no_control_x_timer <= 0:
+			no_control_x_timer = 0
+			in_control_x = true
+	if no_control_y_timer:
+		no_control_y_timer -= delta
+		if no_control_y_timer <= 0:
+			no_control_y_timer = 0
+			in_control_y = true
+	if no_gravity_timer:
+		no_gravity_timer -= delta
+		if no_gravity_timer <= 0:
+			no_gravity_timer = 0
+			apply_gravity = true
+	
 	# Acceleration and friction nonsense
 	
 	# please clean up this mess, future me
 	# oh god oh fuck
-	if abs(velocity.x) > RUN_SPEED_MAX:
-#		if direction == 0:
-#			velocity.x -= min(
-#				abs(velocity.x) - RUN_SPEED_MAX,
-#				1 - (abs(velocity.x) * CORRECTION_FRIC_TEMP * delta)
-#			) * sign(velocity.x)
-#		elif sign(direction) == sign(velocity.x):
-#			pass
-#		else:
-#			pass
-		print(min(
-			abs(velocity.x) - RUN_SPEED_MAX,
-			abs(velocity.x) * (1 - CORRECTION_FRIC_TEMP)
-		) * sign(velocity.x))
-		velocity.x -= min(
-			abs(velocity.x) - RUN_SPEED_MAX,
-			abs(velocity.x) * (1 - CORRECTION_FRIC_TEMP)
-		) * sign(velocity.x)
-	else:
-		if (not direction) or direction * velocity.x < 0:
-			# will have to figure out how to timestep this later
-			# need to learn calculus apparently?
-			velocity.x *= RUN_FRIC_TEMP if is_on_floor() else AIR_FRIC_TEMP
-		if direction:
-			velocity.x += RUN_ACC * delta * direction
-			velocity.x = clamp(velocity.x, -RUN_SPEED_MAX, RUN_SPEED_MAX)
+	if in_control_x:
+		if abs(velocity.x) > RUN_SPEED_MAX:
+	#		if direction == 0:
+	#			velocity.x -= min(
+	#				abs(velocity.x) - RUN_SPEED_MAX,
+	#				1 - (abs(velocity.x) * CORRECTION_FRIC_TEMP * delta)
+	#			) * sign(velocity.x)
+	#		elif sign(direction) == sign(velocity.x):
+	#			pass
+	#		else:
+	#			pass
+			velocity.x -= min(
+				abs(velocity.x) - RUN_SPEED_MAX,
+				abs(velocity.x) * (1 - CORRECTION_FRIC_TEMP)
+			) * sign(velocity.x)
+		else:
+			if (not direction) or direction * velocity.x < 0:
+				# will have to figure out how to timestep this later
+				# need to learn calculus apparently?
+				velocity.x *= RUN_FRIC_TEMP if is_on_floor() else AIR_FRIC_TEMP
+			if direction:
+				velocity.x += RUN_ACC * delta * direction
+				velocity.x = clamp(velocity.x, -RUN_SPEED_MAX, RUN_SPEED_MAX)
 	
 	# Landing and Sticky Landing
 	
@@ -80,38 +108,75 @@ func _physics_process(delta):
 	
 	# Variable Height Jump
 	
-	var current_gravity: float = GRAVITY
-	
-	if not grounded:
-		if Input.is_action_pressed("ui_accept"):
-			if GRAVMOD_BIGLEAP_BEGIN < velocity.y and velocity.y < GRAVMOD_BIGLEAP_END:
-				current_gravity *= GRAVMOD_BIGLEAP_MULTIPLIER
-		elif GRAVMOD_SHORTHOP_BEGIN < velocity.y and velocity.y < GRAVMOD_SHORTHOP_END:
-			current_gravity *= GRAVMOD_SHORTHOP_MULTIPLIER
-	
-	velocity.y += current_gravity * delta
+	if apply_gravity:
+		var current_gravity: float = GRAVITY
+		
+		if not grounded and in_control_y:
+			if Input.is_action_pressed("ui_accept"):
+				if GRAVMOD_BIGLEAP_BEGIN < velocity.y and velocity.y < GRAVMOD_BIGLEAP_END:
+					current_gravity *= GRAVMOD_BIGLEAP_MULTIPLIER
+			elif GRAVMOD_SHORTHOP_BEGIN < velocity.y and velocity.y < GRAVMOD_SHORTHOP_END:
+				current_gravity *= GRAVMOD_SHORTHOP_MULTIPLIER
+		
+		velocity.y += current_gravity * delta
 	
 	# Jump
+	if in_control_y:
+		if Input.is_action_just_pressed("ui_accept"):
+			jump_timer = JUMP_TIME
+		if grounded:
+			coyote_timer = COYOTE_TIME
+			last_ground_y = position.y
+		
+		if jump_timer and coyote_timer:
+			jump_timer = 0
+			coyote_timer = 0
+			position.y = last_ground_y
+			velocity.y = JUMP_FORCE
+			if velocity.x < JUMP_SPBOOST_MAX:
+				velocity.x *= JUMP_SPBOOST_MULTIPLIER
+				velocity.x = clamp(velocity.x, -JUMP_SPBOOST_MAX, JUMP_SPBOOST_MAX)
+			jump_timer = 0
+			coyote_timer = 0
+		else:
+			jump_timer = max(jump_timer - delta, 0.0)
+			coyote_timer = max(coyote_timer - delta, 0.0)
+		
+		# Walljump
+		
+		if jump_timer:
+			if test_move(transform, Vector2.LEFT * WALLJUMP_MARGIN):
+				jump_timer = 0
+				velocity.y = WALLJUMP_FORCE
+				velocity.x = WALLJUMP_PUSH
+				in_control_x = false
+				in_control_y = false
+				no_control_x_timer = WALLJUMP_CONTROL_REMOVED_TIME
+				no_control_y_timer = WALLJUMP_CONTROL_REMOVED_TIME
+				
+			elif test_move(transform, Vector2.RIGHT * WALLJUMP_MARGIN):
+				jump_timer = 0
+				velocity.y = WALLJUMP_FORCE
+				velocity.x = -WALLJUMP_PUSH
+				in_control_x = false
+				in_control_y = false
+				no_control_x_timer = WALLJUMP_CONTROL_REMOVED_TIME
+				no_control_y_timer = WALLJUMP_CONTROL_REMOVED_TIME
 	
-	if Input.is_action_just_pressed("ui_accept"):
-		jump_timer = JUMP_TIME
-	if is_on_floor():
-		coyote_timer = COYOTE_TIME
-	if jump_timer and coyote_timer:
-		velocity.y = JUMP_FORCE
-		if velocity.x < JUMP_SPBOOST_MAX:
-			velocity.x *= JUMP_SPBOOST_MULTIPLIER
-			velocity.x = clamp(velocity.x, -JUMP_SPBOOST_MAX, JUMP_SPBOOST_MAX)
-		jump_timer = 0
-		coyote_timer = 0
-	else:
-		jump_timer = max(jump_timer - delta, 0.0)
-		coyote_timer = max(coyote_timer - delta, 0.0)
+	# Apply velocity
 	
 	move_and_slide(velocity, Vector2.UP)
+	if is_on_ceiling() or is_on_floor():
+		if velocity_conservation_timer.y > 0:
+			velocity_conservation_timer.y -= delta
+		if velocity_conservation_timer.y <= 0:
+			velocity.y = 0
+	else:
+		velocity_conservation_timer.y = VELOCITY_CONSERVATION_TIME
 	if is_on_wall():
-		velocity.x = 0
-	if is_on_ceiling():
-		velocity.y = 0
-	if is_on_floor():
-		velocity.y = 0
+		if velocity_conservation_timer.x > 0:
+			velocity_conservation_timer.x -= delta
+		if velocity_conservation_timer.x <= 0:
+			velocity.x = 0
+	else:
+		velocity_conservation_timer.x = VELOCITY_CONSERVATION_TIME
