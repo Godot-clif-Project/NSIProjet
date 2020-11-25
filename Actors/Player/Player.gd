@@ -3,6 +3,7 @@ extends KinematicBody2D
 
 const RUN_SPEED_MAX = 90.0
 const RUN_ACC = 380.0
+const RUN_AIR_ACC = RUN_ACC * .65
 const GRAVITY = 620.0
 const JUMP_FORCE = -220.0
 const JUMP_TIME = .1
@@ -21,12 +22,16 @@ const WALLJUMP_FORCE = JUMP_FORCE * .8
 const WALLJUMP_PUSH = JUMP_SPBOOST_MAX
 const WALLJUMP_PUSH_NEUTRAL = JUMP_SPBOOST_MAX
 const WALLJUMP_MARGIN = 1.5
-const WALLJUMP_CONTROL_REMOVED_TIME = .18
+const WALLJUMP_CONTROL_REMOVED_TIME = .15
 const WALLJUMP_CONTROL_REMOVED_TIME_NEUTRAL = 0.0
-const VELOCITY_CONSERVATION_TIME = .07
+const VELOCITY_CONSERVATION_TIME = .06
+const FALL_SPEED = -JUMP_FORCE * 1.15
+const FASTFALL_SPEED = -JUMP_FORCE * 1.5
+const FASTFALL_MULTIPLIER = 1.2
+const FASTFALL_BEGIN = 0
 
 const RUN_FRIC_TEMP = .75
-const AIR_FRIC_TEMP = .8
+const AIR_FRIC_TEMP = .85
 const CORRECTION_FRIC_TEMP = .95
 const CORRECTION_FRIC_ATTENUATED_TEMP = .975
 
@@ -40,7 +45,8 @@ var no_gravity_timer: float
 var velocity_conservation_timer = Vector2(VELOCITY_CONSERVATION_TIME, VELOCITY_CONSERVATION_TIME)
 
 var velocity: Vector2
-var direction: int
+var direction_x: int
+var direction_y: int
 var jump_timer: float
 var coyote_timer: float
 
@@ -49,9 +55,13 @@ var last_ground_y: int
 
 
 func _physics_process(delta):
-	direction = (
-		int(Input.is_action_pressed("ui_right")) -
-		int(Input.is_action_pressed("ui_left"))
+	direction_x = (
+		int(Input.is_action_pressed("Right")) -
+		int(Input.is_action_pressed("Left"))
+	)
+	direction_y = (
+		int(Input.is_action_pressed("Down")) -
+		int(Input.is_action_pressed("Up"))
 	)
 	
 	if not in_control_x:
@@ -76,12 +86,12 @@ func _physics_process(delta):
 	# oh god oh fuck
 	if in_control_x:
 		if abs(velocity.x) > RUN_SPEED_MAX:
-			if direction == 0:
+			if direction_x == 0:
 				velocity.x -= min(
 					abs(velocity.x) - RUN_SPEED_MAX,
 					abs(velocity.x) * (1 - CORRECTION_FRIC_TEMP)
 				) * sign(velocity.x)
-			elif sign(direction) == sign(velocity.x):
+			elif sign(direction_x) == sign(velocity.x):
 				velocity.x -= min(
 					abs(velocity.x) - RUN_SPEED_MAX,
 					abs(velocity.x) * (1 - CORRECTION_FRIC_ATTENUATED_TEMP)
@@ -92,12 +102,12 @@ func _physics_process(delta):
 					abs(velocity.x) * (1 - CORRECTION_FRIC_TEMP * AIR_FRIC_TEMP)
 				) * sign(velocity.x)
 		else:
-			if (not direction) or direction * velocity.x < 0:
+			if (not direction_x) or direction_x * velocity.x < 0:
 				# will have to figure out how to timestep this later
 				# need to learn calculus apparently?
 				velocity.x *= RUN_FRIC_TEMP if is_on_floor() else AIR_FRIC_TEMP
-			if direction:
-				velocity.x += RUN_ACC * delta * direction
+			if direction_x:
+				velocity.x += (RUN_ACC if grounded else RUN_AIR_ACC) * delta * direction_x
 				velocity.x = clamp(velocity.x, -RUN_SPEED_MAX, RUN_SPEED_MAX)
 	
 	# Landing and Sticky Landing
@@ -105,29 +115,35 @@ func _physics_process(delta):
 	if is_on_floor():
 		if not grounded:
 			var speed_excess: float = abs(velocity.x) - STICKY_LANDING_MIN
-			if direction == 0 and speed_excess > 0:
+			if direction_x == 0 and speed_excess > 0:
 				velocity.x -= sign(velocity.x) * min(STICKY_LANDING_FORCE, speed_excess)
 			grounded = true
 	elif grounded:
 		grounded = false
 	
-	# Variable Height Jump
+	# Variable Height Jump and Fastfalling
 	
 	if apply_gravity:
 		var current_gravity: float = GRAVITY
 		
+		if direction_y == 1 and velocity.y > FASTFALL_BEGIN:
+			current_gravity *= FASTFALL_MULTIPLIER
+		
 		if not grounded and in_control_y:
-			if Input.is_action_pressed("ui_accept"):
+			if Input.is_action_pressed("Accept"):
 				if GRAVMOD_BIGLEAP_BEGIN < velocity.y and velocity.y < GRAVMOD_BIGLEAP_END:
 					current_gravity *= GRAVMOD_BIGLEAP_MULTIPLIER
 			elif GRAVMOD_SHORTHOP_BEGIN < velocity.y and velocity.y < GRAVMOD_SHORTHOP_END:
 				current_gravity *= GRAVMOD_SHORTHOP_MULTIPLIER
 		
-		velocity.y += current_gravity * delta
+		velocity.y = min(
+			velocity.y + current_gravity * delta,
+			FASTFALL_SPEED if direction_y == 1 else FALL_SPEED
+		)
 	
 	# Jump
 	if in_control_y:
-		if Input.is_action_just_pressed("ui_accept"):
+		if Input.is_action_just_pressed("Accept"):
 			jump_timer = JUMP_TIME
 		if grounded:
 			coyote_timer = COYOTE_TIME
@@ -153,30 +169,30 @@ func _physics_process(delta):
 			if test_move(transform, Vector2.LEFT * WALLJUMP_MARGIN):
 				jump_timer = 0
 				velocity.y = WALLJUMP_FORCE
-				velocity.x = WALLJUMP_PUSH if direction else WALLJUMP_PUSH_NEUTRAL
+				velocity.x = WALLJUMP_PUSH if direction_x else WALLJUMP_PUSH_NEUTRAL
 				in_control_x = false
 				in_control_y = false
 				no_control_x_timer = (
-					WALLJUMP_CONTROL_REMOVED_TIME if direction
+					WALLJUMP_CONTROL_REMOVED_TIME if direction_x
 					else WALLJUMP_CONTROL_REMOVED_TIME_NEUTRAL
 				)
 				no_control_y_timer = (
-					WALLJUMP_CONTROL_REMOVED_TIME if direction
+					WALLJUMP_CONTROL_REMOVED_TIME if direction_x
 					else WALLJUMP_CONTROL_REMOVED_TIME_NEUTRAL
 				)
 				
 			elif test_move(transform, Vector2.RIGHT * WALLJUMP_MARGIN):
 				jump_timer = 0
 				velocity.y = WALLJUMP_FORCE
-				velocity.x = -WALLJUMP_PUSH if direction else -WALLJUMP_PUSH_NEUTRAL
+				velocity.x = -WALLJUMP_PUSH if direction_x else -WALLJUMP_PUSH_NEUTRAL
 				in_control_x = false
 				in_control_y = false
 				no_control_x_timer = (
-					WALLJUMP_CONTROL_REMOVED_TIME if direction
+					WALLJUMP_CONTROL_REMOVED_TIME if direction_x
 					else WALLJUMP_CONTROL_REMOVED_TIME_NEUTRAL
 				)
 				no_control_y_timer = (
-					WALLJUMP_CONTROL_REMOVED_TIME if direction
+					WALLJUMP_CONTROL_REMOVED_TIME if direction_x
 					else WALLJUMP_CONTROL_REMOVED_TIME_NEUTRAL
 				)
 	
