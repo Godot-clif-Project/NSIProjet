@@ -18,14 +18,17 @@ const GRAVMOD_BIGLEAP_MULTIPLIER = .6
 const GRAVMOD_BIGLEAP_BEGIN = JUMP_FORCE * .2
 const GRAVMOD_BIGLEAP_END = -GRAVMOD_BIGLEAP_BEGIN
 const WALLJUMP_FORCE = JUMP_FORCE * .8
-const WALLJUMP_PUSH = 100.0
+const WALLJUMP_PUSH = JUMP_SPBOOST_MAX
+const WALLJUMP_PUSH_NEUTRAL = JUMP_SPBOOST_MAX
 const WALLJUMP_MARGIN = 1.5
-const WALLJUMP_CONTROL_REMOVED_TIME = .2
+const WALLJUMP_CONTROL_REMOVED_TIME = .18
+const WALLJUMP_CONTROL_REMOVED_TIME_NEUTRAL = 0.0
 const VELOCITY_CONSERVATION_TIME = .07
 
 const RUN_FRIC_TEMP = .75
 const AIR_FRIC_TEMP = .8
 const CORRECTION_FRIC_TEMP = .95
+const CORRECTION_FRIC_ATTENUATED_TEMP = .975
 
 var in_control_x: bool = true
 var in_control_y: bool = true
@@ -51,17 +54,17 @@ func _physics_process(delta):
 		int(Input.is_action_pressed("ui_left"))
 	)
 	
-	if no_control_x_timer:
+	if not in_control_x:
 		no_control_x_timer -= delta
 		if no_control_x_timer <= 0:
 			no_control_x_timer = 0
 			in_control_x = true
-	if no_control_y_timer:
+	if not in_control_y:
 		no_control_y_timer -= delta
 		if no_control_y_timer <= 0:
 			no_control_y_timer = 0
 			in_control_y = true
-	if no_gravity_timer:
+	if not apply_gravity:
 		no_gravity_timer -= delta
 		if no_gravity_timer <= 0:
 			no_gravity_timer = 0
@@ -73,19 +76,21 @@ func _physics_process(delta):
 	# oh god oh fuck
 	if in_control_x:
 		if abs(velocity.x) > RUN_SPEED_MAX:
-	#		if direction == 0:
-	#			velocity.x -= min(
-	#				abs(velocity.x) - RUN_SPEED_MAX,
-	#				1 - (abs(velocity.x) * CORRECTION_FRIC_TEMP * delta)
-	#			) * sign(velocity.x)
-	#		elif sign(direction) == sign(velocity.x):
-	#			pass
-	#		else:
-	#			pass
-			velocity.x -= min(
-				abs(velocity.x) - RUN_SPEED_MAX,
-				abs(velocity.x) * (1 - CORRECTION_FRIC_TEMP)
-			) * sign(velocity.x)
+			if direction == 0:
+				velocity.x -= min(
+					abs(velocity.x) - RUN_SPEED_MAX,
+					abs(velocity.x) * (1 - CORRECTION_FRIC_TEMP)
+				) * sign(velocity.x)
+			elif sign(direction) == sign(velocity.x):
+				velocity.x -= min(
+					abs(velocity.x) - RUN_SPEED_MAX,
+					abs(velocity.x) * (1 - CORRECTION_FRIC_ATTENUATED_TEMP)
+				) * sign(velocity.x)
+			else:
+				velocity.x -= min(
+					abs(velocity.x) - RUN_SPEED_MAX,
+					abs(velocity.x) * (1 - CORRECTION_FRIC_TEMP * AIR_FRIC_TEMP)
+				) * sign(velocity.x)
 		else:
 			if (not direction) or direction * velocity.x < 0:
 				# will have to figure out how to timestep this later
@@ -148,20 +153,32 @@ func _physics_process(delta):
 			if test_move(transform, Vector2.LEFT * WALLJUMP_MARGIN):
 				jump_timer = 0
 				velocity.y = WALLJUMP_FORCE
-				velocity.x = WALLJUMP_PUSH
+				velocity.x = WALLJUMP_PUSH if direction else WALLJUMP_PUSH_NEUTRAL
 				in_control_x = false
 				in_control_y = false
-				no_control_x_timer = WALLJUMP_CONTROL_REMOVED_TIME
-				no_control_y_timer = WALLJUMP_CONTROL_REMOVED_TIME
+				no_control_x_timer = (
+					WALLJUMP_CONTROL_REMOVED_TIME if direction
+					else WALLJUMP_CONTROL_REMOVED_TIME_NEUTRAL
+				)
+				no_control_y_timer = (
+					WALLJUMP_CONTROL_REMOVED_TIME if direction
+					else WALLJUMP_CONTROL_REMOVED_TIME_NEUTRAL
+				)
 				
 			elif test_move(transform, Vector2.RIGHT * WALLJUMP_MARGIN):
 				jump_timer = 0
 				velocity.y = WALLJUMP_FORCE
-				velocity.x = -WALLJUMP_PUSH
+				velocity.x = -WALLJUMP_PUSH if direction else -WALLJUMP_PUSH_NEUTRAL
 				in_control_x = false
 				in_control_y = false
-				no_control_x_timer = WALLJUMP_CONTROL_REMOVED_TIME
-				no_control_y_timer = WALLJUMP_CONTROL_REMOVED_TIME
+				no_control_x_timer = (
+					WALLJUMP_CONTROL_REMOVED_TIME if direction
+					else WALLJUMP_CONTROL_REMOVED_TIME_NEUTRAL
+				)
+				no_control_y_timer = (
+					WALLJUMP_CONTROL_REMOVED_TIME if direction
+					else WALLJUMP_CONTROL_REMOVED_TIME_NEUTRAL
+				)
 	
 	# Apply velocity
 	
