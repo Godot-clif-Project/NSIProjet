@@ -17,7 +17,7 @@ func _ready():
 	load_json("test")
 
 func _process(delta):
-	if Input.is_action_just_pressed("Accept"):
+	if Input.is_action_just_pressed("Debug1"):
 		proceed_dialog()
 
 func proceed_dialog():
