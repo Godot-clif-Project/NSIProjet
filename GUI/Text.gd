@@ -1,19 +1,38 @@
 extends RichTextLabel
 
-var dialogfile = {}
+var dialog
 var line = 0
-var textfile = File.new()
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	set_use_bbcode(true)
-	textfile.open("res://GUI/text.json", File.READ)
-	var parsedtextfile = textfile.get_as_text()
-	var dialogfile = JSON.parse(parsedtextfile).result
-	set_bbcode(dialogfile[line].text)
-	textfile.close()
-	print(dialogfile[1].text)
+var JsonData
+var timer
+var dialogwait = 2
+var isTimerTimeout = 1
 
+func load_json(jsonname):
+	var file = File.new();
+	file.open("res://GUI/"+jsonname+".json", file.READ);
+	JsonData = parse_json(file.get_as_text())
+	file.close()
+	
+func _ready():
+	
+	timer = get_node("./Timer")
+	load_json("convertcsv")
+	set_visible_characters(0)
+	set_process_input(true)
+	
 func _input(event):
-	if Input.is_action_pressed("ui_accept"):
-		line += 1
-		set_bbcode(dialogfile[line].text)
+	if event is InputEventMouseButton or Input.is_action_pressed("ui_accept") :
+		if get_visible_characters() > get_total_character_count():
+			if line < JsonData.size()-1:
+					line += 1
+					set_bbcode("putain")
+					set_bbcode(JsonData[line].text)
+					$"/root/Control/Timer".start(dialogwait)
+			else:
+				set_bbcode("end of text?")
+		else:
+			set_visible_characters(get_total_character_count())
+
+func _on_Timer_timeout():
+	set_visible_characters(get_visible_characters()+1)
+

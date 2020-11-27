@@ -1,0 +1,72 @@
+[
+ {
+   "ID": "TestLevel",
+   "command": 0,
+   "name": "Mio Akiyama",
+   "text": "キミを見てるといつもハートDOKI☆DOKI",
+   "effect": ""
+ },
+ {
+   "ID": "TestLevel",
+   "command": 0,
+   "name": "Mio Akiyama",
+   "text": "揺れる思いはマシュマロみたいにふわ☆ふわ",
+   "effect": ""
+ },
+ {
+   "ID": "TestLevel",
+   "command": 0,
+   "name": "Mio Akiyama",
+   "text": "いつもがんばる",
+   "effect": ""
+ },
+ {
+   "ID": "TestLevel",
+   "command": 0,
+   "name": "Yui Hirasawa",
+   "text": "[wave amp=50 freq=2][rainbow freq=0.2 sat=10 val=20]【いつもがんばる】[/rainbow][/wave]",
+   "effect": ""
+ },
+ {
+   "ID": "TestLevel",
+   "command": 0,
+   "name": "Mio Akiyama",
+   "text": "キミの横顔",
+   "effect": ""
+ },
+ {
+   "ID": "TestLevel",
+   "command": 0,
+   "name": "Yui Hirasawa",
+   "text": "[wave amp=50 freq=2][rainbow freq=0.2 sat=10 val=20]【キミの横顔】[/rainbow][/wave]",
+   "effect": ""
+ },
+ {
+   "ID": "TestLevel",
+   "command": 0,
+   "name": "Mio Akiyama",
+   "text": "ずっと見てても気づかないよね",
+   "effect": ""
+ },
+ {
+   "ID": "TestLevel",
+   "command": 0,
+   "name": "Mio Akiyama",
+   "text": "夢の中なら",
+   "effect": ""
+ },
+ {
+   "ID": "TestLevel",
+   "command": 0,
+   "name": "Yui Hirasawa",
+   "text": "[wave amp=50 freq=2][rainbow freq=0.2 sat=10 val=20]【夢の中なら】[/rainbow][/wave]",
+   "effect": ""
+ },
+ {
+   "ID": "TestLevel",
+   "command": 0,
+   "name": "Mio Akiyama",
+   "text": "二人の距離縮められるのにな",
+   "effect": ""
+ }
+]

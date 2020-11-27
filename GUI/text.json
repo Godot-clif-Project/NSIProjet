@@ -3,7 +3,7 @@
    "ID": "TestLevel",
    "command": 0,
    "name": "test2",
-   "text": "[center][wave amp=50 frq=5]hello world[/wave][/center]"
+   "text": "hello world"
  },
  {
    "ID": "TestLevel",
