@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://GUI/Text.gd" type="Script" id=1]
+[ext_resource path="res://GUI/PlaceholderUI.tscn" type="PackedScene" id=2]
 [ext_resource path="res://GUI/Dialog.gd" type="Script" id=3]
 [ext_resource path="res://GUI/Dialog.tres" type="Theme" id=4]
 
@@ -19,17 +19,44 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Tween" type="Tween" parent="."]
-
-[node name="TextLabel" type="RichTextLabel" parent="."]
+[node name="UpBox" type="Control" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -160.0
-margin_top = -50.0
+margin_top = -90.0
 margin_right = 160.0
-margin_bottom = 50.0
+margin_bottom = 90.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="UpDialogBox" parent="UpBox" instance=ExtResource( 2 )]
+anchor_top = 0.0
+anchor_bottom = 0.0
+margin_top = 0.0
+margin_bottom = 80.0
+
+[node name="Tween" type="Tween" parent="UpBox/UpDialogBox"]
+
+[node name="UpTextMargin" type="MarginContainer" parent="UpBox/UpDialogBox"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -80.0
+margin_top = 4.0
+margin_right = 155.0
+margin_bottom = 60.0
+rect_clip_content = true
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="UpText" type="RichTextLabel" parent="UpBox/UpDialogBox/UpTextMargin"]
+margin_right = 235.0
+margin_bottom = 56.0
 rect_clip_content = false
 theme = ExtResource( 4 )
 bbcode_enabled = true
@@ -37,22 +64,139 @@ tab_size = 9
 fit_content_height = true
 scroll_active = false
 scroll_following = true
-script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NameLabel" type="RichTextLabel" parent="."]
+[node name="UpNameMargin" type="MarginContainer" parent="UpBox/UpDialogBox"]
 anchor_left = 0.5
-anchor_top = 1.0
 anchor_right = 0.5
-anchor_bottom = 1.0
-margin_left = -160.0
-margin_top = -20.0
-margin_right = 160.0
+margin_left = -155.0
+margin_top = 55.0
+margin_right = 155.0
+margin_bottom = 75.0
+size_flags_horizontal = 0
+size_flags_vertical = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="UpName" type="RichTextLabel" parent="UpBox/UpDialogBox/UpNameMargin"]
+margin_right = 310.0
+margin_bottom = 20.0
 rect_clip_content = false
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme = ExtResource( 4 )
 bbcode_enabled = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="UpPortraitMargin" type="MarginContainer" parent="UpBox/UpDialogBox"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -155.0
+margin_top = 4.0
+margin_right = -85.0
+margin_bottom = 55.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="UpPortraitTexture" type="TextureRect" parent="UpBox/UpDialogBox/UpPortraitMargin"]
+margin_right = 69.0
+margin_bottom = 51.0
+stretch_mode = 4
+
+[node name="DownBox" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -160.0
+margin_top = -90.0
+margin_right = 160.0
+margin_bottom = 90.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DownDialogBox" parent="DownBox" instance=ExtResource( 2 )]
+
+[node name="Tween" type="Tween" parent="DownBox/DownDialogBox"]
+
+[node name="DownTextMargin" type="MarginContainer" parent="DownBox/DownDialogBox"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -155.0
+margin_top = -76.0
+margin_right = 80.0
+margin_bottom = -20.0
+rect_clip_content = true
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DownText" type="RichTextLabel" parent="DownBox/DownDialogBox/DownTextMargin"]
+margin_right = 235.0
+margin_bottom = 56.0
+rect_clip_content = false
+theme = ExtResource( 4 )
+bbcode_enabled = true
+tab_size = 9
+fit_content_height = true
+scroll_active = false
+scroll_following = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DownNameMargin" type="MarginContainer" parent="DownBox/DownDialogBox"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -155.0
+margin_top = -25.0
+margin_right = 155.0
+margin_bottom = -5.0
+size_flags_horizontal = 0
+size_flags_vertical = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DownName" type="RichTextLabel" parent="DownBox/DownDialogBox/DownNameMargin"]
+margin_right = 310.0
+margin_bottom = 20.0
+rect_clip_content = false
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 4 )
+bbcode_enabled = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DownPortraitMargin" type="MarginContainer" parent="DownBox/DownDialogBox"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = 85.0
+margin_top = -76.0
+margin_right = 155.0
+margin_bottom = -25.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DownPortraitTexture" type="TextureRect" parent="DownBox/DownDialogBox/DownPortraitMargin"]
+margin_right = 70.0
+margin_bottom = 51.0
+stretch_mode = 4

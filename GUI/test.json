@@ -1,72 +1,82 @@
 [
  {
    "ID": "TestLevel",
-   "command": 0,
-   "name": "[right]Mio Akiyama",
-   "text": "[center]キミを見てるといつもハートDOKI☆DOKI",
-   "effect": ""
+   "command": 1,
+   "name": "test1",
+   "text": "キミを見てるといつもハートDOKI☆DOKI",
+   "emotion": "neutral",
+   "position": 0
  },
  {
    "ID": "TestLevel",
    "command": 0,
-   "name": "[right]Mio Akiyama",
-   "text": "[center]揺れる思いはマシュマロみたいにふわ☆ふわ",
-   "effect": ""
+   "name": "test1",
+   "text": "揺れる思いはマシュマロみたいにふわ☆ふわ",
+   "emotion": "happy",
+   "position": 0
  },
  {
    "ID": "TestLevel",
    "command": 0,
-   "name": "[right]Mio Akiyama",
-   "text": "[center]いつもがんばる",
-   "effect": ""
+   "name": "test1",
+   "text": "いつもがんばる",
+   "emotion": "neutral",
+   "position": 0
+ },
+ {
+   "ID": "TestLevel",
+   "command": 1,
+   "name": "test2",
+   "text": "[wave amp=50 freq=2][rainbow freq=0.2 sat=10 val=20]【いつもがんばる】[/rainbow][/wave]",
+   "emotion": "neutral",
+   "position": 1
  },
  {
    "ID": "TestLevel",
    "command": 0,
-   "name": "[right]Yui Hirasawa",
-   "text": "[center][wave amp=50 freq=2][rainbow freq=0.2 sat=10 val=20]【いつもがんばる】[/rainbow][/wave]",
-   "effect": ""
+   "name": "test1",
+   "text": "キミの横顔",
+   "emotion": "neutral",
+   "position": 0
  },
  {
    "ID": "TestLevel",
    "command": 0,
-   "name": "[right]Mio Akiyama",
-   "text": "[center]キミの横顔",
-   "effect": ""
+   "name": "test2",
+   "text": "[wave amp=50 freq=2][rainbow freq=0.2 sat=10 val=20]【キミの横顔】[/rainbow][/wave]",
+   "emotion": "happy",
+   "position": 1
  },
  {
    "ID": "TestLevel",
    "command": 0,
-   "name": "[right]Yui Hirasawa",
-   "text": "[center][wave amp=50 freq=2][rainbow freq=0.2 sat=10 val=20]【キミの横顔】[/rainbow][/wave]",
-   "effect": ""
+   "name": "test1",
+   "text": "ずっと見てても気づかないよね",
+   "emotion": "happy",
+   "position": 0
  },
  {
    "ID": "TestLevel",
    "command": 0,
-   "name": "[right]Mio Akiyama",
-   "text": "[center]ずっと見てても気づかないよね",
-   "effect": ""
+   "name": "test1",
+   "text": "夢の中なら",
+   "emotion": "happy",
+   "position": 0
  },
  {
    "ID": "TestLevel",
    "command": 0,
-   "name": "[right]Mio Akiyama",
-   "text": "[center]夢の中なら",
-   "effect": ""
+   "name": "test2",
+   "text": "[wave amp=50 freq=2][rainbow freq=0.2 sat=10 val=20]【夢の中なら】[/rainbow][/wave]",
+   "emotion": "sad",
+   "position": 1
  },
  {
    "ID": "TestLevel",
    "command": 0,
-   "name": "[right]Yui Hirasawa",
-   "text": "[center][wave amp=50 freq=2][rainbow freq=0.2 sat=10 val=20]【夢の中なら】[/rainbow][/wave]",
-   "effect": ""
- },
- {
-   "ID": "TestLevel",
-   "command": 0,
-   "name": "[right]Mio Akiyama",
-   "text": "[center]二人の距離縮められるのにな",
-   "effect": ""
+   "name": "test1",
+   "text": "二人の距離縮められるのにな",
+   "emotion": "sad",
+   "position": 0
  }
 ]
