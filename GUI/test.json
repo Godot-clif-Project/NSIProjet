@@ -27,7 +27,7 @@
    "ID": "TestLevel",
    "command": 1,
    "name": "test2",
-   "text": "[wave amp=50 freq=2][rainbow freq=0.2 sat=10 val=20]【いつもがんばる】[/rainbow][/wave]",
+   "text": "[wave amp=50 freq=2][rainbow freq=0.2 sat=10 val=10]【いつもがんばる】[/rainbow][/wave]",
    "emotion": "neutral",
    "position": 1
  },
