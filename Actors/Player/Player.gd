@@ -5,7 +5,10 @@ extends KinematicBody2D
 # Easier to timestep, easier to control
 # But: easy to run into problems when the speed is too high
 
-# fuck i broke walljumps
+# To do:
+# Clean up the code for walljumps, direction etc.
+# Change the loss of control from a separate timer to the y velocity
+# Make jumps faster (gravity and force)
 
 
 const RUN_SPEED_MAX = 90.0
@@ -40,7 +43,7 @@ const WALLSLIDE_MIN_SPEED = 30.0
 const WALLSLIDE_GRAVITY = 400.0
 const WALLSLIDE_MAX_SPEED = 100.0
 const WALLSLIDE_TIME = .085
-const STUPID_WALL_CHECK_DISTANCE = .5
+const STUPID_WALL_CHECK_DISTANCE = 1
 
 const RUN_FRIC_TEMP = .75
 const AIR_FRIC_TEMP = .85
@@ -61,11 +64,11 @@ var direction_x: int
 var direction_y: int
 var jump_timer: float
 var coyote_timer: float
-var wallslide_timer: float
+var wall_coyote_timer: float
 
 var grounded: bool
-var last_ground_y: int
 var wallsliding: bool
+var last_ground_y: int
 var last_wall_normal: int
 
 
@@ -116,19 +119,17 @@ func _physics_process(delta):
 			last_wall_normal = -int(sign(velocity.x))
 		else:
 			last_wall_normal = int(sign(velocity.x))
-		wallslide_timer = WALLSLIDE_TIME
+		wall_coyote_timer = WALLSLIDE_TIME
 		if not wallsliding:
 			wallsliding = true
 			velocity.y = min(velocity.y, WALLSLIDE_MIN_SPEED)
 	elif wallsliding:
-		wallslide_timer -= delta
-		if wallslide_timer <= 0:
+		wall_coyote_timer -= delta
+		if wall_coyote_timer <= 0:
 			wallsliding = false
 	
 	# Acceleration and friction nonsense
 	
-	# please clean up this mess, future me
-	# oh god oh fuck
 	if in_control_x:
 		if abs(velocity.x) > RUN_SPEED_MAX:
 			if direction_x == 0:
@@ -149,7 +150,6 @@ func _physics_process(delta):
 		else:
 			if (not direction_x) or direction_x * velocity.x < 0:
 				# will have to figure out how to timestep this later
-				# need to learn calculus apparently?
 				velocity.x *= RUN_FRIC_TEMP if is_on_floor() else AIR_FRIC_TEMP
 			if direction_x:
 				velocity.x += (RUN_ACC if grounded else RUN_AIR_ACC) * delta * direction_x
@@ -205,12 +205,19 @@ func _physics_process(delta):
 		
 		if jump_timer:
 			var wall_normal: int
-			if not wallsliding:
-				if test_move(transform, Vector2(sign(velocity.x) * WALLJUMP_MARGIN, 0)):
-					wall_normal = -sign(velocity.x)
+#			if not wallsliding:
+			if true:
+#				if test_move(transform, Vector2(sign(velocity.x) * WALLJUMP_MARGIN, 0)):
+#					wall_normal = -sign(velocity.x)
+#					last_wall_normal = wall_normal
+#				elif test_move(transform, Vector2(-sign(velocity.x) * WALLJUMP_MARGIN, 0)):
+#					wall_normal = sign(velocity.x)
+#					last_wall_normal = wall_normal
+				if test_move(transform, Vector2(WALLJUMP_MARGIN, 0)):
+					wall_normal = -1
 					last_wall_normal = wall_normal
-				elif test_move(transform, Vector2(-sign(velocity.x) * WALLJUMP_MARGIN, 0)):
-					wall_normal = sign(velocity.x)
+				elif test_move(transform, Vector2(-WALLJUMP_MARGIN, 0)):
+					wall_normal = 1
 					last_wall_normal = wall_normal
 			else:
 				wall_normal = last_wall_normal
