@@ -253,9 +253,7 @@ func _physics_process(delta):
 			velocity.x = 0
 	else:
 		velocity_conservation_timer.x = VELOCITY_CONSERVATION_TIME
-
-
-func _process(delta):
+	
 	
 	# Animations
 	
