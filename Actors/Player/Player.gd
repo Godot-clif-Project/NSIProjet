@@ -13,9 +13,9 @@ extends KinematicBody2D
 
 const RUN_SPEED_MAX = 90.0
 const RUN_ACC = 380.0
-const RUN_AIR_ACC = RUN_ACC * .65
-const GRAVITY = 620.0
-const JUMP_FORCE = -220.0
+const RUN_AIR_ACC = RUN_ACC * .75
+const GRAVITY = 640.0
+const JUMP_FORCE = -230.0
 const JUMP_TIME = .1
 const COYOTE_TIME = .1
 const JUMP_SPBOOST_MULTIPLIER = 1.3
@@ -41,12 +41,11 @@ const FASTFALL_MULTIPLIER = 1.2
 const FASTFALL_BEGIN = 0
 const WALLSLIDE_MIN_SPEED = 30.0
 const WALLSLIDE_GRAVITY = 400.0
-const WALLSLIDE_MAX_SPEED = 100.0
-const WALLSLIDE_TIME = .085
-const STUPID_WALL_CHECK_DISTANCE = 1
+const WALLSLIDE_MAX_SPEED = 50.0
+const WALLSLIDE_FCOUNT = 2
 
-const RUN_FRIC_TEMP = .75
-const AIR_FRIC_TEMP = .85
+const RUN_FRIC_TEMP = .72
+const AIR_FRIC_TEMP = .83
 const CORRECTION_FRIC_TEMP = .95
 const CORRECTION_FRIC_ATTENUATED_TEMP = .975
 
@@ -64,10 +63,10 @@ var direction_x: int
 var direction_y: int
 var jump_timer: float
 var coyote_timer: float
-var wall_coyote_timer: float
 
 var grounded: bool
 var wallsliding: bool
+var wallslide_fcounter: int
 var last_ground_y: int
 var last_wall_normal: int
 
@@ -114,18 +113,18 @@ func _physics_process(delta):
 	if is_on_wall():
 		if test_move(
 			transform,
-			Vector2(sign(velocity.x) * STUPID_WALL_CHECK_DISTANCE, 0)
+			Vector2(sign(velocity.x) * get_safe_margin(), 0)
 		):
 			last_wall_normal = -int(sign(velocity.x))
 		else:
 			last_wall_normal = int(sign(velocity.x))
-		wall_coyote_timer = WALLSLIDE_TIME
 		if not wallsliding:
 			wallsliding = true
 			velocity.y = min(velocity.y, WALLSLIDE_MIN_SPEED)
+		wallslide_fcounter = WALLSLIDE_FCOUNT
 	elif wallsliding:
-		wall_coyote_timer -= delta
-		if wall_coyote_timer <= 0:
+		wallslide_fcounter -= 1
+		if wallslide_fcounter <= 0:
 			wallsliding = false
 	
 	# Acceleration and friction nonsense
@@ -164,7 +163,6 @@ func _physics_process(delta):
 			current_gravity *= FASTFALL_MULTIPLIER
 		
 		if not grounded and in_control_y:
-			print(velocity.y)
 			if (not wallsliding) or direction_y == 1 or velocity.y < 0:
 				if Input.is_action_pressed("Accept"):
 					if GRAVMOD_BIGLEAP_BEGIN < velocity.y and velocity.y < GRAVMOD_BIGLEAP_END:
@@ -180,6 +178,7 @@ func _physics_process(delta):
 		)
 	
 	# Jump
+	
 	if in_control_y:
 		if Input.is_action_just_pressed("Accept"):
 			jump_timer = JUMP_TIME
@@ -205,22 +204,13 @@ func _physics_process(delta):
 		
 		if jump_timer:
 			var wall_normal: int
-#			if not wallsliding:
-			if true:
-#				if test_move(transform, Vector2(sign(velocity.x) * WALLJUMP_MARGIN, 0)):
-#					wall_normal = -sign(velocity.x)
-#					last_wall_normal = wall_normal
-#				elif test_move(transform, Vector2(-sign(velocity.x) * WALLJUMP_MARGIN, 0)):
-#					wall_normal = sign(velocity.x)
-#					last_wall_normal = wall_normal
-				if test_move(transform, Vector2(WALLJUMP_MARGIN, 0)):
-					wall_normal = -1
-					last_wall_normal = wall_normal
-				elif test_move(transform, Vector2(-WALLJUMP_MARGIN, 0)):
-					wall_normal = 1
-					last_wall_normal = wall_normal
-			else:
-				wall_normal = last_wall_normal
+			if test_move(transform, Vector2(WALLJUMP_MARGIN, 0)):
+				wall_normal = -1
+				last_wall_normal = wall_normal
+			elif test_move(transform, Vector2(-WALLJUMP_MARGIN, 0)):
+				wall_normal = 1
+				last_wall_normal = wall_normal
+			
 			if wall_normal:
 				jump_timer = 0
 				velocity.y = WALLJUMP_FORCE
