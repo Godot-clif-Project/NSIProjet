@@ -6,9 +6,7 @@ extends KinematicBody2D
 # But: easy to run into problems when the speed is too high
 
 # To do:
-# Clean up the code for walljumps, direction etc.
 # Change the loss of control from a separate timer to the y velocity
-# Make jumps faster (gravity and force)
 
 
 const RUN_SPEED_MAX = 90.0
@@ -69,6 +67,15 @@ var wallsliding: bool
 var wallslide_fcounter: int
 var last_ground_y: int
 var last_wall_normal: int
+
+onready var anim_idle = $SpriteIdle
+onready var animation_player = $AnimationPlayer
+
+onready var anim_current = anim_idle
+
+
+func _ready():
+	animation_player.play("Idle")
 
 
 func _physics_process(delta):
@@ -246,3 +253,14 @@ func _physics_process(delta):
 			velocity.x = 0
 	else:
 		velocity_conservation_timer.x = VELOCITY_CONSERVATION_TIME
+
+
+func _process(delta):
+	
+	# Animations
+	
+	if anim_current.flip_h:
+		if velocity.x > 0:
+			anim_current.flip_h = false
+	elif velocity.x < 0:
+		anim_current.flip_h = true
