@@ -5,9 +5,6 @@ extends KinematicBody2D
 # Easier to timestep, easier to control
 # But: easy to run into problems when the speed is too high
 
-# To do:
-# Change the loss of control from a separate timer to the y velocity
-
 
 const RUN_SPEED_MAX = 90.0
 const RUN_ACC = 380.0
@@ -47,6 +44,8 @@ const AIR_FRIC_TEMP = .83
 const CORRECTION_FRIC_TEMP = .95
 const CORRECTION_FRIC_ATTENUATED_TEMP = .975
 
+const RUNNING_THRESHOLD = 10.0
+
 var in_control_x: bool = true
 var in_control_y: bool = true
 var no_control_x_timer: float
@@ -69,13 +68,14 @@ var last_ground_y: int
 var last_wall_normal: int
 
 onready var anim_idle = $SpriteIdle
+onready var anim_run = $SpriteRun
 onready var animation_player = $AnimationPlayer
 
 onready var anim_current = anim_idle
-
+onready var anim_list = [anim_idle, anim_run]
 
 func _ready():
-	animation_player.play("Idle")
+	set_anim(anim_idle, "Idle")
 
 
 func _physics_process(delta):
@@ -264,3 +264,20 @@ func _process(delta):
 			anim_current.flip_h = false
 	elif velocity.x < 0:
 		anim_current.flip_h = true
+	
+	if abs(velocity.x) > RUNNING_THRESHOLD and not is_on_wall():
+		set_anim(anim_run, "Run")
+	else:
+		set_anim(anim_idle, "Idle")
+
+
+func set_anim(new_anim: Sprite, anim: String):
+	if not anim_current == new_anim:
+		for spr in anim_list:
+			if spr != new_anim:
+				spr.visible = false
+			else:
+				spr.visible = true
+		anim_current = new_anim
+	if not animation_player.current_animation == anim:
+		animation_player.play(anim)
