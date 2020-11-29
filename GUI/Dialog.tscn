@@ -1,11 +1,11 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://GUI/Name.tres" type="Theme" id=1]
 [ext_resource path="res://GUI/PlaceholderUI.tscn" type="PackedScene" id=2]
 [ext_resource path="res://GUI/Dialog.gd" type="Script" id=3]
 [ext_resource path="res://GUI/Dialog.tres" type="Theme" id=4]
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=1]
 resource_name = "Appear"
 length = 0.5
 tracks/0/type = "value"
@@ -33,7 +33,35 @@ tracks/1/keys = {
 "values": [ Vector2( 7, 10 ), Vector2( 7, 10 ) ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=2]
+resource_name = "Disappear"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, -120 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("UpDialogBox/UpPortraitMargin:rect_position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 7, 10 ), Vector2( 7, 10 ) ]
+}
+
+[sub_resource type="Animation" id=3]
 resource_name = "Appear"
 length = 0.5
 tracks/0/type = "value"
@@ -61,6 +89,34 @@ tracks/1/keys = {
 "values": [ Vector2( 275, 0 ), Vector2( 275, 15 ) ]
 }
 
+[sub_resource type="Animation" id=4]
+resource_name = "Disappear"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, 120 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("DownDialogBox/DownPortraitMargin:rect_position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 275, 15 ), Vector2( 275, 0 ) ]
+}
+
 [node name="DialogBox" type="Control"]
 anchor_left = 0.5
 anchor_top = 0.5
@@ -82,9 +138,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -160.0
-margin_top = -210.0
+margin_top = -90.0
 margin_right = 160.0
-margin_bottom = -30.0
+margin_bottom = 90.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -111,7 +167,7 @@ __meta__ = {
 
 [node name="UpText" type="RichTextLabel" parent="UpBox/UpDialogBox/UpTextMargin"]
 margin_right = 261.0
-margin_bottom = 12.0
+margin_bottom = 16.0
 rect_clip_content = false
 theme = ExtResource( 4 )
 bbcode_enabled = true
@@ -176,7 +232,8 @@ __meta__ = {
 
 [node name="UpAnimation" type="AnimationPlayer" parent="UpBox"]
 playback_speed = 1.25
-anims/Appear = SubResource( 6 )
+anims/Appear = SubResource( 1 )
+anims/Disappear = SubResource( 2 )
 
 [node name="DownBox" type="Control" parent="."]
 anchor_left = 0.5
@@ -184,9 +241,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -160.0
-margin_top = 30.0
+margin_top = -90.4454
 margin_right = 160.0
-margin_bottom = 210.0
+margin_bottom = 89.5546
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -232,9 +289,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 margin_left = 115.0
-margin_top = -59.9999
+margin_top = -44.9999
 margin_right = 165.0
-margin_bottom = -9.99992
+margin_bottom = 5.00005
 rect_scale = Vector2( 0.8, 0.8 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -242,7 +299,7 @@ __meta__ = {
 
 [node name="DownPortraitTexture" type="TextureRect" parent="DownBox/DownDialogBox/DownPortraitMargin"]
 margin_right = 50.0
-margin_bottom = 50.0
+margin_bottom = 49.0
 stretch_mode = 1
 
 [node name="NinePatchRect2" parent="DownBox/DownDialogBox" instance=ExtResource( 2 )]
@@ -284,5 +341,6 @@ __meta__ = {
 }
 
 [node name="DownAnimation" type="AnimationPlayer" parent="DownBox"]
-anims/Appear = SubResource( 5 )
+anims/Appear = SubResource( 3 )
+anims/Disappear = SubResource( 4 )
 [connection signal="animation_finished" from="DownBox/DownAnimation" to="." method="_on_DownAnimation_animation_finished"]

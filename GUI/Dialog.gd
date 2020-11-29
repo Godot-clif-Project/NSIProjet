@@ -8,6 +8,7 @@ var dialogwait = 2
 var isTimerTimeout = 1
 var UpDialogBoxAppeared = false
 var DownDialogBoxAppeared = false
+var jsonname = "errorhandler"
 
 func load_json(jsonname):
 	var file = File.new();
@@ -16,7 +17,7 @@ func load_json(jsonname):
 	file.close()
 	
 func _ready():
-	load_json("test")
+	load_json(str(jsonname))
 	get_node("UpBox").hide()
 	get_node("DownBox").hide()
 
@@ -29,17 +30,21 @@ func proceed_dialog():
 		if JsonData[line].position == 0:
 			if JsonData[line].command == 1:
 				showUpBox()
+				yield($UpBox/UpAnimation,"animation_finished")
 			if UpDialogBoxAppeared == true:
 				$UpBox/UpDialogBox/UpPortraitMargin/UpPortraitTexture.texture = load(
 				"res://GUI/Portraits/" + JsonData[line].name + JsonData[line].emotion + ".png")
 				up_text()
+				yield($UpBox/UpDialogBox/Tween,"tween_completed")
 		elif JsonData[line].position == 1:
 			if JsonData[line].command == 1:
 				showDownBox()
+				yield($DownBox/DownAnimation,"animation_finished")
 			if DownDialogBoxAppeared == true:
 				$DownBox/DownDialogBox/DownPortraitMargin/DownPortraitTexture.texture = load(
 				"res://GUI/Portraits/" + JsonData[line].name + JsonData[line].emotion + ".png")
 				down_text()
+				yield($DownBox/DownDialogBox/Tween,"tween_completed")
 	else:
 		$UpBox/UpAnimation.play("Disappear")
 		$DownBox/DownAnimation.play("Disappear")
@@ -63,11 +68,11 @@ func down_text():
 	$DownBox/DownDialogBox/Tween.start()
 
 func showUpBox():
-	get_node("UpBox").show()
 	$UpBox/UpAnimation.play("Appear")
+	get_node("UpBox").show()
 	UpDialogBoxAppeared = true
 
 func showDownBox():
-	get_node("DownBox").show()
 	$DownBox/DownAnimation.play("Appear")
+	get_node("DownBox").show()
 	DownDialogBoxAppeared = true
