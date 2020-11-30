@@ -70,9 +70,11 @@ var last_wall_normal: int
 onready var anim_idle = $SpriteIdle
 onready var anim_run = $SpriteRun
 onready var animation_player = $AnimationPlayer
+onready var anim_jump = $SpriteJump
+onready var anim_hangtime = $SpriteHangtime
 
-onready var anim_current = anim_idle
-onready var anim_list = [anim_idle, anim_run]
+onready var anim_current
+onready var anim_list = [anim_idle, anim_run, anim_jump, anim_hangtime]
 
 func _ready():
 	set_anim(anim_idle, "Idle")
@@ -203,6 +205,8 @@ func _physics_process(delta):
 				velocity.x = clamp(velocity.x, -JUMP_SPBOOST_MAX, JUMP_SPBOOST_MAX)
 			jump_timer = 0
 			coyote_timer = 0
+			grounded = false
+			on_jump()
 		else:
 			jump_timer = max(jump_timer - delta, 0.0)
 			coyote_timer = max(coyote_timer - delta, 0.0)
@@ -233,6 +237,8 @@ func _physics_process(delta):
 					WALLJUMP_CONTROL_REMOVED_TIME if direction_x
 					else WALLJUMP_CONTROL_REMOVED_TIME_NEUTRAL
 				)
+				grounded = false
+				on_jump()
 	
 	# Apply velocity
 	
@@ -257,16 +263,17 @@ func _physics_process(delta):
 	
 	# Animations
 	
+	if grounded:
+		if abs(velocity.x) > RUNNING_THRESHOLD and not is_on_wall():
+			set_anim(anim_run, "Run")
+		else:
+			set_anim(anim_idle, "Idle")
+	
 	if anim_current.flip_h:
 		if velocity.x > 0:
 			anim_current.flip_h = false
 	elif velocity.x < 0:
 		anim_current.flip_h = true
-	
-	if abs(velocity.x) > RUNNING_THRESHOLD and not is_on_wall():
-		set_anim(anim_run, "Run")
-	else:
-		set_anim(anim_idle, "Idle")
 
 
 func set_anim(new_anim: Sprite, anim: String):
@@ -279,3 +286,11 @@ func set_anim(new_anim: Sprite, anim: String):
 		anim_current = new_anim
 	if not animation_player.current_animation == anim:
 		animation_player.play(anim)
+
+
+func animationplayer_set_hangtime():
+	set_anim(anim_hangtime, "Hangtime")
+
+
+func on_jump():
+	set_anim(anim_jump, "Jump")
