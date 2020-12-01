@@ -14,6 +14,8 @@ extends KinematicBody2D
 # Don't cancel the momentum when going down, instead, if it's higher than the
 # max fall speed (on context), apply friction (also applies for wall sliding)
 
+# implement dash cancel
+
 
 const RUN_SPEED_MAX = 90.0
 const RUN_ACC = 380.0
