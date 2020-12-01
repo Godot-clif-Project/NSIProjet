@@ -1,1 +1,3 @@
-# tadaa c notre projet
+# Projet NSI
+
+Celeste Ripoff
