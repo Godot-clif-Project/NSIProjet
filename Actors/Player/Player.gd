@@ -64,8 +64,8 @@ const FALLING_THRESHOLD = 0.0
 
 
 const DASH_DELAY = .04
-const DASH_SPEED = 430.0
-const DASH_DURATION = .1
+const DASH_SPEED = 400.0
+const DASH_DURATION = .12
 const DASH_EXIT_SPEED = 150
 
 var in_control_x: bool = true
