@@ -9,6 +9,10 @@ var isTimerTimeout = 1
 var UpDialogBoxAppeared = false
 var DownDialogBoxAppeared = false
 var jsonname = "errorhandler"
+onready var UpTextBox = $UpBox/UpDialogBox/UpTextMargin/UpText
+onready var DownTextBox = $DownBox/DownDialogBox/DownTextMargin/DownText
+onready var UpPortrait = $UpBox/UpDialogBox/UpPortraitMargin/UpPortraitTexture
+onready var DownPortrait = $DownBox/DownDialogBox/DownPortraitMargin/DownPortraitTexture
 
 func load_json(jsonname):
 	line = 0
@@ -30,52 +34,37 @@ func _process(delta):
 
 func proceed_dialog():
 	if line < JsonData.size():
-		if JsonData[line].position == 0:
-			UpBoxHandler(JsonData[line].command)
-#			if JsonData[line].command == 1:
-#				if UpDialogBoxAppeared == false:
-#					showUpBox()
-#					yield($UpBox/UpAnimation,"animation_finished")
-#			if UpDialogBoxAppeared == true and $UpBox.TweenComplete == true:
-#				if $DownBox/DownDialogBox/DownTextMargin/DownText.percent_visible == 0 or $DownBox/DownDialogBox/DownTextMargin/DownText.percent_visible == 100:
-#					up_text()
-#					line += 1
+		if JsonData[line].position == 0 :
+			if $UpBox.UpTweenComplete == 1:
+				UpBoxHandler(JsonData[line].command)
 		# Same code but for the Down Box. please help
 		elif JsonData[line].position == 1:
 			DownBoxHandler(JsonData[line].command)
-#			if JsonData[line].command == 1:
-#				if DownDialogBoxAppeared == false:
-#					showDownBox()
-#					yield($DownBox/DownAnimation,"animation_finished")
-#			if DownDialogBoxAppeared == true and $DownBox.TweenComplete == true:
-#				if $UpBox/UpDialogBox/UpTextMargin/UpText.percent_visible == 0 or $UpBox/UpDialogBox/UpTextMargin/UpText.percent_visible == 100:
-#					down_text()
-#					line += 1
 	else:
-		$UpBox/UpAnimation.play("Disappear")
-		yield($UpBox/UpAnimation,"animation_finished")
-		$DownBox/DownAnimation.play("Disappear")
-		yield($DownBox/DownAnimation,"animation_finished")
+		if UpDialogBoxAppeared == true:
+			$UpBox/UpAnimation.play("Disappear")
+			yield($UpBox/UpAnimation,"animation_finished")
+		if DownDialogBoxAppeared == true:
+			$DownBox/DownAnimation.play("Disappear")
+			yield($DownBox/DownAnimation,"animation_finished")
 		ResetBoxes()
 
 func up_text():
-	$UpBox.TweenComplete == false
-	$UpBox/UpDialogBox/UpPortraitMargin/UpPortraitTexture.texture = load(
+	UpPortrait.texture = load(
 	"res://GUI/Portraits/" + JsonData[line].name + JsonData[line].emotion + ".png")
-	$UpBox/UpDialogBox/UpTextMargin/UpText.bbcode_text = JsonData[line].text
+	UpTextBox.bbcode_text = JsonData[line].text
 	$UpBox/UpDialogBox/NinePatchRect/UpNameMargin/UpName.bbcode_text = "[center]"+JsonData[line].name
-	$UpBox/UpDialogBox/UpTextMargin/UpText.percent_visible = 0
-	$UpBox/UpDialogBox/Tween.interpolate_property($UpBox/UpDialogBox/UpTextMargin/UpText, "percent_visible", 0,1,0.4, Tween.TRANS_SINE,Tween.EASE_IN)
+	UpTextBox.percent_visible = 0
+	$UpBox/UpDialogBox/Tween.interpolate_property(UpTextBox, "percent_visible", 0,1,0.4, Tween.TRANS_SINE,Tween.EASE_IN)
 	$UpBox/UpDialogBox/Tween.start()
 
 func down_text(): 
-	$DownBox.TweenComplete == false
-	$DownBox/DownDialogBox/DownPortraitMargin/DownPortraitTexture.texture = load(
+	DownPortrait.texture = load(
 	"res://GUI/Portraits/" + JsonData[line].name + JsonData[line].emotion + ".png")
-	$DownBox/DownDialogBox/DownTextMargin/DownText.bbcode_text = "[right]"+JsonData[line].text
+	DownTextBox.bbcode_text = "[right]"+JsonData[line].text
 	$DownBox/DownDialogBox/NinePatchRect2/DownNameMargin/DownName.bbcode_text = "[center]"+JsonData[line].name
-	$DownBox/DownDialogBox/DownTextMargin/DownText.percent_visible = 0
-	$DownBox/DownDialogBox/Tween.interpolate_property($DownBox/DownDialogBox/DownTextMargin/DownText, "percent_visible", 0,1,0.4, Tween.TRANS_SINE,Tween.EASE_IN)
+	DownTextBox.percent_visible = 0
+	$DownBox/DownDialogBox/Tween.interpolate_property(DownTextBox, "percent_visible", 0,1,0.4, Tween.TRANS_SINE,Tween.EASE_IN)
 	$DownBox/DownDialogBox/Tween.start()
 
 func showUpBox():
@@ -93,7 +82,7 @@ func UpBoxHandler(command):
 		if UpDialogBoxAppeared == false:
 			showUpBox()
 			yield($UpBox/UpAnimation,"animation_finished")
-	if UpDialogBoxAppeared == true and $UpBox.TweenComplete == true:
+	if UpDialogBoxAppeared == true:
 		#if $DownBox/DownDialogBox/DownTextMargin/DownText.percent_visible == 100:
 		up_text()
 	else:
@@ -107,7 +96,7 @@ func DownBoxHandler(command):
 		if DownDialogBoxAppeared == false:
 			showDownBox()
 			yield($DownBox/DownAnimation,"animation_finished")
-	if DownDialogBoxAppeared == true and $DownBox.TweenComplete == true:
+	if DownDialogBoxAppeared == true:
 		#if $UpBox/UpDialogBox/UpTextMargin/UpText.percent_visible == 100:
 		down_text()
 	else:
@@ -118,10 +107,10 @@ func DownBoxHandler(command):
 
 func ResetBoxes():
 	line = 0
+	$DownBox/DownDialogBox/DownTextMargin/DownText.percent_visible = 0
+	$UpBox/UpDialogBox/UpTextMargin/UpText.percent_visible = 0
 	get_node("UpBox").hide()
 	get_node("DownBox").hide()
 	DownDialogBoxAppeared = false
 	UpDialogBoxAppeared = false
-	$DownBox/DownDialogBox/DownTextMargin/DownText.percent_visible = 0
-	$UpBox/UpDialogBox/UpTextMargin/UpText.percent_visible = 0
-	load_json("test")
+	load_json("errorhandler")

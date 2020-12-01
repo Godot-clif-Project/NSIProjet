@@ -160,3 +160,4 @@ playback_speed = 1.25
 anims/Appear = SubResource( 1 )
 anims/Disappear = SubResource( 2 )
 [connection signal="tween_completed" from="UpDialogBox/Tween" to="." method="_on_Tween_tween_completed"]
+[connection signal="tween_started" from="UpDialogBox/Tween" to="." method="_on_Tween_tween_started"]

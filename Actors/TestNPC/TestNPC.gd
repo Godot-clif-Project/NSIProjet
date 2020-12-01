@@ -1,6 +1,6 @@
 extends Sprite
 
-
+var inZone = false
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -14,11 +14,15 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+func _process(delta):
+	if Input.is_action_just_pressed("Debug1") and inZone == true:
+		get_node("DialogueBox").load_json("test")
+		get_node("DialogueBox").proceed_dialog()
 
-
-func _on_Area2D_area_entered(area):
-	get_node("DialogueBox").load_json("test")
-	
+func _on_Area2D_area_entered(body: Node2D):
+	print("inthezone")
+	get_node("DialogueBox").jsonname = "test"
 
 func _on_Area2D_area_exited(area):
-	get_node("DialogueBox").jsonname = ""
+	print("outofthezone")
+	get_node("DialogueBox").jsonname = "errorhandler"
