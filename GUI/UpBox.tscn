@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://GUI/UpBoxScript.gd" type="Script" id=1]
 [ext_resource path="res://GUI/PlaceholderUI.tscn" type="PackedScene" id=2]
+[ext_resource path="res://GUI/Portraits/MC.tres" type="SpriteFrames" id=3]
 [ext_resource path="res://GUI/Dialog.tres" type="Theme" id=4]
 
 [sub_resource type="Animation" id=1]
@@ -107,20 +108,17 @@ __meta__ = {
 [node name="UpPortraitMargin" type="MarginContainer" parent="UpDialogBox"]
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -153.0
-margin_top = 10.0
-margin_right = -103.0
-margin_bottom = 60.0
-rect_scale = Vector2( 0.8, 0.8 )
+margin_left = -157.953
+margin_top = 5.82713
+margin_right = -109.953
+margin_bottom = 53.8271
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="UpPortraitTexture" type="TextureRect" parent="UpDialogBox/UpPortraitMargin"]
-margin_right = 50.0
-margin_bottom = 50.0
-expand = true
-stretch_mode = 1
+[node name="UpPortraitTexture" type="AnimatedSprite" parent="UpDialogBox/UpPortraitMargin"]
+position = Vector2( 25, 25 )
+frames = ExtResource( 3 )
 
 [node name="NinePatchRect" parent="UpDialogBox" instance=ExtResource( 2 )]
 margin_left = -156.0

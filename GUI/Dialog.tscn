@@ -20,7 +20,7 @@ __meta__ = {
 }
 
 [node name="UpBox" parent="." instance=ExtResource( 1 )]
+margin_top = -240.0
+margin_bottom = -60.0
 
 [node name="DownBox" parent="." instance=ExtResource( 2 )]
-margin_top = 160.0
-margin_bottom = 340.0

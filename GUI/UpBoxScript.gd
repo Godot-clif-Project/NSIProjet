@@ -1,6 +1,5 @@
 extends Control
 
-var UpTweenComplete = 1
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -8,8 +7,7 @@ var UpTweenComplete = 1
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
-
+	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
@@ -17,11 +15,13 @@ func _ready():
 
 
 func _on_Tween_tween_completed(object, key):
-	UpTweenComplete = 1
+	Global.UpTweenCompleted = 1
+	Global.emit_signal("StopUpTalkAnimation")
 #	print(UpTweenComplete)
 	 # Replace with function body.
 
 
 func _on_Tween_tween_started(object, key):
-	UpTweenComplete = 0
+	Global.UpTweenCompleted = 0
+	Global.emit_signal("UpTalkAnimation")
 #	print(UpTweenComplete)
