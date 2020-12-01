@@ -18,7 +18,7 @@ onready var DownPortrait = $DownBox/DownDialogBox/DownPortraitMargin/DownPortrai
 
 func load_json(jsonname):
 	var file = File.new();
-	file.open("res://GUI/"+jsonname+".json", file.READ);
+	file.open("res://GUI/Dialogues/"+jsonname+".json", file.READ);
 	JsonData = parse_json(file.get_as_text())
 	file.close()
 
@@ -33,7 +33,7 @@ func _ready():
 	Global.connect("DownTalkAnimation",self,"DownTalkAnimation")
 	Global.connect("StopDownTalkAnimation",self,"StopDownTalkAnimation")
 	
-	load_json(str(jsonname))
+	load_json("errorhandler")
 	
 	get_node("UpBox").hide()
 	get_node("DownBox").hide()

@@ -1,4 +1,4 @@
-extends Sprite
+extends AnimatedSprite
 
 export var jsonname = ""
 var inZone = false
@@ -16,7 +16,7 @@ func _process(delta):
 		
 func _on_Area2D_body_entered(body: Node2D):
 	if Global.WasInitialized == false:
-		jsonname = "test"
+		jsonname = "CoolDialogue"
 	inZone = true
 
 func _on_Area2D_body_exited(area):
