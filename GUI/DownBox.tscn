@@ -1,0 +1,171 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://GUI/PlaceholderUI.tscn" type="PackedScene" id=1]
+[ext_resource path="res://GUI/Dialog.tres" type="Theme" id=2]
+[ext_resource path="res://GUI/Name.tres" type="Theme" id=3]
+[ext_resource path="res://GUI/DownBoxScript.gd" type="Script" id=4]
+
+[sub_resource type="Animation" id=1]
+resource_name = "Appear"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 90 ), Vector2( 0, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("DownDialogBox/DownPortraitMargin:rect_position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 275, 0 ), Vector2( 275, 15 ) ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "Disappear"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, 120 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("DownDialogBox/DownPortraitMargin:rect_position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 275, 15 ), Vector2( 275, 0 ) ]
+}
+
+[node name="DownBox" type="Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -160.0
+margin_top = -90.0
+margin_right = 160.0
+margin_bottom = 90.0
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DownDialogBox" parent="." instance=ExtResource( 1 )]
+margin_top = -60.0
+margin_bottom = -6.10352e-05
+
+[node name="Tween" type="Tween" parent="DownDialogBox"]
+
+[node name="DownTextMargin" type="MarginContainer" parent="DownDialogBox"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -155.0
+margin_top = -50.445
+margin_right = 109.0
+margin_bottom = 9.555
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DownText" type="RichTextLabel" parent="DownDialogBox/DownTextMargin"]
+margin_right = 264.0
+margin_bottom = 60.0
+rect_clip_content = false
+theme = ExtResource( 2 )
+bbcode_enabled = true
+tab_size = 9
+fit_content_height = true
+scroll_active = false
+scroll_following = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DownPortraitMargin" type="MarginContainer" parent="DownDialogBox"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = 115.0
+margin_top = -44.9999
+margin_right = 165.0
+margin_bottom = 5.00002
+rect_scale = Vector2( 0.8, 0.8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DownPortraitTexture" type="TextureRect" parent="DownDialogBox/DownPortraitMargin"]
+margin_right = 50.0
+margin_bottom = 49.0
+stretch_mode = 1
+
+[node name="NinePatchRect2" parent="DownDialogBox" instance=ExtResource( 1 )]
+margin_left = 112.0
+margin_top = -74.9999
+margin_right = 158.0
+margin_bottom = -47.9999
+
+[node name="DownNameMargin" type="VBoxContainer" parent="DownDialogBox/NinePatchRect2"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -21.0
+margin_top = -21.0
+margin_right = 21.0
+margin_bottom = -3.0
+size_flags_horizontal = 0
+size_flags_vertical = 2
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DownName" type="RichTextLabel" parent="DownDialogBox/NinePatchRect2/DownNameMargin"]
+margin_right = 42.0
+margin_bottom = 18.0
+rect_clip_content = false
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 3 )
+bbcode_enabled = true
+tab_size = 1
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DownAnimation" type="AnimationPlayer" parent="."]
+anims/Appear = SubResource( 1 )
+anims/Disappear = SubResource( 2 )
+[connection signal="tween_completed" from="DownDialogBox/Tween" to="." method="_on_Tween_tween_completed"]

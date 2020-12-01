@@ -8,6 +8,17 @@ extends KinematicBody2D
 # TO DO:
 # Sync animation change with frame change
 
+# Add a bool for jumping, to control when you can control the gravity
+
+# When you exit a dash:
+#   if you hold jump, bounce
+#   if you hold dash, roll
+
+# Don't cancel the momentum when going down, instead, if it's higher than the
+# max fall speed (on context), apply friction (also applies for wall sliding)
+
+# implement dash cancel
+
 
 # Physics constants
 
@@ -55,6 +66,11 @@ const RUNNING_THRESHOLD = 10.0
 const FALLING_THRESHOLD = 0.0
 
 
+const DASH_DELAY = .04
+const DASH_SPEED = 430.0
+const DASH_DURATION = .1
+const DASH_EXIT_SPEED = 150
+
 var in_control_x: bool = true
 var in_control_y: bool = true
 var no_control_x_timer: float
@@ -76,6 +92,15 @@ var wallslide_fcounter: int
 var last_ground_y: int
 var last_wall_normal: int
 
+var dashing_allowed: bool
+var dashing_refreshed: bool
+var dash_direction: Vector2
+var dash_cancel_timer: float
+var dash_waiting: bool
+var dashing: bool
+var dash_timer: float
+var facing: int
+
 onready var animation_player = $AnimationPlayer
 onready var anim_container = $SpriteContainer
 onready var anim_idle = $SpriteContainer/SpriteIdle
@@ -89,6 +114,8 @@ onready var anim_list = [anim_idle, anim_run, anim_jump, anim_hangtime, anim_fal
 
 func _ready():
 	set_anim(anim_idle, "Idle")
+	dashing_allowed = true
+	dashing_refreshed = true
 
 
 func _physics_process(delta):
@@ -100,6 +127,8 @@ func _physics_process(delta):
 		int(Input.is_action_pressed("Down")) -
 		int(Input.is_action_pressed("Up"))
 	)
+	if direction_x == sign(velocity.x):
+		facing = direction_x
 	
 	if not in_control_x:
 		no_control_x_timer -= delta
@@ -199,17 +228,17 @@ func _physics_process(delta):
 	
 	# Jump
 	
-	if in_control_y:
-		if Input.is_action_just_pressed("Accept"):
-			jump_timer = JUMP_TIME
-		if grounded:
-			coyote_timer = COYOTE_TIME
-			last_ground_y = position.y
-		
+	if Input.is_action_just_pressed("Accept"):
+		jump_timer = JUMP_TIME
+	if grounded:
+		coyote_timer = COYOTE_TIME
+		last_ground_y = position.y
+	
+	if in_control_y:		
 		if jump_timer and coyote_timer:
 			jump_timer = 0
 			coyote_timer = 0
-			position.y = last_ground_y
+			move_and_collide(Vector2(0, last_ground_y - position.y))
 			velocity.y = JUMP_FORCE
 			if velocity.x < JUMP_SPBOOST_MAX:
 				velocity.x *= JUMP_SPBOOST_MULTIPLIER
@@ -240,16 +269,50 @@ func _physics_process(delta):
 					WALLJUMP_PUSH_NEUTRAL) * wall_normal
 				in_control_x = false
 				in_control_y = false
-				no_control_x_timer = (
-					WALLJUMP_CONTROL_REMOVED_TIME if direction_x
-					else WALLJUMP_CONTROL_REMOVED_TIME_NEUTRAL
-				)
-				no_control_y_timer = (
-					WALLJUMP_CONTROL_REMOVED_TIME if direction_x
-					else WALLJUMP_CONTROL_REMOVED_TIME_NEUTRAL
-				)
+				if direction_x:
+					no_control_x_timer = WALLJUMP_CONTROL_REMOVED_TIME
+					no_control_y_timer = WALLJUMP_CONTROL_REMOVED_TIME
+					facing = int(wall_normal)
+				else:
+					no_control_x_timer = WALLJUMP_CONTROL_REMOVED_TIME_NEUTRAL
+					no_control_y_timer = WALLJUMP_CONTROL_REMOVED_TIME_NEUTRAL
 				grounded = false
 				on_jump()
+	
+	# Dash
+	
+	if grounded and dashing_allowed:
+		dashing_refreshed = true
+	
+	if Input.is_action_just_pressed("Cancel") and dashing_allowed and dashing_refreshed:
+		dashing_allowed = false
+		dashing_refreshed = false
+		dash_cancel_timer = DASH_DELAY
+		dash_waiting = true
+	if dash_waiting:
+		dash_cancel_timer -= delta
+		if dash_cancel_timer <= 0:
+			dash_waiting = false
+			dashing = true
+			apply_gravity = false
+			in_control_x = false
+			in_control_y = false
+			coyote_timer = 0
+			no_gravity_timer = DASH_DURATION
+			no_control_x_timer = DASH_DURATION
+			no_control_y_timer = DASH_DURATION
+			dash_timer = DASH_DURATION
+			dash_direction = Vector2(direction_x, direction_y).normalized()
+			if dash_direction == Vector2.ZERO:
+				dash_direction = Vector2(facing, 0)
+			velocity = dash_direction * DASH_SPEED
+	if dashing:
+		dash_timer -= delta
+		if dash_timer <= 0:
+			dashing = false
+			dashing_allowed = true
+			velocity.x = min(abs(velocity.x), DASH_EXIT_SPEED) * sign(velocity.x)
+			velocity.y = min(abs(velocity.y), DASH_EXIT_SPEED) * sign(velocity.y)
 	
 	# Apply velocity
 	
@@ -285,11 +348,10 @@ func _physics_process(delta):
 		if velocity.y >= FALLING_THRESHOLD:
 			set_anim(anim_fall, "Fall")
 	
-	
 	if anim_container.scale.x == -1:
-		if velocity.x > 0:
+		if facing > 0:
 			anim_container.scale.x = 1
-	elif velocity.x < 0:
+	elif facing < 0:
 		anim_container.scale.x = -1
 
 
