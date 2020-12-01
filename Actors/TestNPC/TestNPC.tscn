@@ -14,7 +14,7 @@ font_data = ExtResource( 3 )
 default_font = SubResource( 1 )
 
 [sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 18.3431, 19.9712 )
+extents = Vector2( 18.7061, 10 )
 
 [node name="TestNPC" type="Sprite"]
 texture = ExtResource( 1 )
@@ -35,10 +35,9 @@ __meta__ = {
 }
 
 [node name="Area2D" type="Area2D" parent="."]
-input_pickable = false
-collision_layer = 32
+collision_layer = 32768
+collision_mask = 32
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource( 3 )
-[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
-[connection signal="body_exited" from="Area2D" to="." method="_on_Area2D_body_exited"]
+[connection signal="area_entered" from="Area2D" to="." method="_on_Area2D_area_entered"]
