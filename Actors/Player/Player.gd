@@ -1,14 +1,9 @@
 extends KinematicBody2D
 
 
-# Might want to use polynomial functions for the physics - at least on the X axis
-# Easier to timestep, easier to control
-# But: easy to run into problems when the speed is too high
-
 # TO DO:
-# Sync animation change with frame change
 
-# Add a bool for jumping, to control when you can control the gravity
+# Sync animation change with frame change
 
 # When you exit a dash:
 #   if you hold jump, bounce
@@ -19,6 +14,8 @@ extends KinematicBody2D
 
 # implement dash cancel
 
+
+export var facing_left: bool
 
 # Physics constants
 
@@ -91,6 +88,7 @@ var wallsliding: bool
 var wallslide_fcounter: int
 var last_ground_y: int
 var last_wall_normal: int
+var jumping: bool
 
 var dashing_allowed: bool
 var dashing_refreshed: bool
@@ -116,6 +114,7 @@ func _ready():
 	set_anim(anim_idle, "Idle")
 	dashing_allowed = true
 	dashing_refreshed = true
+	facing = -1 if facing_left else 1
 
 
 func _physics_process(delta):
@@ -127,7 +126,7 @@ func _physics_process(delta):
 		int(Input.is_action_pressed("Down")) -
 		int(Input.is_action_pressed("Up"))
 	)
-	if direction_x == sign(velocity.x):
+	if direction_x == sign(velocity.x) and direction_x != 0:
 		facing = direction_x
 	
 	if not in_control_x:
@@ -157,8 +156,14 @@ func _physics_process(delta):
 	elif grounded:
 		grounded = false
 	
+	if grounded:
+		jumping = false
+	if grounded and dashing_allowed:
+		dashing_refreshed = true
+	
 	# Replace this mess (and also in the walljump code) with a "facing" variable
-	# This will also make animations easier to implement 
+	# This will also make animations easier to implement
+	# Note from the future: lmao no that didn't help you're still stuck with this mess
 	if is_on_wall():
 		if test_move(
 			transform,
@@ -212,14 +217,16 @@ func _physics_process(delta):
 			current_gravity *= FASTFALL_MULTIPLIER
 		
 		if not grounded and in_control_y:
-			if (not wallsliding) or direction_y == 1 or velocity.y < 0:
+			if wallsliding and not velocity.y < 0:
+				current_gravity = WALLSLIDE_GRAVITY
+			elif jumping:
 				if Input.is_action_pressed("Accept"):
 					if GRAVMOD_BIGLEAP_BEGIN < velocity.y and velocity.y < GRAVMOD_BIGLEAP_END:
 						current_gravity *= GRAVMOD_BIGLEAP_MULTIPLIER
 				elif GRAVMOD_SHORTHOP_BEGIN < velocity.y and velocity.y < GRAVMOD_SHORTHOP_END:
 					current_gravity *= GRAVMOD_SHORTHOP_MULTIPLIER
-			else:
-				current_gravity = WALLSLIDE_GRAVITY
+			if direction_y == 1 and velocity.y >= FASTFALL_BEGIN:
+				current_gravity *= FASTFALL_MULTIPLIER
 		
 		velocity.y = min(
 			velocity.y + current_gravity * delta,
@@ -281,9 +288,6 @@ func _physics_process(delta):
 	
 	# Dash
 	
-	if grounded and dashing_allowed:
-		dashing_refreshed = true
-	
 	if Input.is_action_just_pressed("Cancel") and dashing_allowed and dashing_refreshed:
 		dashing_allowed = false
 		dashing_refreshed = false
@@ -306,13 +310,15 @@ func _physics_process(delta):
 			if dash_direction == Vector2.ZERO:
 				dash_direction = Vector2(facing, 0)
 			velocity = dash_direction * DASH_SPEED
+			on_dash()
 	if dashing:
 		dash_timer -= delta
 		if dash_timer <= 0:
 			dashing = false
 			dashing_allowed = true
-			velocity.x = min(abs(velocity.x), DASH_EXIT_SPEED) * sign(velocity.x)
-			velocity.y = min(abs(velocity.y), DASH_EXIT_SPEED) * sign(velocity.y)
+			var exit_vel = (dash_direction * DASH_EXIT_SPEED).abs()
+			velocity.x = min(abs(velocity.x), exit_vel.x) * sign(velocity.x)
+			velocity.y = min(abs(velocity.y), exit_vel.y) * sign(velocity.y)
 	
 	# Apply velocity
 	
@@ -338,13 +344,13 @@ func _physics_process(delta):
 	# Animations
 	
 	if grounded:
-		if abs(velocity.x) > RUNNING_THRESHOLD and not is_on_wall():
+		if abs(velocity.x) > RUNNING_THRESHOLD and not wallsliding:
 			set_anim(anim_run, "Run")
 		else:
 			set_anim(anim_idle, "Idle")
 	else:
 		if anim_current == anim_run or anim_current == anim_idle:
-			set_anim(anim_idle, "Idle")
+			set_anim(anim_idle, "Hangtime")
 		if velocity.y >= FALLING_THRESHOLD:
 			set_anim(anim_fall, "Fall")
 	
@@ -372,4 +378,9 @@ func animationplayer_set_hangtime():
 
 
 func on_jump():
+	jumping = true
 	set_anim(anim_jump, "Jump")
+
+
+func on_dash():
+	jumping = false
