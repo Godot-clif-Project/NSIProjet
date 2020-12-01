@@ -57,3 +57,6 @@ collision_layer = 33
 current = true
 
 [node name="DialogBox" parent="." instance=ExtResource( 4 )]
+margin_left = -159.0
+margin_right = 161.0
+[connection signal="StartDialog" from="TestNPC" to="DialogBox" method="_on_TestNPC_StartDialog" binds= [ "jsonname" ]]

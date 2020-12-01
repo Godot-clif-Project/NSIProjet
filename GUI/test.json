@@ -3,7 +3,7 @@
    "ID": "TestLevel",
    "command": 1,
    "name": "test1",
-   "text": "キミを見てるといつもハートDOKI☆DOKI",
+   "text": "welcome to the new test! (1)",
    "emotion": "neutral",
    "position": 0
  },
@@ -11,7 +11,7 @@
    "ID": "TestLevel",
    "command": 0,
    "name": "test1",
-   "text": "揺れる思いはマシュマロみたいにふわ☆ふわ",
+   "text": "I never wondered if any of the text was shown properly.. (2)",
    "emotion": "happy",
    "position": 0
  },
@@ -19,7 +19,7 @@
    "ID": "TestLevel",
    "command": 0,
    "name": "test1",
-   "text": "いつもがんばる",
+   "text": "Like. What if it was wrong. (3)",
    "emotion": "neutral",
    "position": 0
  },
@@ -27,7 +27,7 @@
    "ID": "TestLevel",
    "command": 1,
    "name": "test2",
-   "text": "[wave amp=50 freq=2][rainbow freq=0.2 sat=10 val=10]【いつもがんばる】[/rainbow][/wave]",
+   "text": "[wave amp=50 freq=2][rainbow freq=0.2 sat=10 val=20]broo don't worryyy (4)[/rainbow][/wave]",
    "emotion": "neutral",
    "position": 1
  },
@@ -35,7 +35,7 @@
    "ID": "TestLevel",
    "command": 0,
    "name": "test1",
-   "text": "キミの横顔",
+   "text": "what do you mean (5)",
    "emotion": "neutral",
    "position": 0
  },
@@ -43,7 +43,7 @@
    "ID": "TestLevel",
    "command": 0,
    "name": "test2",
-   "text": "[wave amp=50 freq=2][rainbow freq=0.2 sat=10 val=20]【キミの横顔】[/rainbow][/wave]",
+   "text": "[wave amp=50 freq=2][rainbow freq=0.2 sat=10 val=20]even if it's wrong it's going to be fixed (6)[/rainbow][/wave]",
    "emotion": "happy",
    "position": 1
  },
@@ -51,7 +51,7 @@
    "ID": "TestLevel",
    "command": 0,
    "name": "test1",
-   "text": "ずっと見てても気づかないよね",
+   "text": "yeah but that takes a while (7)",
    "emotion": "happy",
    "position": 0
  },
@@ -59,7 +59,7 @@
    "ID": "TestLevel",
    "command": 0,
    "name": "test1",
-   "text": "夢の中なら",
+   "text": "and I'm kinda lazy (8)",
    "emotion": "happy",
    "position": 0
  },
@@ -67,7 +67,7 @@
    "ID": "TestLevel",
    "command": 0,
    "name": "test2",
-   "text": "[wave amp=50 freq=2][rainbow freq=0.2 sat=10 val=20]【夢の中なら】[/rainbow][/wave]",
+   "text": "chill bro (9)",
    "emotion": "sad",
    "position": 1
  },
@@ -75,7 +75,7 @@
    "ID": "TestLevel",
    "command": 0,
    "name": "test1",
-   "text": "二人の距離縮められるのにな",
+   "text": "[shake rate=5 level=19]no!! (10)[/shake]",
    "emotion": "sad",
    "position": 0
  }

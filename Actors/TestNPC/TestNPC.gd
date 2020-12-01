@@ -1,28 +1,25 @@
 extends Sprite
 
+export var jsonname = ""
 var inZone = false
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+var WasInitialized = false
+signal StartDialog(jsonname)
 
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
 func _process(delta):
-	if Input.is_action_just_pressed("Debug1") and inZone == true:
-		get_node("DialogueBox").load_json("test")
-		get_node("DialogueBox").proceed_dialog()
+	if Input.is_action_just_pressed("Debug1") and inZone == true and WasInitialized == false:
+		Global.WasInitialized == true
+		Global.emit_signal("StartDialog",jsonname)
+	if Input.is_action_just_pressed("Debug4"):
+		print("This will cause issues if the dialog was already open.")
+		print("In the future, force resetting a dialog will force close it via ResetBoxes().")
+		Global.WasInitialized == false
+		
+func _on_Area2D_body_entered(body: Node2D):
+	if Global.WasInitialized == false:
+		jsonname = "test"
+	inZone = true
 
-func _on_Area2D_area_entered(body: Node2D):
-	print("inthezone")
-	get_node("DialogueBox").jsonname = "test"
+func _on_Area2D_body_exited(area):
+	jsonname = "errorhandler"
+	inZone = false
 
-func _on_Area2D_area_exited(area):
-	print("outofthezone")
-	get_node("DialogueBox").jsonname = "errorhandler"
