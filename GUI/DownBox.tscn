@@ -102,7 +102,6 @@ __meta__ = {
 
 [node name="DownPortraitTexture" type="AnimatedSprite" parent="DownDialogBox/DownPortraitMargin"]
 position = Vector2( 25, 25 )
-scale = Vector2( 1, 1 )
 frames = ExtResource( 3 )
 
 [node name="NinePatchRect2" parent="DownDialogBox" instance=ExtResource( 1 )]
@@ -141,3 +140,4 @@ valign = 1
 anims/Appear = SubResource( 1 )
 anims/Disappear = SubResource( 2 )
 [connection signal="tween_completed" from="DownDialogBox/Tween" to="." method="_on_Tween_tween_completed"]
+[connection signal="tween_started" from="DownDialogBox/Tween" to="." method="_on_Tween_tween_started"]

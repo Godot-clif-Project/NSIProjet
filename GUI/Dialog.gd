@@ -26,8 +26,10 @@ func _init():
 	pass
 func _ready():
 	Global.connect("StartDialog",self,"StartDialogCode")
+	
 	Global.connect("UpTalkAnimation",self,"UpTalkAnimation")
 	Global.connect("StopUpTalkAnimation",self,"StopUpTalkAnimation")
+	
 	Global.connect("DownTalkAnimation",self,"DownTalkAnimation")
 	Global.connect("StopDownTalkAnimation",self,"StopDownTalkAnimation")
 	

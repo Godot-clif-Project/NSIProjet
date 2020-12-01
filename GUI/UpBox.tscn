@@ -30,7 +30,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 7, 10 ), Vector2( 7, 10 ) ]
+"values": [ Vector2( 2, 6 ), Vector2( 2, 6 ) ]
 }
 
 [sub_resource type="Animation" id=2]
@@ -65,9 +65,8 @@ tracks/1/keys = {
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -160.0
-margin_top = -250.0
 margin_right = 160.0
-margin_bottom = -70.0
+margin_bottom = 180.0
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -108,10 +107,10 @@ __meta__ = {
 [node name="UpPortraitMargin" type="MarginContainer" parent="UpDialogBox"]
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -157.953
-margin_top = 5.82713
-margin_right = -109.953
-margin_bottom = 53.8271
+margin_left = -158.0
+margin_top = 6.0
+margin_right = -110.0
+margin_bottom = 54.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
