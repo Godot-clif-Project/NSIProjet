@@ -12,7 +12,11 @@ extends KinematicBody2D
 # Don't cancel the momentum when going down, instead, if it's higher than the
 # max fall speed (on context), apply friction (also applies for wall sliding)
 
-# implement dash cancel
+# if the up velocity is too high, don't move from that velocity, but still keep it
+# in memory, move from a min()
+
+# Make it easier to regain the dash when on the ground
+# (to be able to extend roll etc. even when coyote jumping)
 
 
 export var facing_left: bool
@@ -64,9 +68,9 @@ const FALLING_THRESHOLD = 0.0
 
 
 const DASH_DELAY = .04
-const DASH_SPEED = 400.0
+const DASH_SPEED = 380.0
 const DASH_DURATION = .12
-const DASH_EXIT_SPEED = 150
+const DASH_EXIT_SPEED = 130.0
 
 var in_control_x: bool = true
 var in_control_y: bool = true
@@ -86,7 +90,7 @@ var coyote_timer: float
 var grounded: bool
 var wallsliding: bool
 var wallslide_fcounter: int
-var last_ground_y: int
+var last_ground_y: float
 var last_wall_normal: int
 var jumping: bool
 
@@ -153,6 +157,8 @@ func _physics_process(delta):
 			if direction_x == 0 and speed_excess > 0:
 				velocity.x -= sign(velocity.x) * min(STICKY_LANDING_FORCE, speed_excess)
 			grounded = true
+	elif test_move(transform, Vector2(0, get_safe_margin())):
+		grounded = true
 	elif grounded:
 		grounded = false
 	
@@ -247,7 +253,7 @@ func _physics_process(delta):
 			coyote_timer = 0
 			move_and_collide(Vector2(0, last_ground_y - position.y))
 			velocity.y = JUMP_FORCE
-			if velocity.x < JUMP_SPBOOST_MAX:
+			if abs(velocity.x) < JUMP_SPBOOST_MAX:
 				velocity.x *= JUMP_SPBOOST_MULTIPLIER
 				velocity.x = clamp(velocity.x, -JUMP_SPBOOST_MAX, JUMP_SPBOOST_MAX)
 			jump_timer = 0
@@ -380,6 +386,8 @@ func animationplayer_set_hangtime():
 func on_jump():
 	jumping = true
 	set_anim(anim_jump, "Jump")
+	dashing = false
+	dashing_allowed = true
 
 
 func on_dash():
