@@ -18,4 +18,6 @@ func _ready():
 
 func _on_Tween_tween_completed(object, key):
 	TweenComplete = true
-	 # Replace with function body.
+
+func _on_Tween_tween_started(object, key):
+	TweenComplete = false

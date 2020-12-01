@@ -1,6 +1,6 @@
 extends Control
 
-var TweenComplete = true
+var UpTweenComplete = 1
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -17,5 +17,11 @@ func _ready():
 
 
 func _on_Tween_tween_completed(object, key):
-	TweenComplete = true
+	UpTweenComplete = 1
+#	print(UpTweenComplete)
 	 # Replace with function body.
+
+
+func _on_Tween_tween_started(object, key):
+	UpTweenComplete = 0
+#	print(UpTweenComplete)
