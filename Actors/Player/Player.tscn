@@ -10,7 +10,7 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 3.9, 7.9 )
 
-[sub_resource type="Animation" id=2]
+[sub_resource type="Animation" id=6]
 resource_name = "Fall"
 length = 0.45
 step = 0.05
@@ -27,7 +27,8 @@ tracks/0/keys = {
 "values": [ 0, 1, 2 ]
 }
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=2]
+resource_name = "Hangtime"
 length = 0.3
 step = 0.05
 tracks/0/type = "value"
@@ -43,7 +44,7 @@ tracks/0/keys = {
 "values": [ 0, 1 ]
 }
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=3]
 length = 0.9
 loop = true
 step = 0.05
@@ -60,7 +61,8 @@ tracks/0/keys = {
 "values": [ 0, 2, 3, 5 ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=4]
+resource_name = "Jump"
 length = 0.41
 tracks/0/type = "value"
 tracks/0/path = NodePath("SpriteContainer/SpriteJump:frame")
@@ -89,7 +91,7 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=5]
 length = 0.4
 loop = true
 step = 0.05
@@ -107,8 +109,7 @@ tracks/0/keys = {
 }
 
 [node name="Player" type="KinematicBody2D"]
-collision_layer = 33
-collision_mask = 33792
+collision_mask = 1024
 script = ExtResource( 2 )
 
 [node name="SpriteContainer" type="Node2D" parent="."]
@@ -147,8 +148,8 @@ hframes = 3
 shape = SubResource( 1 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Fall = SubResource( 2 )
-anims/Hangtime = SubResource( 3 )
-anims/Idle = SubResource( 4 )
-anims/Jump = SubResource( 5 )
-anims/Run = SubResource( 6 )
+anims/Fall = SubResource( 6 )
+anims/Hangtime = SubResource( 2 )
+anims/Idle = SubResource( 3 )
+anims/Jump = SubResource( 4 )
+anims/Run = SubResource( 5 )
