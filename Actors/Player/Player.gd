@@ -5,6 +5,11 @@ extends KinematicBody2D
 # Easier to timestep, easier to control
 # But: easy to run into problems when the speed is too high
 
+# TO DO:
+# Sync animation change with frame change
+
+
+# Physics constants
 
 const RUN_SPEED_MAX = 90.0
 const RUN_ACC = 380.0
@@ -44,7 +49,11 @@ const AIR_FRIC_TEMP = .83
 const CORRECTION_FRIC_TEMP = .95
 const CORRECTION_FRIC_ATTENUATED_TEMP = .975
 
+# Animation constants
+
 const RUNNING_THRESHOLD = 10.0
+const FALLING_THRESHOLD = 0.0
+
 
 var in_control_x: bool = true
 var in_control_y: bool = true
@@ -67,14 +76,16 @@ var wallslide_fcounter: int
 var last_ground_y: int
 var last_wall_normal: int
 
-onready var anim_idle = $SpriteIdle
-onready var anim_run = $SpriteRun
 onready var animation_player = $AnimationPlayer
-onready var anim_jump = $SpriteJump
-onready var anim_hangtime = $SpriteHangtime
+onready var anim_container = $SpriteContainer
+onready var anim_idle = $SpriteContainer/SpriteIdle
+onready var anim_run = $SpriteContainer/SpriteRun
+onready var anim_jump = $SpriteContainer/SpriteJump
+onready var anim_hangtime = $SpriteContainer/SpriteHangtime
+onready var anim_fall = $SpriteContainer/SpriteFall
 
 onready var anim_current
-onready var anim_list = [anim_idle, anim_run, anim_jump, anim_hangtime]
+onready var anim_list = [anim_idle, anim_run, anim_jump, anim_hangtime, anim_fall]
 
 func _ready():
 	set_anim(anim_idle, "Idle")
@@ -268,12 +279,18 @@ func _physics_process(delta):
 			set_anim(anim_run, "Run")
 		else:
 			set_anim(anim_idle, "Idle")
+	else:
+		if anim_current == anim_run or anim_current == anim_idle:
+			set_anim(anim_idle, "Idle")
+		if velocity.y >= FALLING_THRESHOLD:
+			set_anim(anim_fall, "Fall")
 	
-	if anim_current.flip_h:
+	
+	if anim_container.scale.x == -1:
 		if velocity.x > 0:
-			anim_current.flip_h = false
+			anim_container.scale.x = 1
 	elif velocity.x < 0:
-		anim_current.flip_h = true
+		anim_container.scale.x = -1
 
 
 func set_anim(new_anim: Sprite, anim: String):

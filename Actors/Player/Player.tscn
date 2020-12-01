@@ -1,20 +1,38 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Aseprite/Main character/plantchar_idle.png" type="Texture" id=1]
 [ext_resource path="res://Actors/Player/Player.gd" type="Script" id=2]
 [ext_resource path="res://Aseprite/Main character/plantchar_run.png" type="Texture" id=3]
 [ext_resource path="res://Aseprite/Main character/plantchar_jump.png" type="Texture" id=4]
 [ext_resource path="res://Aseprite/Main character/plantchar_hangtime.png" type="Texture" id=5]
+[ext_resource path="res://Aseprite/Main character/plantchar_fall.png" type="Texture" id=6]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 3.9, 7.9 )
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=6]
+resource_name = "Fall"
+length = 0.45
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("SpriteContainer/SpriteFall:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2 ]
+}
+
+[sub_resource type="Animation" id=2]
 resource_name = "Hangtime"
 length = 0.3
 step = 0.05
 tracks/0/type = "value"
-tracks/0/path = NodePath("SpriteHangtime:frame")
+tracks/0/path = NodePath("SpriteContainer/SpriteHangtime:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -26,13 +44,12 @@ tracks/0/keys = {
 "values": [ 0, 1 ]
 }
 
-[sub_resource type="Animation" id=2]
-resource_name = "Idle"
+[sub_resource type="Animation" id=3]
 length = 0.9
 loop = true
 step = 0.05
 tracks/0/type = "value"
-tracks/0/path = NodePath("SpriteIdle:frame")
+tracks/0/path = NodePath("SpriteContainer/SpriteIdle:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -48,7 +65,7 @@ tracks/0/keys = {
 resource_name = "Jump"
 length = 0.41
 tracks/0/type = "value"
-tracks/0/path = NodePath("SpriteJump:frame")
+tracks/0/path = NodePath("SpriteContainer/SpriteJump:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -74,13 +91,12 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=3]
-resource_name = "Run"
+[sub_resource type="Animation" id=5]
 length = 0.4
 loop = true
 step = 0.05
 tracks/0/type = "value"
-tracks/0/path = NodePath("SpriteRun:frame")
+tracks/0/path = NodePath("SpriteContainer/SpriteRun:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -96,36 +112,44 @@ tracks/0/keys = {
 collision_mask = 1024
 script = ExtResource( 2 )
 
-[node name="SpriteIdle" type="Sprite" parent="."]
-visible = false
+[node name="SpriteContainer" type="Node2D" parent="."]
+
+[node name="SpriteIdle" type="Sprite" parent="SpriteContainer"]
 texture = ExtResource( 1 )
 offset = Vector2( 0, -2.5 )
 hframes = 6
 
-[node name="SpriteRun" type="Sprite" parent="."]
+[node name="SpriteRun" type="Sprite" parent="SpriteContainer"]
 visible = false
 texture = ExtResource( 3 )
 offset = Vector2( 0, -2.5 )
 hframes = 4
 
-[node name="SpriteJump" type="Sprite" parent="."]
+[node name="SpriteJump" type="Sprite" parent="SpriteContainer"]
 visible = false
 texture = ExtResource( 4 )
 offset = Vector2( 0, -2.5 )
 hframes = 4
 frame = 3
 
-[node name="SpriteHangtime" type="Sprite" parent="."]
+[node name="SpriteHangtime" type="Sprite" parent="SpriteContainer"]
 visible = false
 texture = ExtResource( 5 )
 offset = Vector2( 0, -2.5 )
 hframes = 2
 
+[node name="SpriteFall" type="Sprite" parent="SpriteContainer"]
+visible = false
+texture = ExtResource( 6 )
+offset = Vector2( 0, -2.5 )
+hframes = 3
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Hangtime = SubResource( 5 )
-anims/Idle = SubResource( 2 )
+anims/Fall = SubResource( 6 )
+anims/Hangtime = SubResource( 2 )
+anims/Idle = SubResource( 3 )
 anims/Jump = SubResource( 4 )
-anims/Run = SubResource( 3 )
+anims/Run = SubResource( 5 )
