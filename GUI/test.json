@@ -75,7 +75,7 @@
    "ID": "TestLevel",
    "command": 0,
    "name": "test1",
-   "text": "[shake rate=5 level=19]no!! (10)[/shake]",
+   "text": "[shake rate=5 level=10]no!! (10)[/shake]",
    "emotion": "sad",
    "position": 0
  }
