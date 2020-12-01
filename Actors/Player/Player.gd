@@ -7,6 +7,13 @@ extends KinematicBody2D
 
 # Add a bool for jumping, to control when you can control the gravity
 
+# When you exit a dash:
+#   if you hold jump, bounce
+#   if you hold dash, roll
+
+# Don't cancel the momentum when going down, instead, if it's higher than the
+# max fall speed (on context), apply friction (also applies for wall sliding)
+
 
 const RUN_SPEED_MAX = 90.0
 const RUN_ACC = 380.0
@@ -213,11 +220,12 @@ func _physics_process(delta):
 	if grounded:
 		coyote_timer = COYOTE_TIME
 		last_ground_y = position.y
+	
 	if in_control_y:		
 		if jump_timer and coyote_timer:
 			jump_timer = 0
 			coyote_timer = 0
-			position.y = last_ground_y
+			move_and_collide(Vector2(0, last_ground_y - position.y))
 			velocity.y = JUMP_FORCE
 			if velocity.x < JUMP_SPBOOST_MAX:
 				velocity.x *= JUMP_SPBOOST_MULTIPLIER
@@ -276,6 +284,7 @@ func _physics_process(delta):
 			apply_gravity = false
 			in_control_x = false
 			in_control_y = false
+			coyote_timer = 0
 			no_gravity_timer = DASH_DURATION
 			no_control_x_timer = DASH_DURATION
 			no_control_y_timer = DASH_DURATION
