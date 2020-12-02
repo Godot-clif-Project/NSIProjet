@@ -15,9 +15,6 @@ extends KinematicBody2D
 # if the up velocity is too high, don't move from that velocity, but still keep it
 # in memory, move from a min()
 
-# Make it easier to regain the dash when on the ground
-# (to be able to extend roll etc. even when coyote jumping)
-
 
 export var facing_left: bool
 
@@ -51,6 +48,7 @@ const FALL_SPEED = -JUMP_FORCE * 1.15
 const FASTFALL_SPEED = -JUMP_FORCE * 1.5
 const FASTFALL_MULTIPLIER = 1.2
 const FASTFALL_BEGIN = 0
+const JUMP_SPEED_MAX = FASTFALL_SPEED
 const WALLSLIDE_MIN_SPEED = 30.0
 const WALLSLIDE_GRAVITY = 400.0
 const WALLSLIDE_MAX_SPEED = 50.0
@@ -59,18 +57,24 @@ const WALLSLIDE_FCOUNT = 2
 const RUN_FRIC_TEMP = .72
 const AIR_FRIC_TEMP = .83
 const CORRECTION_FRIC_TEMP = .95
-const CORRECTION_FRIC_ATTENUATED_TEMP = .975
+const CORRECTION_FRIC_ATTENUATED_TEMP = .97
+const CORRECTION_FRIC_ATTENUATED_AIR_TEMP = .985
+const AIR_Y_FRICTION_TEMP = CORRECTION_FRIC_TEMP
 
 # Animation constants
 
 const RUNNING_THRESHOLD = 10.0
 const FALLING_THRESHOLD = 0.0
 
+# Dash constants
 
-const DASH_DELAY = .04
-const DASH_SPEED = 380.0
-const DASH_DURATION = .12
+const DASH_DELAY = .05
+const DASH_PRE_VEL_MULTIPLIER = 0
+const DASH_SPEED = 320.0
+const DASH_DURATION = .15
 const DASH_EXIT_SPEED = 130.0
+const DASH_DIAG_X_EXIT_SPEED = 200.0
+const DASH_DIAG_Y_EXIT_SPEED = 250.0
 
 var in_control_x: bool = true
 var in_control_y: bool = true
@@ -199,17 +203,22 @@ func _physics_process(delta):
 			elif sign(direction_x) == sign(velocity.x):
 				velocity.x -= min(
 					abs(velocity.x) - RUN_SPEED_MAX,
-					abs(velocity.x) * (1 - CORRECTION_FRIC_ATTENUATED_TEMP)
+					abs(velocity.x) * (1 - (
+						CORRECTION_FRIC_ATTENUATED_TEMP if grounded else
+						CORRECTION_FRIC_ATTENUATED_AIR_TEMP
+					))
 				) * sign(velocity.x)
 			else:
 				velocity.x -= min(
 					abs(velocity.x) - RUN_SPEED_MAX,
-					abs(velocity.x) * (1 - CORRECTION_FRIC_TEMP * AIR_FRIC_TEMP)
+					abs(velocity.x) * (1 - CORRECTION_FRIC_TEMP * (
+						RUN_FRIC_TEMP if grounded else AIR_FRIC_TEMP
+					))
 				) * sign(velocity.x)
 		else:
 			if (not direction_x) or direction_x * velocity.x < 0:
 				# will have to figure out how to timestep this later
-				velocity.x *= RUN_FRIC_TEMP if is_on_floor() else AIR_FRIC_TEMP
+				velocity.x *= RUN_FRIC_TEMP if grounded else AIR_FRIC_TEMP
 			if direction_x:
 				velocity.x += (RUN_ACC if grounded else RUN_AIR_ACC) * delta * direction_x
 				velocity.x = clamp(velocity.x, -RUN_SPEED_MAX, RUN_SPEED_MAX)
@@ -222,22 +231,27 @@ func _physics_process(delta):
 		if direction_y == 1 and velocity.y > FASTFALL_BEGIN:
 			current_gravity *= FASTFALL_MULTIPLIER
 		
-		if not grounded and in_control_y:
-			if wallsliding and not velocity.y < 0:
-				current_gravity = WALLSLIDE_GRAVITY
-			elif jumping:
-				if Input.is_action_pressed("Accept"):
-					if GRAVMOD_BIGLEAP_BEGIN < velocity.y and velocity.y < GRAVMOD_BIGLEAP_END:
-						current_gravity *= GRAVMOD_BIGLEAP_MULTIPLIER
-				elif GRAVMOD_SHORTHOP_BEGIN < velocity.y and velocity.y < GRAVMOD_SHORTHOP_END:
-					current_gravity *= GRAVMOD_SHORTHOP_MULTIPLIER
-			if direction_y == 1 and velocity.y >= FASTFALL_BEGIN:
-				current_gravity *= FASTFALL_MULTIPLIER
+		var max_fall_speed = FASTFALL_SPEED if direction_y == 1 else FALL_SPEED
 		
-		velocity.y = min(
-			velocity.y + current_gravity * delta,
-			FASTFALL_SPEED if direction_y == 1 else FALL_SPEED
-		)
+		if velocity.y < max_fall_speed:
+			if not grounded and in_control_y:
+				if wallsliding and not velocity.y < 0:
+					current_gravity = WALLSLIDE_GRAVITY
+				elif jumping:
+					if Input.is_action_pressed("Accept"):
+						if GRAVMOD_BIGLEAP_BEGIN < velocity.y and velocity.y < GRAVMOD_BIGLEAP_END:
+							current_gravity *= GRAVMOD_BIGLEAP_MULTIPLIER
+					elif GRAVMOD_SHORTHOP_BEGIN < velocity.y and velocity.y < GRAVMOD_SHORTHOP_END:
+						current_gravity *= GRAVMOD_SHORTHOP_MULTIPLIER
+				if direction_y == 1 and velocity.y >= FASTFALL_BEGIN:
+					current_gravity *= FASTFALL_MULTIPLIER
+			
+			velocity.y = min(
+				velocity.y + current_gravity * delta,
+				max_fall_speed
+			)
+		else:
+			velocity.y = max(velocity.y * AIR_Y_FRICTION_TEMP, max_fall_speed)
 	
 	# Jump
 	
@@ -299,6 +313,7 @@ func _physics_process(delta):
 		dashing_refreshed = false
 		dash_cancel_timer = DASH_DELAY
 		dash_waiting = true
+		velocity *= DASH_PRE_VEL_MULTIPLIER
 	if dash_waiting:
 		dash_cancel_timer -= delta
 		if dash_cancel_timer <= 0:
@@ -322,7 +337,14 @@ func _physics_process(delta):
 		if dash_timer <= 0:
 			dashing = false
 			dashing_allowed = true
-			var exit_vel = (dash_direction * DASH_EXIT_SPEED).abs()
+			var exit_vel: Vector2
+			if dash_direction.y <= 0:
+				exit_vel = (dash_direction * DASH_EXIT_SPEED).abs()
+			else:
+				exit_vel = Vector2(
+					abs(dash_direction.x * DASH_DIAG_X_EXIT_SPEED),
+					abs(dash_direction.y * DASH_DIAG_Y_EXIT_SPEED)
+				)
 			velocity.x = min(abs(velocity.x), exit_vel.x) * sign(velocity.x)
 			velocity.y = min(abs(velocity.y), exit_vel.y) * sign(velocity.y)
 	
@@ -391,4 +413,6 @@ func on_jump():
 
 
 func on_dash():
+	if dash_direction.x:
+		facing = sign(dash_direction.x)
 	jumping = false
