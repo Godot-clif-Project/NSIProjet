@@ -42,14 +42,17 @@ func _process(delta):
 
 func proceed_dialog():
 	if line < JsonData.size():
-			ChangePortraitPosition()
-			yield(AnimationMaster,"animation_finished")
-			ChangePortrait()
-			DownBoxHandler(JsonData[line].command)
+		if Global.DialogStarted == false:
+			Global.DialogStarted = true
+			Global.emit_signal("DialogStarted")
+		ChangePortraitPosition()
+		yield(AnimationMaster,"animation_finished")
+		ChangePortrait()
+		DownBoxHandler(JsonData[line].command)
 	else:
 		if DialogBoxAppeared == true:
-			print("what")
 			hideDownBox()
+			Global.emit_signal("DialogFinished")
 		yield(AnimationMaster,"animation_finished")
 		ResetBoxes()
 		
@@ -79,6 +82,8 @@ func DownBoxHandler(command):
 			line += 1
 
 func ResetBoxes():
+	hide()
+	Global.DialogStarted = false
 	line = 0
 	TextBox.percent_visible = 0
 	hide()
@@ -111,7 +116,7 @@ func StopDownTalkAnimation():
 	IsTalking = false
 	
 func StartDialogCode(jsonname):
-	if Global.WasInitialized == false:
+	if Global.DialogStarted == false:
 		load_json(jsonname)
 
 func _on_Tween_tween_completed(object, key):

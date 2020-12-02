@@ -6,8 +6,7 @@ var WasInitialized = false
 signal StartDialog(jsonname)
 
 func _process(delta):
-	if Input.is_action_just_pressed("Debug1") and inZone == true and WasInitialized == false:
-		Global.WasInitialized == true
+	if Input.is_action_just_pressed("Debug1") and inZone == true and Global.DialogStarted == false:
 		Global.emit_signal("StartDialog",jsonname)
 	if Input.is_action_just_pressed("Debug4"):
 		print("This will cause issues if the dialog was already open.")
@@ -15,8 +14,7 @@ func _process(delta):
 		Global.WasInitialized == false
 		
 func _on_Area2D_body_entered(body: Node2D):
-	if Global.WasInitialized == false:
-		jsonname = "CoolDialogue"
+	jsonname = "CoolDialogue"
 	inZone = true
 
 func _on_Area2D_body_exited(area):

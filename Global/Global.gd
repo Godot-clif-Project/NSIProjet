@@ -3,7 +3,7 @@ extends Node
 signal StartDialog(jsonname)
 signal DialogStarted()
 signal DialogFinished()
-var WasInitialized = false
+var DialogStarted = false
 
 func _init():
 	OS.window_size = Vector2(1280, 720)
