@@ -35,7 +35,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 0, 120 ), Vector2( 0, 250 ) ]
+"values": [ Vector2( 0, 60 ), Vector2( 0, 150 ) ]
 }
 
 [sub_resource type="Animation" id=3]
@@ -100,9 +100,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -160.0
-margin_top = 60.0
+margin_top = -30.0
 margin_right = 160.0
-margin_bottom = 240.0
+margin_bottom = 150.0
 script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false

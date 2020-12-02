@@ -119,11 +119,16 @@ onready var anim_current
 onready var anim_list = [anim_idle, anim_run, anim_jump, anim_hangtime, anim_fall]
 
 func _ready():
+	#Je te laisse rajouter ton code pour que le joueur ne puisse pas bouger pendant
+	#un dialog lolol
+	Global.connect("DialogFinished",self,"DialogFinishedCode")
+	Global.connect("DialogStarted",self,"DialogStartedCode")
+	
 	set_anim(anim_idle, "Idle")
 	dashing_allowed = true
 	dashing_refreshed = true
 	facing = -1 if facing_left else 1
-
+	
 
 func _physics_process(delta):
 	direction_x = (
@@ -416,3 +421,9 @@ func on_dash():
 	if dash_direction.x:
 		facing = sign(dash_direction.x)
 	jumping = false
+
+func DialogFinishedCode():
+	print("Dialog Finished!")
+
+func DialogStartedCode():
+	print("Dialog Started!")

@@ -16,6 +16,7 @@ var AnimationFinished = true
 
 const MCFrames = preload("res://GUI/Portraits/MC.tres")
 const CoolFrames = preload("res://GUI/Portraits/Cool.tres")
+const UnknownFrames = preload("res://GUI/Portraits/Unknown.tres")
 
 export var jsonname = "errorhandler"
 
@@ -47,7 +48,9 @@ func proceed_dialog():
 			DownBoxHandler(JsonData[line].command)
 	else:
 		if DialogBoxAppeared == true:
-			AnimationMaster.play("Disappear")
+			print("what")
+			hideDownBox()
+		yield(AnimationMaster,"animation_finished")
 		ResetBoxes()
 		
 func down_text(): 
@@ -62,6 +65,10 @@ func showDownBox():
 	show()
 	DialogBoxAppeared = true
 
+func hideDownBox():
+	AnimationMaster.play("Disappear")
+	DialogBoxAppeared = false
+
 func DownBoxHandler(command):
 	if command == 1:
 		if DialogBoxAppeared == false:
@@ -70,8 +77,6 @@ func DownBoxHandler(command):
 		if line < JsonData.size():
 			down_text()
 			line += 1
-	else:
-		AnimationMaster.play("Disappear")
 
 func ResetBoxes():
 	line = 0
@@ -92,6 +97,8 @@ func ChangePortrait():
 			Portrait.frames = MCFrames
 		"Cool":
 			Portrait.frames = CoolFrames
+		_:
+			Portrait.frames = UnknownFrames
 
 func DownTalkAnimation():
 	Portrait.animation = "talk"

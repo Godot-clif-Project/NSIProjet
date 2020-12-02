@@ -1,6 +1,8 @@
 extends Node
 
 signal StartDialog(jsonname)
+signal DialogStarted()
+signal DialogFinished()
 var WasInitialized = false
 
 func _init():
