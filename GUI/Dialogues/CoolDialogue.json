@@ -43,7 +43,7 @@
    "ID": "TestLevel",
    "command": 0,
    "name": "Cool",
-   "text": "Training...Training to [wave amp=30 freq=6][color=red]ROLL![/color][/wave]",
+   "text": "Training...Training to [wave amp=50 freq=2][color=red]ROLL![/color][/wave]",
    "emotion": "happy",
    "position": 1
  },

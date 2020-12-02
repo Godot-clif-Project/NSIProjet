@@ -114,12 +114,8 @@ onready var anim_fall = $SpriteContainer/SpriteFall
 onready var anim_current
 onready var anim_list = [anim_idle, anim_run, anim_jump, anim_hangtime, anim_fall]
 
-var anim_queue
-var animplayer_current_TEMP
-
 func _ready():
 	set_anim(anim_idle, "Idle")
-	animation_player.play("Idle")
 	dashing_allowed = true
 	dashing_refreshed = true
 	facing = -1 if facing_left else 1
@@ -379,16 +375,8 @@ func set_anim(new_anim: Sprite, anim: String):
 			else:
 				spr.visible = true
 		anim_current = new_anim
-	if not animation_player.assigned_animation == anim:
-		anim_queue = anim
-	if not animation_player.is_playing():
-		fetch_animation()
-
-
-func fetch_animation():
-	if anim_queue != null:
-		animation_player.play(anim_queue)
-		anim_queue = null
+	if not animation_player.current_animation == anim:
+		animation_player.play(anim)
 
 
 func animationplayer_set_hangtime():
