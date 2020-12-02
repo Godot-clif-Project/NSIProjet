@@ -126,9 +126,9 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -104.0
+margin_left = -95.0
 margin_top = -52.0
-margin_right = 109.0
+margin_right = 95.0
 margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -137,7 +137,7 @@ __meta__ = {
 }
 
 [node name="DownText" type="RichTextLabel" parent="DownDialogBox/DownTextMargin"]
-margin_right = 213.0
+margin_right = 190.0
 margin_bottom = 48.0
 rect_clip_content = false
 theme = ExtResource( 2 )
@@ -156,9 +156,9 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -147.0
+margin_left = 95.0
 margin_top = -53.0
-margin_right = -99.0
+margin_right = 143.0
 margin_bottom = -5.00002
 __meta__ = {
 "_edit_use_anchors_": false
@@ -169,9 +169,9 @@ position = Vector2( 25, 25 )
 frames = ExtResource( 3 )
 
 [node name="NinePatchRect2" parent="DownDialogBox" instance=ExtResource( 1 )]
-margin_left = -146.0
+margin_left = 96.0
 margin_top = -75.088
-margin_right = -98.0
+margin_right = 144.0
 margin_bottom = -43.088
 texture = ExtResource( 5 )
 patch_margin_left = 16
@@ -197,7 +197,7 @@ __meta__ = {
 
 [node name="DownName" type="Label" parent="DownDialogBox/NinePatchRect2/DownNameMargin"]
 margin_right = 42.0
-margin_bottom = 18.0
+margin_bottom = 17.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource( 2 )
