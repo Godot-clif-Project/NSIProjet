@@ -10,7 +10,7 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 3.9, 7.9 )
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=2]
 resource_name = "Fall"
 length = 0.45
 step = 0.05
@@ -26,9 +26,28 @@ tracks/0/keys = {
 "update": 1,
 "values": [ 0, 1, 2 ]
 }
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.15, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"values": [ {
+"args": [  ],
+"method": "fetch_animation"
+}, {
+"args": [  ],
+"method": "fetch_animation"
+}, {
+"args": [  ],
+"method": "fetch_animation"
+} ]
+}
 
-[sub_resource type="Animation" id=2]
-resource_name = "Hangtime"
+[sub_resource type="Animation" id=3]
 length = 0.3
 step = 0.05
 tracks/0/type = "value"
@@ -43,8 +62,25 @@ tracks/0/keys = {
 "update": 1,
 "values": [ 0, 1 ]
 }
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.15 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [  ],
+"method": "fetch_animation"
+}, {
+"args": [  ],
+"method": "fetch_animation"
+} ]
+}
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=4]
 length = 0.9
 loop = true
 step = 0.05
@@ -60,9 +96,31 @@ tracks/0/keys = {
 "update": 1,
 "values": [ 0, 2, 3, 5 ]
 }
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.25, 0.45, 0.7 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"values": [ {
+"args": [  ],
+"method": "fetch_animation"
+}, {
+"args": [  ],
+"method": "fetch_animation"
+}, {
+"args": [  ],
+"method": "fetch_animation"
+}, {
+"args": [  ],
+"method": "fetch_animation"
+} ]
+}
 
-[sub_resource type="Animation" id=4]
-resource_name = "Jump"
+[sub_resource type="Animation" id=5]
 length = 0.41
 tracks/0/type = "value"
 tracks/0/path = NodePath("SpriteContainer/SpriteJump:frame")
@@ -83,15 +141,24 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0.4 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0.1, 0.2, 0.3, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
 "values": [ {
+"args": [  ],
+"method": "fetch_animation"
+}, {
+"args": [  ],
+"method": "fetch_animation"
+}, {
+"args": [  ],
+"method": "fetch_animation"
+}, {
 "args": [  ],
 "method": "animationplayer_set_hangtime"
 } ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=6]
 length = 0.4
 loop = true
 step = 0.05
@@ -106,6 +173,29 @@ tracks/0/keys = {
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2, 3 ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"values": [ {
+"args": [  ],
+"method": "fetch_animation"
+}, {
+"args": [  ],
+"method": "fetch_animation"
+}, {
+"args": [  ],
+"method": "fetch_animation"
+}, {
+"args": [  ],
+"method": "fetch_animation"
+} ]
 }
 
 [node name="Player" type="KinematicBody2D"]
@@ -130,7 +220,6 @@ visible = false
 texture = ExtResource( 4 )
 offset = Vector2( 0, -2.5 )
 hframes = 4
-frame = 3
 
 [node name="SpriteHangtime" type="Sprite" parent="SpriteContainer"]
 visible = false
@@ -148,8 +237,8 @@ hframes = 3
 shape = SubResource( 1 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Fall = SubResource( 6 )
-anims/Hangtime = SubResource( 2 )
-anims/Idle = SubResource( 3 )
-anims/Jump = SubResource( 4 )
-anims/Run = SubResource( 5 )
+anims/Fall = SubResource( 2 )
+anims/Hangtime = SubResource( 3 )
+anims/Idle = SubResource( 4 )
+anims/Jump = SubResource( 5 )
+anims/Run = SubResource( 6 )
