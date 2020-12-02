@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://GUI/PlaceholderUI.tscn" type="PackedScene" id=1]
 [ext_resource path="res://GUI/Dialog.tres" type="Theme" id=2]
 [ext_resource path="res://GUI/Portraits/Cool.tres" type="SpriteFrames" id=3]
 [ext_resource path="res://GUI/DownBoxScript.gd" type="Script" id=4]
+[ext_resource path="res://GUI/TestBox.png" type="Texture" id=5]
 
 [sub_resource type="Animation" id=1]
 resource_name = "Appear"
@@ -50,7 +51,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.001 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 5, 7 ), Vector2( 5, 7 ) ]
+"values": [ Vector2( 13, 7 ), Vector2( 14, 7 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("DownDialogBox/NinePatchRect2:rect_position")
@@ -62,7 +63,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( 7, -15.088 ) ]
+"values": [ Vector2( 14, -15.088 ) ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -78,7 +79,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( 268, 7 ) ]
+"values": [ Vector2( 255, 7 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("DownDialogBox/NinePatchRect2:rect_position")
@@ -90,7 +91,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( 270, -15.088 ) ]
+"values": [ Vector2( 256, -15.088 ) ]
 }
 
 [node name="DownBox" type="Control"]
@@ -99,9 +100,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -160.0
-margin_top = -30.0
+margin_top = 60.0
 margin_right = 160.0
-margin_bottom = 150.0
+margin_bottom = 240.0
 script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -112,6 +113,11 @@ anchor_top = 0.5
 anchor_bottom = 0.5
 margin_top = -30.0
 margin_bottom = 30.0
+texture = ExtResource( 5 )
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 16
 
 [node name="Tween" type="Tween" parent="DownDialogBox"]
 
@@ -150,9 +156,9 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -155.0
+margin_left = -147.0
 margin_top = -53.0
-margin_right = -107.0
+margin_right = -99.0
 margin_bottom = -5.00002
 __meta__ = {
 "_edit_use_anchors_": false
@@ -163,10 +169,15 @@ position = Vector2( 25, 25 )
 frames = ExtResource( 3 )
 
 [node name="NinePatchRect2" parent="DownDialogBox" instance=ExtResource( 1 )]
-margin_left = -153.0
+margin_left = -146.0
 margin_top = -75.088
-margin_right = -107.0
-margin_bottom = -48.0883
+margin_right = -98.0
+margin_bottom = -43.088
+texture = ExtResource( 5 )
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 16
 
 [node name="DownNameMargin" type="VBoxContainer" parent="DownDialogBox/NinePatchRect2"]
 anchor_left = 0.5
@@ -174,9 +185,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 margin_left = -21.0
-margin_top = -21.0
+margin_top = -24.305
 margin_right = 21.0
-margin_bottom = -3.0
+margin_bottom = -6.30501
 size_flags_horizontal = 0
 size_flags_vertical = 2
 alignment = 1
@@ -192,7 +203,6 @@ size_flags_vertical = 3
 theme = ExtResource( 2 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 align = 1
-valign = 1
 
 [node name="DownAnimation" type="AnimationPlayer" parent="."]
 anims/Appear = SubResource( 1 )
