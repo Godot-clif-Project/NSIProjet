@@ -2,7 +2,7 @@
  {
    "ID": "TestLevel",
    "command": 1,
-   "name": "test1",
+   "name": "MC",
    "text": "Hey!",
    "emotion": "happy",
    "position": 0
@@ -10,7 +10,7 @@
  {
    "ID": "TestLevel",
    "command": 1,
-   "name": "test2",
+   "name": "Cool",
    "text": "[shake rate=15 level=10]H-Hi.[/shake]",
    "emotion": "neutral",
    "position": 1
@@ -18,7 +18,7 @@
  {
    "ID": "TestLevel",
    "command": 0,
-   "name": "test1",
+   "name": "MC",
    "text": "What are you doing...?",
    "emotion": "neutral",
    "position": 0
@@ -26,7 +26,7 @@
  {
    "ID": "TestLevel",
    "command": 1,
-   "name": "test2",
+   "name": "Cool",
    "text": "I'm [shake rate=15 level=10]training[/shake], can't you see?",
    "emotion": "neutral",
    "position": 1
@@ -34,15 +34,15 @@
  {
    "ID": "TestLevel",
    "command": 0,
-   "name": "test1",
-   "text": "Oh....But why?",
+   "name": "MC",
+   "text": "Oh....But why do you train?",
    "emotion": "neutral",
    "position": 0
  },
  {
    "ID": "TestLevel",
    "command": 0,
-   "name": "test2",
+   "name": "Cool",
    "text": "Training...Training to [wave amp=50 freq=2][color=red]ROLL![/color][/wave]",
    "emotion": "happy",
    "position": 1
@@ -50,7 +50,7 @@
  {
    "ID": "TestLevel",
    "command": 0,
-   "name": "test1",
+   "name": "MC",
    "text": "Oh!!! I see!!",
    "emotion": "happy",
    "position": 0
@@ -58,7 +58,7 @@
  {
    "ID": "TestLevel",
    "command": 0,
-   "name": "test1",
+   "name": "MC",
    "text": "...Once you know how to do it, will you teach me?",
    "emotion": "neutral",
    "position": 0
@@ -66,7 +66,7 @@
  {
    "ID": "TestLevel",
    "command": 0,
-   "name": "test2",
+   "name": "Cool",
    "text": "[shake rate=15 level=10]Sure![/shake]",
    "emotion": "happy",
    "position": 1
@@ -74,7 +74,7 @@
  {
    "ID": "TestLevel",
    "command": 0,
-   "name": "test1",
+   "name": "MC",
    "text": "Thank you!!",
    "emotion": "happy",
    "position": 0

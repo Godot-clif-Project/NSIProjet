@@ -3,7 +3,7 @@
 [ext_resource path="res://Levels/TestLevel/sky.png" type="Texture" id=1]
 [ext_resource path="res://Levels/TestLevel/tile.png" type="Texture" id=2]
 [ext_resource path="res://Actors/Player/Player.tscn" type="PackedScene" id=3]
-[ext_resource path="res://GUI/Dialog.tscn" type="PackedScene" id=4]
+[ext_resource path="res://GUI/DownBox.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Actors/TestNPC/TestNPC.tscn" type="PackedScene" id=5]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
@@ -48,7 +48,7 @@ tile_data = PoolIntArray( -786453, 0, 0, -786452, 0, 0, -786451, 0, 0, -786450, 
 
 [node name="TestNPC" parent="." instance=ExtResource( 5 )]
 position = Vector2( 59.25, 5.09251 )
-frame = 4
+frame = 2
 playing = true
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
@@ -58,7 +58,10 @@ collision_layer = 33
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 
-[node name="DialogBox" parent="." instance=ExtResource( 4 )]
-margin_left = -159.0
-margin_right = 161.0
-[connection signal="StartDialog" from="TestNPC" to="DialogBox" method="_on_TestNPC_StartDialog" binds= [ "jsonname" ]]
+[node name="DownBox" parent="." instance=ExtResource( 4 )]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 0.0
+margin_top = 250.0
+margin_right = 0.0
+margin_bottom = 250.0
