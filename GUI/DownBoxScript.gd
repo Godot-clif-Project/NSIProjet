@@ -4,6 +4,8 @@ onready var NameBox = $DownDialogBox/NinePatchRect2/DownNameMargin/DownName
 onready var Portrait = $DownDialogBox/DownPortraitMargin/DownPortraitTexture
 onready var AnimationMaster = $DownAnimation
 onready var DownTween = $DownDialogBox/Tween
+onready var BloopSound = $BloopSound
+onready var timer = $Timer
 
 var DownTweenCompleted = true
 var dialog
@@ -56,7 +58,7 @@ func proceed_dialog():
 		yield(AnimationMaster,"animation_finished")
 		ResetBoxes()
 		
-func down_text(): 
+func down_text():
 	TextBox.bbcode_text = "[center]"+JsonData[line].text
 	NameBox.text = JsonData[line].name
 	TextBox.percent_visible = 0
@@ -121,16 +123,31 @@ func StartDialogCode(jsonname):
 
 func _on_Tween_tween_completed(object, key):
 	DownTweenCompleted = true
+	BloopSound.stop()
 	StopDownTalkAnimation()
 
 func _on_Tween_tween_started(object, key):
 	DownTweenCompleted = false
+	BloopSound.play()
 	DownTalkAnimation()
 
 
 func _on_DownAnimation_animation_finished(anim_name):
-	AnimationFinished = true
+	match anim_name:
+		"Appear":
+			DialogBoxAppeared = true
+		"Disappear":
+			DialogBoxAppeared = false
+		_:
+			AnimationFinished = true
 
 
 func _on_DownAnimation_animation_started(anim_name):
-	AnimationFinished = false
+	match anim_name:
+		"Appear":
+			DialogBoxAppeared = false
+			timer.start()
+		"Disappear":
+			DialogBoxAppeared = true
+		_:
+			AnimationFinished = false
