@@ -66,6 +66,8 @@ const AIR_Y_FRICTION_TEMP = CORRECTION_FRIC_TEMP
 const RUNNING_THRESHOLD = 10.0
 const FALLING_THRESHOLD = 0.0
 
+const CUTSCENE_WALKING_SPEED = 65.0
+
 # Dash constants
 
 const DASH_DELAY = .05
@@ -107,6 +109,10 @@ var dashing: bool
 var dash_timer: float
 var facing: int
 
+var in_cutscene: bool
+var cutscene_info # Global.CutscenePlayerInfo
+var cutscene_velocity
+
 onready var animation_player = $AnimationPlayer
 onready var anim_container = $SpriteContainer
 onready var anim_idle = $SpriteContainer/SpriteIdle
@@ -142,21 +148,24 @@ func _physics_process(delta):
 	if direction_x == sign(velocity.x) and direction_x != 0:
 		facing = direction_x
 	
-	if not in_control_x:
-		no_control_x_timer -= delta
-		if no_control_x_timer <= 0:
-			no_control_x_timer = 0
-			in_control_x = true
-	if not in_control_y:
-		no_control_y_timer -= delta
-		if no_control_y_timer <= 0:
-			no_control_y_timer = 0
-			in_control_y = true
-	if not apply_gravity:
-		no_gravity_timer -= delta
-		if no_gravity_timer <= 0:
-			no_gravity_timer = 0
-			apply_gravity = true
+	if in_cutscene:
+		velocity.x = cutscene_velocity
+	else:
+		if not in_control_x:
+			no_control_x_timer -= delta
+			if no_control_x_timer <= 0:
+				no_control_x_timer = 0
+				in_control_x = true
+		if not in_control_y:
+			no_control_y_timer -= delta
+			if no_control_y_timer <= 0:
+				no_control_y_timer = 0
+				in_control_y = true
+		if not apply_gravity:
+			no_gravity_timer -= delta
+			if no_gravity_timer <= 0:
+				no_gravity_timer = 0
+				apply_gravity = true
 	
 	# Landing and Sticky Landing
 	
@@ -355,7 +364,27 @@ func _physics_process(delta):
 	
 	# Apply velocity
 	
-	move_and_slide(velocity, Vector2.UP)
+	if in_cutscene:
+		move_and_slide(Vector2(0, velocity.y), Vector2.UP)
+		if cutscene_info.set_position:
+			print(cutscene_velocity)
+			print(cutscene_info.position_x)
+			print(global_position.x)
+			move_and_collide(Vector2(velocity.x, 0) * delta)
+			if sign(cutscene_info.position_x - global_position.x) != sign(cutscene_velocity):
+				move_and_collide(Vector2(cutscene_info.position_x - global_position.x, 0))
+				Global.emit_signal("CutscenePlayerStoppedMoving", true)
+				if cutscene_info.facing:
+					facing = cutscene_info.facing
+				cutscene_velocity = 0
+				cutscene_info.set_position = false
+			cutscene_info.maximum_time -= delta
+			if cutscene_info.maximum_time <= 0:
+				cutscene_velocity = 0
+				Global.emit_signal("CutscenePlayerStoppedMoving", false)
+				cutscene_info.set_position = false
+	else:
+		move_and_slide(velocity, Vector2.UP)
 	if is_on_ceiling():
 		if velocity_conservation_timer.y > 0:
 			velocity_conservation_timer.y -= delta
@@ -423,7 +452,25 @@ func on_dash():
 	jumping = false
 
 func DialogFinishedCode():
-	print("Dialog Finished!")
+	in_cutscene = false
+	dashing_allowed = true
 
-func DialogStartedCode():
-	print("Dialog Started!")
+func DialogStartedCode(playerInfo):
+	in_cutscene = true
+	in_control_x = false
+	in_control_y = false
+	no_control_x_timer = 0
+	no_control_y_timer = 0
+	dashing_allowed = false
+	dashing_refreshed = true
+	dashing = false
+	apply_gravity = true
+	cutscene_info = playerInfo
+	if playerInfo.set_position:
+		cutscene_velocity = (
+			sign(playerInfo.position_x - global_position.x) *
+			playerInfo.movement_speed if playerInfo.movement_speed > 0 else CUTSCENE_WALKING_SPEED
+		)
+	else:
+		cutscene_velocity = 0
+		Global.emit_signal("CutscenePlayerStoppedMoving", true)

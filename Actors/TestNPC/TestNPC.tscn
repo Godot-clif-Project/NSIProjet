@@ -46,7 +46,7 @@ font_data = ExtResource( 3 )
 default_font = SubResource( 8 )
 
 [sub_resource type="RectangleShape2D" id=10]
-extents = Vector2( 18.3431, 19.9712 )
+extents = Vector2( 26.5772, 16.5134 )
 
 [node name="TestNPC" type="AnimatedSprite"]
 frames = SubResource( 7 )
@@ -71,6 +71,7 @@ input_pickable = false
 collision_layer = 32
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( -15.8134, -5.56812 )
 shape = SubResource( 10 )
 [connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
 [connection signal="body_exited" from="Area2D" to="." method="_on_Area2D_body_exited"]

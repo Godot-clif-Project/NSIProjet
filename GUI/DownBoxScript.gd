@@ -46,7 +46,12 @@ func proceed_dialog():
 	if line < JsonData.size():
 		if Global.DialogStarted == false:
 			Global.DialogStarted = true
-			Global.emit_signal("DialogStarted")
+			# Make this read the values from somewhere else instead (maybe exported
+			# variables in the collision shape or somewhere in the json files
+			# - probably more messy)
+			# oh fuck this is called for every single dialog
+			# uuh you'll figure something out
+			Global.emit_signal("DialogStarted", Global.CutscenePlayerInfo.new(true, 46, 1))
 		ChangePortraitPosition()
 		yield(AnimationMaster,"animation_finished")
 		ChangePortrait()

@@ -5,6 +5,11 @@ var inZone = false
 var WasInitialized = false
 signal StartDialog(jsonname)
 
+
+func _ready():
+	playing = true
+
+
 func _process(delta):
 	if Input.is_action_just_pressed("Debug1") and inZone == true and Global.DialogStarted == false:
 		Global.emit_signal("StartDialog",jsonname)
