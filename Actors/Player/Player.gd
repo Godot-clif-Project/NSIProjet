@@ -3,17 +3,10 @@ extends KinematicBody2D
 
 # TO DO:
 
-# Sync animation change with frame change
-
-# When you exit a dash:
-#   if you hold jump, bounce
-#   if you hold dash, roll
-
-# Don't cancel the momentum when going down, instead, if it's higher than the
-# max fall speed (on context), apply friction (also applies for wall sliding)
-
 # if the up velocity is too high, don't move from that velocity, but still keep it
 # in memory, move from a min()
+
+# Add coyote time for dashing into bouncing or rolling (MAYBE NOT)
 
 
 export var facing_left: bool
@@ -81,7 +74,7 @@ const DASH_DIAG_Y_EXIT_SPEED = 250.0
 # Bounce constants
 
 const BOUNCE_CHECK_DISTANCE = 2 * WALLJUMP_MARGIN
-const BOUNCE_PUSH = 200
+
 
 var in_control_x: bool = true
 var in_control_y: bool = true
@@ -114,6 +107,9 @@ var dashing: bool
 var dash_timer: float
 var facing: int
 
+export var bouncing_allowed: bool
+export var rolling_allowed: bool
+
 var in_cutscene: bool
 var cutscene_info # Global.CutscenePlayerInfo
 var cutscene_velocity
@@ -130,8 +126,6 @@ onready var anim_current
 onready var anim_list = [anim_idle, anim_run, anim_jump, anim_hangtime, anim_fall]
 
 func _ready():
-	#Je te laisse rajouter ton code pour que le joueur ne puisse pas bouger pendant
-	#un dialog lolol
 	Global.connect("DialogFinished",self,"DialogFinishedCode")
 	Global.connect("DialogStarted",self,"DialogStartedCode")
 	
@@ -357,16 +351,21 @@ func _physics_process(delta):
 		if dash_timer <= 0:
 			dashing = false
 			dashing_allowed = true
-			var exit_vel: Vector2
-			if dash_direction.y <= 0:
-				exit_vel = (dash_direction * DASH_EXIT_SPEED).abs()
+			if bouncing_allowed and Input.is_action_pressed("Accept"):
+				pass
+			elif rolling_allowed and Input.is_action_pressed("Cancel"):
+				pass
 			else:
-				exit_vel = Vector2(
-					abs(dash_direction.x * DASH_DIAG_X_EXIT_SPEED),
-					abs(dash_direction.y * DASH_DIAG_Y_EXIT_SPEED)
-				)
-			velocity.x = min(abs(velocity.x), exit_vel.x) * sign(velocity.x)
-			velocity.y = min(abs(velocity.y), exit_vel.y) * sign(velocity.y)
+				var exit_vel: Vector2
+				if dash_direction.y <= 0:
+					exit_vel = (dash_direction * DASH_EXIT_SPEED).abs()
+				else:
+					exit_vel = Vector2(
+						abs(dash_direction.x * DASH_DIAG_X_EXIT_SPEED),
+						abs(dash_direction.y * DASH_DIAG_Y_EXIT_SPEED)
+					)
+				velocity.x = min(abs(velocity.x), exit_vel.x) * sign(velocity.x)
+				velocity.y = min(abs(velocity.y), exit_vel.y) * sign(velocity.y)
 	
 	# Apply velocity
 	

@@ -50,12 +50,11 @@ tile_data = PoolIntArray( -786453, 0, 0, -786452, 0, 0, -786451, 0, 0, -786450, 
 position = Vector2( 76, 5 )
 flip_h = true
 
-[node name="Position2D" parent="TestNPC" index="2"]
-position = Vector2( -29.145, 2.02362 )
-
 [node name="Player" parent="." instance=ExtResource( 3 )]
 position = Vector2( -112, 8 )
 collision_layer = 33
+bouncing_allowed = true
+rolling_allowed = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
@@ -67,5 +66,3 @@ margin_left = 0.0
 margin_top = 250.0
 margin_right = 0.0
 margin_bottom = 250.0
-
-[editable path="TestNPC"]
