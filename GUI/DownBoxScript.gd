@@ -39,7 +39,7 @@ func _ready():
 
 func _process(delta):
 	if jsonname != "" or "errorhandler":
-		if Input.is_action_just_pressed("Cancel") and AnimationFinished == true and DownTweenCompleted == true:
+		if Input.is_action_just_pressed("Cancel") and AnimationFinished == true and DownTweenCompleted == true and Global.inZone == true:
 			proceed_dialog()
 
 func proceed_dialog():
@@ -89,6 +89,7 @@ func ResetBoxes():
 	TextBox.percent_visible = 0
 	hide()
 	DialogBoxAppeared = false
+	load_json("errorhandler")
 
 func ChangePortraitPosition():
 	if JsonData[line].position == 0:

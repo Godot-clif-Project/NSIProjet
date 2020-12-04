@@ -1,8 +1,6 @@
 extends AnimatedSprite
 
 export var jsonname = ""
-var inZone = false
-var WasInitialized = false
 signal StartDialog(jsonname)
 
 
@@ -11,7 +9,7 @@ func _ready():
 
 
 func _process(delta):
-	if Input.is_action_just_pressed("Cancel") and inZone == true and Global.DialogStarted == false:
+	if Input.is_action_just_pressed("Cancel") and Global.inZone == true and Global.DialogStarted == false:
 		Global.emit_signal("StartDialog",jsonname)
 	if Input.is_action_just_pressed("Debug4"):
 		print("This will cause issues if the dialog was already open.")
@@ -20,11 +18,8 @@ func _process(delta):
 		
 func _on_Area2D_body_entered(body: Node2D):
 	Global.DialogPosition = $Position2D.global_position
-	jsonname = "CoolDialogue"
-	inZone = true
-	print(jsonname)
+	Global.inZone = true
 
 func _on_Area2D_body_exited(area):
-	jsonname = "errorhandler"
-	inZone = false
+	Global.inZone = false
 

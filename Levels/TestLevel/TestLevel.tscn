@@ -49,6 +49,7 @@ tile_data = PoolIntArray( -786453, 0, 0, -786452, 0, 0, -786451, 0, 0, -786450, 
 [node name="TestNPC" parent="." instance=ExtResource( 5 )]
 position = Vector2( 76, 5 )
 flip_h = true
+jsonname = "CoolDialogue"
 
 [node name="Position2D" parent="TestNPC" index="2"]
 position = Vector2( -29.145, 2.02362 )
