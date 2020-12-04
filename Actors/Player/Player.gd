@@ -3,10 +3,10 @@ extends KinematicBody2D
 
 # TO DO:
 
-# if the up velocity is too high, don't move from that velocity, but still keep it
-# in memory, move from a min()
-
 # Add coyote time for dashing into bouncing or rolling (MAYBE NOT)
+
+# When trying to bounce off a wall but the you dash beyond the wall, bounce
+# when you leave the wall instead of at the end of the dash
 
 
 export var facing_left: bool
@@ -16,7 +16,7 @@ export var facing_left: bool
 const RUN_SPEED_MAX = 90.0
 const RUN_ACC = 380.0
 const RUN_AIR_ACC = RUN_ACC * .75
-const GRAVITY = 640.0
+const GRAVITY = 650.0
 const JUMP_FORCE = -230.0
 const JUMP_TIME = .1
 const COYOTE_TIME = .1
@@ -63,10 +63,10 @@ const CUTSCENE_WALKING_SPEED = 65.0
 
 # Dash constants
 
-const DASH_DELAY = .05
+const DASH_DELAY = .1
 const DASH_PRE_VEL_MULTIPLIER = 0
-const DASH_SPEED = 320.0
-const DASH_DURATION = .15
+const DASH_SPEED = 350.0
+const DASH_DURATION = .12
 const DASH_EXIT_SPEED = 130.0
 const DASH_DIAG_X_EXIT_SPEED = 200.0
 const DASH_DIAG_Y_EXIT_SPEED = 250.0
@@ -295,11 +295,11 @@ func _physics_process(delta):
 		
 		if jump_timer:
 			var wall_normal: int
-			if test_move(transform, Vector2(WALLJUMP_MARGIN, 0)):
-				wall_normal = -1
+			if test_move(transform, Vector2(WALLJUMP_MARGIN * facing, 0)):
+				wall_normal = -facing
 				last_wall_normal = wall_normal
-			elif test_move(transform, Vector2(-WALLJUMP_MARGIN, 0)):
-				wall_normal = 1
+			elif test_move(transform, Vector2(WALLJUMP_MARGIN * (-facing), 0)):
+				wall_normal = facing
 				last_wall_normal = wall_normal
 			
 			if wall_normal:
@@ -328,6 +328,7 @@ func _physics_process(delta):
 		dash_cancel_timer = DASH_DELAY
 		dash_waiting = true
 		velocity *= DASH_PRE_VEL_MULTIPLIER
+		dash_direction = Vector2.ZERO
 	if dash_waiting:
 		dash_cancel_timer -= delta
 		if dash_cancel_timer <= 0:
@@ -341,7 +342,8 @@ func _physics_process(delta):
 			no_control_x_timer = DASH_DURATION
 			no_control_y_timer = DASH_DURATION
 			dash_timer = DASH_DURATION
-			dash_direction = Vector2(direction_x, direction_y).normalized()
+			if direction_x != 0 or direction_y != 0:
+				dash_direction = Vector2(direction_x, direction_y).normalized()
 			if dash_direction == Vector2.ZERO:
 				dash_direction = Vector2(facing, 0)
 			velocity = dash_direction * DASH_SPEED

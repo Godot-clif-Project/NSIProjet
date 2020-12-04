@@ -32,15 +32,27 @@ func _init():
 func _ready():
 	Global.connect("StartDialog",self,"StartDialogCode")
 	
+	# apparently these two signals don't exist
 	Global.connect("DownTalkAnimation",self,"DownTalkAnimation")
 	Global.connect("StopDownTalkAnimation",self,"StopDownTalkAnimation")
+	
 	load_json("errorhandler")
 	hide()
 
 func _process(delta):
 	if jsonname != "" or "errorhandler":
-		if Input.is_action_just_pressed("Cancel") and AnimationFinished == true and DownTweenCompleted == true and Global.inZone == true:
-			proceed_dialog()
+		if AnimationFinished == true and DownTweenCompleted == true and Global.inZone == true:
+			if not DialogBoxAppeared:
+				if Input.is_action_just_pressed("Interact"):
+					# might be better if there were two separate functions
+					proceed_dialog()
+			elif DialogBoxAppeared:
+				if Input.is_action_just_pressed("Accept") or Input.is_action_just_pressed("Interact"):
+					proceed_dialog()
+				if Input.is_action_just_pressed("Cancel"):
+					# Code to make the dialog go faster or skip to the end of 
+					# the text animation goes here
+					pass
 
 func proceed_dialog():
 	if line < JsonData.size():

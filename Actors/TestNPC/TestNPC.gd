@@ -9,11 +9,12 @@ func _ready():
 
 
 func _process(delta):
-	if Input.is_action_just_pressed("Cancel") and Global.inZone == true and Global.DialogStarted == false:
+	if Input.is_action_just_pressed("Interact") and Global.inZone == true and Global.DialogStarted == false:
 		Global.emit_signal("StartDialog",jsonname)
 	if Input.is_action_just_pressed("Debug4"):
 		print("This will cause issues if the dialog was already open.")
 		print("In the future, force resetting a dialog will force close it via ResetBoxes().")
+		# this is a condition check btw, not an assign operation
 		Global.DialogStarted == false
 		
 func _on_Area2D_body_entered(body: Node2D):
