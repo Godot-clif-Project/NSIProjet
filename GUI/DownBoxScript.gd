@@ -39,7 +39,7 @@ func _ready():
 	hide()
 
 func _process(delta):
-	if Input.is_action_just_pressed("Debug1") and AnimationFinished == true and DownTweenCompleted == true:
+	if Input.is_action_just_pressed("Cancel") and AnimationFinished == true and DownTweenCompleted == true:
 		proceed_dialog()
 
 func proceed_dialog():
