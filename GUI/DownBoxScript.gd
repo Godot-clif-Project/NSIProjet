@@ -13,7 +13,6 @@ var line = 0
 var JsonData
 var DialogBoxAppeared = false
 var IsTalking = false
-var PortraitPath = "res://GUI/Portraits/"
 var AnimationFinished = true
 
 const MCFrames = preload("res://GUI/Portraits/MC.tres")
@@ -39,19 +38,17 @@ func _ready():
 	hide()
 
 func _process(delta):
-	if Input.is_action_just_pressed("Debug1") and AnimationFinished == true and DownTweenCompleted == true:
-		proceed_dialog()
+	if jsonname != "" or "errorhandler":
+		if Input.is_action_just_pressed("Cancel") and AnimationFinished == true and DownTweenCompleted == true:
+			proceed_dialog()
 
 func proceed_dialog():
 	if line < JsonData.size():
 		if Global.DialogStarted == false:
 			Global.DialogStarted = true
-			# Make this read the values from somewhere else instead (maybe exported
-			# variables in the collision shape or somewhere in the json files
-			# - probably more messy)
-			# oh fuck this is called for every single dialog
-			# uuh you'll figure something out
-			Global.emit_signal("DialogStarted", Global.CutscenePlayerInfo.new(true, 46, 1))
+			#46 is X axis of position2D
+			print(Global.DialogPosition.x)
+			Global.emit_signal("DialogStarted", Global.CutscenePlayerInfo.new(true, Global.DialogPosition.x, 1))
 		ChangePortraitPosition()
 		yield(AnimationMaster,"animation_finished")
 		ChangePortrait()
