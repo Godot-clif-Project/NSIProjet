@@ -145,7 +145,7 @@ func _physics_process(delta):
 		int(Input.is_action_pressed("Down")) -
 		int(Input.is_action_pressed("Up"))
 	)
-	if direction_x == sign(velocity.x) and direction_x != 0:
+	if direction_x == sign(velocity.x) and direction_x != 0 and in_control_x:
 		facing = direction_x
 	
 	if in_cutscene:
@@ -268,12 +268,12 @@ func _physics_process(delta):
 			velocity.y = max(velocity.y * AIR_Y_FRICTION_TEMP, max_fall_speed)
 	
 	# Jump
-	
-	if Input.is_action_just_pressed("Accept"):
-		jump_timer = JUMP_TIME
-	if grounded:
-		coyote_timer = COYOTE_TIME
-		last_ground_y = position.y
+	if not in_cutscene:
+		if Input.is_action_just_pressed("Accept"):
+			jump_timer = JUMP_TIME
+		if grounded:
+			coyote_timer = COYOTE_TIME
+			last_ground_y = position.y
 	
 	if in_control_y:		
 		if jump_timer and coyote_timer:
@@ -367,9 +367,6 @@ func _physics_process(delta):
 	if in_cutscene:
 		move_and_slide(Vector2(0, velocity.y), Vector2.UP)
 		if cutscene_info.set_position:
-			print(cutscene_velocity)
-			print(cutscene_info.position_x)
-			print(global_position.x)
 			move_and_collide(Vector2(velocity.x, 0) * delta)
 			if sign(cutscene_info.position_x - global_position.x) != sign(cutscene_velocity):
 				move_and_collide(Vector2(cutscene_info.position_x - global_position.x, 0))
@@ -467,10 +464,13 @@ func DialogStartedCode(playerInfo):
 	apply_gravity = true
 	cutscene_info = playerInfo
 	if playerInfo.set_position:
+		var cutsc_dir = sign(playerInfo.position_x - global_position.x)
 		cutscene_velocity = (
-			sign(playerInfo.position_x - global_position.x) *
-			playerInfo.movement_speed if playerInfo.movement_speed > 0 else CUTSCENE_WALKING_SPEED
+			cutsc_dir *
+			(playerInfo.movement_speed if playerInfo.movement_speed > 0 else
+			CUTSCENE_WALKING_SPEED)
 		)
+		facing = cutsc_dir if cutsc_dir else facing
 	else:
 		cutscene_velocity = 0
 		Global.emit_signal("CutscenePlayerStoppedMoving", true)
