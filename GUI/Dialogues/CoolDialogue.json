@@ -26,8 +26,8 @@
  {
    "ID": "TestLevel",
    "command": 1,
-   "name": "Cool",
-   "text": "I'm [shake rate=15 level=10]training[/shake], can't you see?",
+   "name": "MC",
+   "text": "I'm [shake rate=15 level=5]training[/shake], can't you see?",
    "emotion": "neutral",
    "position": 1
  },
@@ -43,7 +43,7 @@
    "ID": "TestLevel",
    "command": 0,
    "name": "Cool",
-   "text": "Training...Training to [wave amp=50 freq=2][color=red]ROLL![/color][/wave]",
+   "text": "Training...Training to [wave amp=30 freq=5][color=red]ROLL![/color][/wave]",
    "emotion": "happy",
    "position": 1
  },
@@ -67,7 +67,7 @@
    "ID": "TestLevel",
    "command": 0,
    "name": "Cool",
-   "text": "[shake rate=15 level=10]Sure![/shake]",
+   "text": "[shake rate=15 level=5]Sure![/shake]",
    "emotion": "happy",
    "position": 1
  },

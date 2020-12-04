@@ -8,6 +8,7 @@ signal CutscenePlayerStoppedMoving(
 )
 var DialogStarted = false
 var DialogPosition = Vector2(0,0)
+var inZone = false
 func _init():
 	OS.window_size = Vector2(854, 480)
 	OS.center_window()

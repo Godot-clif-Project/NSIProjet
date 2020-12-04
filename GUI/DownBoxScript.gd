@@ -45,8 +45,6 @@ func _process(delta):
 func proceed_dialog():
 	if line < JsonData.size():
 		if Global.DialogStarted == false:
-			Global.DialogStarted = true
-			#46 is X axis of position2D
 			Global.emit_signal("DialogStarted", Global.CutscenePlayerInfo.new(true, Global.DialogPosition.x, 1))
 		ChangePortraitPosition()
 		yield(AnimationMaster,"animation_finished")
@@ -91,7 +89,6 @@ func ResetBoxes():
 	TextBox.percent_visible = 0
 	hide()
 	DialogBoxAppeared = false
-	load_json("errorhandler")
 
 func ChangePortraitPosition():
 	if JsonData[line].position == 0:
