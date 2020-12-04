@@ -7,7 +7,7 @@ signal CutscenePlayerStoppedMoving(
 	did_they_manage_to_reach_the_specified_position_though_im_really_curious_this_is_a_bool
 )
 var DialogStarted = false
-
+var DialogPosition = Vector2(0,0)
 func _init():
 	OS.window_size = Vector2(854, 480)
 	OS.center_window()

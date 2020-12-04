@@ -19,10 +19,13 @@ func _process(delta):
 		Global.WasInitialized == false
 		
 func _on_Area2D_body_entered(body: Node2D):
+	Global.DialogPosition = $Position2D.position
+	print(Global.DialogPosition)
 	jsonname = "CoolDialogue"
 	inZone = true
 
 func _on_Area2D_body_exited(area):
+	print(Global.DialogPosition)
 	jsonname = "errorhandler"
 	inZone = false
 
