@@ -47,7 +47,6 @@ func proceed_dialog():
 		if Global.DialogStarted == false:
 			Global.DialogStarted = true
 			#46 is X axis of position2D
-			print(Global.DialogPosition.x)
 			Global.emit_signal("DialogStarted", Global.CutscenePlayerInfo.new(true, Global.DialogPosition.x, 1))
 		ChangePortraitPosition()
 		yield(AnimationMaster,"animation_finished")
