@@ -9,7 +9,7 @@ signal CutscenePlayerStoppedMoving(
 var DialogStarted = false
 
 func _init():
-	OS.window_size = Vector2(1280, 720)
+	OS.window_size = Vector2(854, 480)
 	OS.center_window()
 
 
