@@ -78,6 +78,11 @@ const DASH_EXIT_SPEED = 130.0
 const DASH_DIAG_X_EXIT_SPEED = 200.0
 const DASH_DIAG_Y_EXIT_SPEED = 250.0
 
+# Bounce constants
+
+const BOUNCE_CHECK_DISTANCE = 2 * WALLJUMP_MARGIN
+const BOUNCE_PUSH = 200
+
 var in_control_x: bool = true
 var in_control_y: bool = true
 var no_control_x_timer: float
@@ -322,7 +327,8 @@ func _physics_process(delta):
 	
 	# Dash
 	
-	if Input.is_action_just_pressed("Cancel") and dashing_allowed and dashing_refreshed:
+	if (Input.is_action_just_pressed("Cancel") and dashing_allowed and
+			dashing_refreshed and not in_cutscene):
 		dashing_allowed = false
 		dashing_refreshed = false
 		dash_cancel_timer = DASH_DELAY
@@ -453,6 +459,7 @@ func DialogFinishedCode():
 	dashing_allowed = true
 
 func DialogStartedCode(playerInfo):
+	dash_waiting = false
 	in_cutscene = true
 	in_control_x = false
 	in_control_y = false
