@@ -45,6 +45,7 @@ func _process(delta):
 			if not DialogBoxAppeared:
 				if Input.is_action_just_pressed("Interact"):
 					# might be better if there were two separate functions
+					start_dialog()
 					proceed_dialog()
 			elif DialogBoxAppeared:
 				if Input.is_action_just_pressed("Accept") or Input.is_action_just_pressed("Interact"):
@@ -54,10 +55,11 @@ func _process(delta):
 					# the text animation goes here
 					pass
 
+func start_dialog():
+	Global.emit_signal("DialogStarted", Global.CutscenePlayerInfo.new(true, Global.DialogPosition.x, 1))
+
 func proceed_dialog():
 	if line < JsonData.size():
-		if Global.DialogStarted == false:
-			Global.emit_signal("DialogStarted", Global.CutscenePlayerInfo.new(true, Global.DialogPosition.x, 1))
 		ChangePortraitPosition()
 		yield(AnimationMaster,"animation_finished")
 		ChangePortrait()
