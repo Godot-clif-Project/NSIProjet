@@ -3,10 +3,12 @@ extends KinematicBody2D
 
 # TO DO:
 
-# Add coyote time for dashing into bouncing or rolling (MAYBE NOT)
-
 # When trying to bounce off a wall but the you dash beyond the wall, bounce
 # when you leave the wall instead of at the end of the dash
+
+# Have a timer before you regain your dash when on the ground
+
+# make exit vel manually slower when dashing up
 
 
 export var facing_left: bool
@@ -353,11 +355,49 @@ func _physics_process(delta):
 		if dash_timer <= 0:
 			dashing = false
 			dashing_allowed = true
+			var exit_velocity: Vector2
+			# Bouncing
 			if bouncing_allowed and Input.is_action_pressed("Accept"):
-				pass
+				if dash_direction.x != 0:
+					if dash_direction.y < 0:
+						if test_move(
+							transform,
+							Vector2(BOUNCE_CHECK_DISTANCE * sign(dash_direction.x),
+							0)
+						):
+							print("diag up against wall")
+						elif test_move(transform, Vector2.UP * BOUNCE_CHECK_DISTANCE):
+							print("diag up against ceiling")
+					elif dash_direction.y == 0:
+						if test_move(
+							transform,
+							Vector2(BOUNCE_CHECK_DISTANCE * sign(dash_direction.x),
+							0)
+						):
+							print("side against wall")
+					else:
+						if test_move(
+							transform,
+							Vector2(BOUNCE_CHECK_DISTANCE * sign(dash_direction.x),
+							0)
+						):
+							print("diag down against wall")
+						elif test_move(transform, Vector2.DOWN * BOUNCE_CHECK_DISTANCE):
+							print("diag down against floor")
+				else:
+					if (
+						dash_direction.y > 0 and
+						test_move(transform, Vector2.DOWN * BOUNCE_CHECK_DISTANCE)
+					):
+						print("down against floor")
+					elif (
+						dash_direction.y < 0 and
+						test_move(transform, Vector2.UP * BOUNCE_CHECK_DISTANCE)
+					):
+						print("up against ceiling")
 			elif rolling_allowed and Input.is_action_pressed("Cancel"):
 				pass
-			else:
+			if exit_velocity == Vector2.ZERO:
 				var exit_vel: Vector2
 				if dash_direction.y <= 0:
 					exit_vel = (dash_direction * DASH_EXIT_SPEED).abs()
@@ -366,8 +406,10 @@ func _physics_process(delta):
 						abs(dash_direction.x * DASH_DIAG_X_EXIT_SPEED),
 						abs(dash_direction.y * DASH_DIAG_Y_EXIT_SPEED)
 					)
-				velocity.x = min(abs(velocity.x), exit_vel.x) * sign(velocity.x)
-				velocity.y = min(abs(velocity.y), exit_vel.y) * sign(velocity.y)
+				exit_velocity.x = min(abs(velocity.x), exit_vel.x) * sign(velocity.x)
+				exit_velocity.y = min(abs(velocity.y), exit_vel.y) * sign(velocity.y)
+			
+			velocity = exit_velocity
 	
 	# Apply velocity
 	
