@@ -341,7 +341,6 @@ func _physics_process(delta):
 	if (Input.is_action_just_pressed("Cancel") and dashing_allowed and
 			dashing_refreshed and not in_cutscene):
 		dashing_allowed = false
-		dashing_refreshed = false
 		dash_cancel_timer = DASH_DELAY
 		dash_waiting = true
 		velocity *= DASH_PRE_VEL_MULTIPLIER
@@ -349,6 +348,7 @@ func _physics_process(delta):
 	if dash_waiting:
 		dash_cancel_timer -= delta
 		if dash_cancel_timer <= 0:
+			dashing_refreshed = false
 			dash_waiting = false
 			dashing = true
 			apply_gravity = false
