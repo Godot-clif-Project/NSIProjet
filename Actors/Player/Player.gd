@@ -125,9 +125,11 @@ onready var anim_run = $SpriteContainer/SpriteRun
 onready var anim_jump = $SpriteContainer/SpriteJump
 onready var anim_hangtime = $SpriteContainer/SpriteHangtime
 onready var anim_fall = $SpriteContainer/SpriteFall
+onready var anim_dash = $SpriteContainer/SpriteDash
 
 onready var anim_current
-onready var anim_list = [anim_idle, anim_run, anim_jump, anim_hangtime, anim_fall]
+onready var anim_list = [anim_idle, anim_run, anim_jump, anim_hangtime,
+						 anim_fall, anim_dash]
 
 var palette_normal_texture: StreamTexture
 var palette_dash_texture: StreamTexture
@@ -159,7 +161,6 @@ func _ready():
 	
 	dash_particles = dash_particles_packed.instance()
 	dash_particles.player_reference = self
-	print(Global.where_particles_should_be)
 	Global.where_particles_should_be.add_child(dash_particles)
 
 
@@ -480,16 +481,19 @@ func _physics_process(delta):
 	
 	# Animations
 	
-	if grounded:
-		if abs(velocity.x) > RUNNING_THRESHOLD and not wallsliding:
-			set_anim(anim_run, "Run")
-		else:
-			set_anim(anim_idle, "Idle")
+	if dashing:
+		set_anim(anim_dash, "Dash")
 	else:
-		if anim_current == anim_run or anim_current == anim_idle:
-			set_anim(anim_idle, "Hangtime")
-		if velocity.y >= FALLING_THRESHOLD:
-			set_anim(anim_fall, "Fall")
+		if grounded:
+			if abs(velocity.x) > RUNNING_THRESHOLD and not wallsliding:
+				set_anim(anim_run, "Run")
+			else:
+				set_anim(anim_idle, "Idle")
+		else:
+			if anim_current == anim_run or anim_current == anim_idle:
+				set_anim(anim_idle, "Hangtime")
+			if velocity.y >= FALLING_THRESHOLD:
+				set_anim(anim_fall, "Fall")
 	
 	if anim_container.scale.x == -1:
 		if facing > 0:
