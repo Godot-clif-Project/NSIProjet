@@ -1,23 +1,30 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
-[ext_resource path="res://Aseprite/Main character/plantchar_idle.png" type="Texture" id=1]
+[ext_resource path="res://Aseprite/Main character/UV sprites/plantchar_fall.png" type="Texture" id=1]
 [ext_resource path="res://Actors/Player/Player.gd" type="Script" id=2]
-[ext_resource path="res://Aseprite/Main character/plantchar_run.png" type="Texture" id=3]
-[ext_resource path="res://Aseprite/Main character/plantchar_jump.png" type="Texture" id=4]
-[ext_resource path="res://Aseprite/Main character/plantchar_hangtime.png" type="Texture" id=5]
-[ext_resource path="res://Aseprite/Main character/plantchar_fall.png" type="Texture" id=6]
+[ext_resource path="res://Aseprite/Main character/UV sprites/plantchar_hangtime.png" type="Texture" id=3]
+[ext_resource path="res://Aseprite/Main character/UV sprites/plantchar_jump.png" type="Texture" id=4]
+[ext_resource path="res://Aseprite/Main character/UV sprites/plantchar_idle.png" type="Texture" id=5]
+[ext_resource path="res://Aseprite/Main character/UV sprites/plantchar_run.png" type="Texture" id=6]
+[ext_resource path="res://Aseprite/Main character/Palette nonsense/normal_palette.png" type="Texture" id=7]
 
 [sub_resource type="Shader" id=9]
 code = "shader_type canvas_item;
 
+uniform sampler2D palette;
+
 void fragment()
 {
-	COLOR = vec4(UV, 1.0, 1.0);
+	vec4 spr_color = texture(TEXTURE, UV);
+	vec4 final_color = texture(palette, vec2(spr_color.r, spr_color.g));
+	final_color.a = spr_color.a;
+	COLOR = final_color;
 }
 "
 
 [sub_resource type="ShaderMaterial" id=10]
 shader = SubResource( 9 )
+shader_param/palette = ExtResource( 7 )
 
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 3.9, 7.9 )
@@ -127,14 +134,14 @@ material = SubResource( 10 )
 
 [node name="SpriteIdle" type="Sprite" parent="SpriteContainer"]
 use_parent_material = true
-texture = ExtResource( 1 )
+texture = ExtResource( 5 )
 offset = Vector2( 0, -2.5 )
 hframes = 6
 
 [node name="SpriteRun" type="Sprite" parent="SpriteContainer"]
 visible = false
 use_parent_material = true
-texture = ExtResource( 3 )
+texture = ExtResource( 6 )
 offset = Vector2( 0, -2.5 )
 hframes = 4
 
@@ -149,14 +156,14 @@ frame = 3
 [node name="SpriteHangtime" type="Sprite" parent="SpriteContainer"]
 visible = false
 use_parent_material = true
-texture = ExtResource( 5 )
+texture = ExtResource( 3 )
 offset = Vector2( 0, -2.5 )
 hframes = 2
 
 [node name="SpriteFall" type="Sprite" parent="SpriteContainer"]
 visible = false
 use_parent_material = true
-texture = ExtResource( 6 )
+texture = ExtResource( 1 )
 offset = Vector2( 0, -2.5 )
 hframes = 3
 

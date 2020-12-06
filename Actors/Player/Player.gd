@@ -6,9 +6,7 @@ extends KinematicBody2D
 # When trying to bounce off a wall but the you dash beyond the wall, bounce
 # when you leave the wall instead of at the end of the dash
 
-# Have a timer before you regain your dash when on the ground
-
-# make exit vel manually slower when dashing up
+# Squeeze around walls when dashing
 
 
 export var facing_left: bool
@@ -22,6 +20,7 @@ const GRAVITY = 650.0
 const JUMP_FORCE = -230.0
 const JUMP_TIME = .1
 const COYOTE_TIME = .1
+const COYOTE_TIME_WHEN_DASHING = .07
 const JUMP_SPBOOST_MULTIPLIER = 1.3
 const JUMP_SPBOOST_MAX = RUN_SPEED_MAX * JUMP_SPBOOST_MULTIPLIER
 const STICKY_LANDING_MIN = 20.0
@@ -63,6 +62,8 @@ const FALLING_THRESHOLD = 0.0
 
 const CUTSCENE_WALKING_SPEED = 65.0
 
+const DASH_REFILL_ANIM_DURATION = .1
+
 # Dash constants
 
 const DASH_DELAY = .1
@@ -72,6 +73,7 @@ const DASH_DURATION = .12
 const DASH_EXIT_SPEED = 130.0
 const DASH_DIAG_X_EXIT_SPEED = 200.0
 const DASH_DIAG_Y_EXIT_SPEED = 250.0
+const DASH_UP_EXIT_SPEED = 110.0
 
 # Bounce constants
 
@@ -127,6 +129,14 @@ onready var anim_fall = $SpriteContainer/SpriteFall
 onready var anim_current
 onready var anim_list = [anim_idle, anim_run, anim_jump, anim_hangtime, anim_fall]
 
+var palette_normal_texture: StreamTexture
+var palette_dash_texture: StreamTexture
+var palette_white_texture: StreamTexture
+var palette_white_petals_texture: StreamTexture
+var palette_current: StreamTexture
+
+var dash_refill_anim_timer: float
+
 func _ready():
 	Global.connect("DialogFinished",self,"DialogFinishedCode")
 	Global.connect("DialogStarted",self,"DialogStartedCode")
@@ -136,6 +146,12 @@ func _ready():
 	dashing_refreshed = true
 	facing = -1 if facing_left else 1
 	
+	palette_normal_texture = preload("res://Aseprite/Main character/Palette nonsense/normal_palette.png")
+	palette_dash_texture = preload("res://Aseprite/Main character/Palette nonsense/dash_palette.png")
+	palette_white_texture = preload("res://Aseprite/Main character/Palette nonsense/white_palette.png")
+	palette_white_petals_texture = preload("res://Aseprite/Main character/Palette nonsense/white_petals_palette.png")
+	palette_current = anim_container.material.get_shader_param("palette")
+
 
 func _physics_process(delta):
 	direction_x = (
@@ -184,7 +200,7 @@ func _physics_process(delta):
 	if grounded:
 		jumping = false
 	if grounded and dashing_allowed:
-		dashing_refreshed = true
+		refill_dash()
 	
 	# Replace this mess (and also in the walljump code) with a "facing" variable
 	# This will also make animations easier to implement
@@ -273,7 +289,7 @@ func _physics_process(delta):
 		if Input.is_action_just_pressed("Accept"):
 			jump_timer = JUMP_TIME
 		if grounded:
-			coyote_timer = COYOTE_TIME
+			coyote_timer = COYOTE_TIME_WHEN_DASHING if dashing else COYOTE_TIME
 			last_ground_y = position.y
 	
 	if jump_timer and coyote_timer and in_control_y:
@@ -356,6 +372,8 @@ func _physics_process(delta):
 			dashing_allowed = true
 			var exit_velocity: Vector2
 			# Bouncing
+			# this code is stupid but we don't have a lot of time left so whatever
+			# i'll try to reduce the copy/paste after the deadline
 			if bouncing_allowed and Input.is_action_pressed("Accept"):
 				if dash_direction.x != 0:
 					if dash_direction.y < 0:
@@ -398,7 +416,9 @@ func _physics_process(delta):
 				pass
 			if exit_velocity == Vector2.ZERO:
 				var exit_vel: Vector2
-				if dash_direction.y <= 0:
+				if dash_direction.y == -1.0:
+					exit_vel.y = DASH_UP_EXIT_SPEED;
+				elif dash_direction.y <= 0:
 					exit_vel = (dash_direction * DASH_EXIT_SPEED).abs()
 				else:
 					exit_vel = Vector2(
@@ -466,6 +486,16 @@ func _physics_process(delta):
 			anim_container.scale.x = 1
 	elif facing < 0:
 		anim_container.scale.x = -1
+	
+	# Change palette
+	
+	if dash_refill_anim_timer > 0:
+		set_palette(palette_white_petals_texture)
+		dash_refill_anim_timer -= delta
+	elif not dashing_refreshed:
+		set_palette(palette_dash_texture)
+	else:
+		set_palette(palette_normal_texture)
 
 
 func set_anim(new_anim: Sprite, anim: String):
@@ -484,6 +514,12 @@ func animationplayer_set_hangtime():
 	set_anim(anim_hangtime, "Hangtime")
 
 
+func set_palette(palette: StreamTexture):
+	if palette_current != palette:
+		palette_current = palette
+		anim_container.material.set_shader_param("palette", palette)
+
+
 func on_jump():
 	jumping = true
 	set_anim(anim_jump, "Jump")
@@ -495,6 +531,13 @@ func on_dash():
 	if dash_direction.x:
 		facing = sign(dash_direction.x)
 	jumping = false
+
+
+func refill_dash():
+	if not dashing_refreshed:
+		dashing_refreshed = true
+		dash_refill_anim_timer = DASH_REFILL_ANIM_DURATION
+
 
 func DialogFinishedCode():
 	in_cutscene = false
@@ -508,7 +551,7 @@ func DialogStartedCode(playerInfo):
 	no_control_x_timer = 0
 	no_control_y_timer = 0
 	dashing_allowed = false
-	dashing_refreshed = true
+	refill_dash()
 	dashing = false
 	apply_gravity = true
 	cutscene_info = playerInfo
