@@ -9,6 +9,10 @@ signal CutscenePlayerStoppedMoving(
 var DialogStarted = false
 var DialogPosition = Vector2(0,0)
 var inZone = false
+
+var gameRunning = true
+var ticks: int
+
 func _init():
 	OS.window_size = Vector2(854, 480)
 	OS.center_window()
@@ -17,6 +21,10 @@ func _init():
 func _ready():
 	pass	
 
+
+func _physics_process(delta):
+	if gameRunning:
+		ticks += 1
 
 class CutscenePlayerInfo:
 	"""

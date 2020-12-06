@@ -276,25 +276,24 @@ func _physics_process(delta):
 			coyote_timer = COYOTE_TIME
 			last_ground_y = position.y
 	
-	if in_control_y:		
-		if jump_timer and coyote_timer:
-			jump_timer = 0
-			coyote_timer = 0
-			move_and_collide(Vector2(0, last_ground_y - position.y))
-			velocity.y = JUMP_FORCE
-			if abs(velocity.x) < JUMP_SPBOOST_MAX:
-				velocity.x *= JUMP_SPBOOST_MULTIPLIER
-				velocity.x = clamp(velocity.x, -JUMP_SPBOOST_MAX, JUMP_SPBOOST_MAX)
-			jump_timer = 0
-			coyote_timer = 0
-			grounded = false
-			on_jump()
-		else:
-			jump_timer = max(jump_timer - delta, 0.0)
-			coyote_timer = max(coyote_timer - delta, 0.0)
-		
-		# Walljump
-		
+	if jump_timer and coyote_timer and in_control_y:
+		jump_timer = 0
+		coyote_timer = 0
+		move_and_collide(Vector2(0, last_ground_y - position.y))
+		velocity.y = JUMP_FORCE
+		if abs(velocity.x) < JUMP_SPBOOST_MAX:
+			velocity.x *= JUMP_SPBOOST_MULTIPLIER
+			velocity.x = clamp(velocity.x, -JUMP_SPBOOST_MAX, JUMP_SPBOOST_MAX)
+		jump_timer = 0
+		coyote_timer = 0
+		grounded = false
+		on_jump()
+	else:
+		jump_timer = max(jump_timer - delta, 0.0)
+		coyote_timer = max(coyote_timer - delta, 0.0)
+	
+	# Walljump
+	if in_control_y:
 		if jump_timer:
 			var wall_normal: int
 			if test_move(transform, Vector2(WALLJUMP_MARGIN * facing, 0)):
