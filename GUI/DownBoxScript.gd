@@ -57,6 +57,7 @@ func _process(delta):
 
 func start_dialog():
 	Global.emit_signal("DialogStarted", Global.CutscenePlayerInfo.new(true, Global.DialogPosition.x, 1))
+	Global.DialogStarted = true
 
 func proceed_dialog():
 	if line < JsonData.size():

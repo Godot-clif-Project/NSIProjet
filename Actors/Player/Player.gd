@@ -44,8 +44,8 @@ const FASTFALL_MULTIPLIER = 1.2
 const FASTFALL_BEGIN = 0
 const JUMP_SPEED_MAX = FASTFALL_SPEED
 const WALLSLIDE_MIN_SPEED = 30.0
-const WALLSLIDE_GRAVITY = 400.0
-const WALLSLIDE_MAX_SPEED = 50.0
+const WALLSLIDE_GRAVITY = 350.0
+const WALLSLIDE_MAX_SPEED = 80.0
 const WALLSLIDE_FCOUNT = 2
 
 const RUN_FRIC_TEMP = .72
@@ -72,6 +72,7 @@ const DASH_DELAY = .1
 const DASH_PRE_VEL_MULTIPLIER = 0
 const DASH_SPEED = 350.0
 const DASH_DURATION = .12
+const DASH_REGAIN_AFTER_RATIO = .7
 const DASH_EXIT_SPEED = 130.0
 const DASH_DIAG_X_EXIT_SPEED = 200.0
 const DASH_DIAG_Y_EXIT_SPEED = 250.0
@@ -99,6 +100,7 @@ var coyote_timer: float
 
 var grounded: bool
 var wallsliding: bool
+var actually_wallsliding: bool
 var wallslide_fcounter: int
 var last_ground_y: float
 var last_wall_normal: int
@@ -230,7 +232,6 @@ func _physics_process(delta):
 			last_wall_normal = int(sign(velocity.x))
 		if not wallsliding:
 			wallsliding = true
-			velocity.y = min(velocity.y, WALLSLIDE_MIN_SPEED)
 		wallslide_fcounter = WALLSLIDE_FCOUNT
 	elif wallsliding:
 		wallslide_fcounter -= 1
@@ -277,18 +278,27 @@ func _physics_process(delta):
 		if direction_y == 1 and velocity.y > FASTFALL_BEGIN:
 			current_gravity *= FASTFALL_MULTIPLIER
 		
-		var max_fall_speed = FASTFALL_SPEED if direction_y == 1 else FALL_SPEED
+		var max_fall_speed: float
+		if direction_y == 1:
+			max_fall_speed = FASTFALL_SPEED
+		elif wallsliding:
+			max_fall_speed = WALLSLIDE_MAX_SPEED
+		else:
+			max_fall_speed = FALL_SPEED
 		
 		if velocity.y < max_fall_speed:
 			if not grounded and in_control_y:
-				if wallsliding and not velocity.y < 0:
+				if wallsliding and velocity.y >= WALLSLIDE_MIN_SPEED:
+					actually_wallsliding = true
 					current_gravity = WALLSLIDE_GRAVITY
-				elif jumping:
-					if Input.is_action_pressed("Accept"):
-						if GRAVMOD_BIGLEAP_BEGIN < velocity.y and velocity.y < GRAVMOD_BIGLEAP_END:
-							current_gravity *= GRAVMOD_BIGLEAP_MULTIPLIER
-					elif GRAVMOD_SHORTHOP_BEGIN < velocity.y and velocity.y < GRAVMOD_SHORTHOP_END:
-						current_gravity *= GRAVMOD_SHORTHOP_MULTIPLIER
+				else:
+					actually_wallsliding = false
+					if jumping:
+						if Input.is_action_pressed("Accept"):
+							if GRAVMOD_BIGLEAP_BEGIN < velocity.y and velocity.y < GRAVMOD_BIGLEAP_END:
+								current_gravity *= GRAVMOD_BIGLEAP_MULTIPLIER
+						elif GRAVMOD_SHORTHOP_BEGIN < velocity.y and velocity.y < GRAVMOD_SHORTHOP_END:
+							current_gravity *= GRAVMOD_SHORTHOP_MULTIPLIER
 				if direction_y == 1 and velocity.y >= FASTFALL_BEGIN:
 					current_gravity *= FASTFALL_MULTIPLIER
 			
@@ -382,9 +392,10 @@ func _physics_process(delta):
 			on_dash()
 	if dashing:
 		dash_timer -= delta
+		if dash_timer <= DASH_DURATION * (1 - DASH_REGAIN_AFTER_RATIO):
+			dashing_allowed = true
 		if dash_timer <= 0:
 			dashing = false
-			dashing_allowed = true
 			var exit_velocity: Vector2
 			# Bouncing
 			# this code is stupid but we don't have a lot of time left so whatever
@@ -450,7 +461,8 @@ func _physics_process(delta):
 	if in_cutscene:
 		move_and_slide(Vector2(0, velocity.y), Vector2.UP)
 		if cutscene_info.set_position:
-			move_and_collide(Vector2(velocity.x, 0) * delta)
+			if grounded:
+				move_and_collide(Vector2(velocity.x, 0) * delta)
 			if sign(cutscene_info.position_x - global_position.x) != sign(cutscene_velocity):
 				move_and_collide(Vector2(cutscene_info.position_x - global_position.x, 0))
 				Global.emit_signal("CutscenePlayerStoppedMoving", true)
@@ -522,8 +534,8 @@ func _physics_process(delta):
 	# Particles
 	
 	if dashing:
-		dash_particles.emitting = true
 		dash_particles.direction = dash_direction
+		dash_particles.emitting = true
 	else:
 		dash_particles.emitting = false
 
