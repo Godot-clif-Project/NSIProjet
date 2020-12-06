@@ -13,6 +13,8 @@ var inZone = false
 var gameRunning = true
 var ticks: int
 
+var where_particles_should_be: Node
+
 func _init():
 	OS.window_size = Vector2(854, 480)
 	OS.center_window()

@@ -137,6 +137,9 @@ var palette_current: StreamTexture
 
 var dash_refill_anim_timer: float
 
+var dash_particles_packed: PackedScene
+var dash_particles: Node
+
 func _ready():
 	Global.connect("DialogFinished",self,"DialogFinishedCode")
 	Global.connect("DialogStarted",self,"DialogStartedCode")
@@ -151,6 +154,13 @@ func _ready():
 	palette_white_texture = preload("res://Aseprite/Main character/Palette nonsense/white_palette.png")
 	palette_white_petals_texture = preload("res://Aseprite/Main character/Palette nonsense/white_petals_palette.png")
 	palette_current = anim_container.material.get_shader_param("palette")
+	
+	dash_particles_packed = preload("res://Actors/Player/Particles/DashParticles.tscn")
+	
+	dash_particles = dash_particles_packed.instance()
+	dash_particles.player_reference = self
+	print(Global.where_particles_should_be)
+	Global.where_particles_should_be.add_child(dash_particles)
 
 
 func _physics_process(delta):
@@ -496,6 +506,14 @@ func _physics_process(delta):
 		set_palette(palette_dash_texture)
 	else:
 		set_palette(palette_normal_texture)
+	
+	# Particles
+	
+	if dashing:
+		dash_particles.emitting = true
+		dash_particles.direction = dash_direction
+	else:
+		dash_particles.emitting = false
 
 
 func set_anim(new_anim: Sprite, anim: String):

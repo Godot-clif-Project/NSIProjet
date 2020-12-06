@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Levels/TestLevel/sky.png" type="Texture" id=1]
 [ext_resource path="res://Levels/TestLevel/tile.png" type="Texture" id=2]
 [ext_resource path="res://Actors/Player/Player.tscn" type="PackedScene" id=3]
 [ext_resource path="res://GUI/DownBox.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Actors/TestNPC/TestNPC.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Global/WhereParticlesShouldBe.tscn" type="PackedScene" id=6]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 0, 0, 8, 0, 8, 8, 0, 8 )
@@ -48,8 +49,11 @@ tile_data = PoolIntArray( -786453, 0, 0, -786452, 0, 0, -786451, 0, 0, -786450, 
 
 [node name="TestNPC" parent="." instance=ExtResource( 5 )]
 position = Vector2( 76, 5 )
+z_index = 1
 flip_h = true
 jsonname = "CoolDialogue"
+
+[node name="WhereParticlesShouldBe" parent="." instance=ExtResource( 6 )]
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
 position = Vector2( -112, 8 )
