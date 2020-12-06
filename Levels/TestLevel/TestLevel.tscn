@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Levels/TestLevel/sky.png" type="Texture" id=1]
 [ext_resource path="res://Levels/TestLevel/tile.png" type="Texture" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://GUI/DownBox.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Actors/TestNPC/TestNPC.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Global/WhereParticlesShouldBe.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Global/Camera2D.tscn" type="PackedScene" id=7]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 0, 0, 8, 0, 8, 8, 0, 8 )
@@ -61,8 +62,7 @@ collision_layer = 33
 bouncing_allowed = true
 rolling_allowed = true
 
-[node name="Camera2D" type="Camera2D" parent="."]
-current = true
+[node name="Camera2D" parent="." instance=ExtResource( 7 )]
 
 [node name="DownBox" parent="." instance=ExtResource( 4 )]
 anchor_top = 1.0

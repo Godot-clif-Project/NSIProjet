@@ -64,6 +64,8 @@ const CUTSCENE_WALKING_SPEED = 65.0
 
 const DASH_REFILL_ANIM_DURATION = .1
 
+const DASH_POSITION_OFFSET = 1
+
 # Dash constants
 
 const DASH_DELAY = .1
@@ -141,6 +143,8 @@ var dash_refill_anim_timer: float
 
 var dash_particles_packed: PackedScene
 var dash_particles: Node
+
+onready var anim_dash_raw_offset = anim_dash.offset
 
 func _ready():
 	Global.connect("DialogFinished",self,"DialogFinishedCode")
@@ -483,6 +487,10 @@ func _physics_process(delta):
 	
 	if dashing:
 		set_anim(anim_dash, "Dash")
+		anim_dash.offset = (
+			anim_dash_raw_offset +
+			Vector2(int(dash_direction.x != 0), int(dash_direction.y != 0))
+		)
 	else:
 		if grounded:
 			if abs(velocity.x) > RUNNING_THRESHOLD and not wallsliding:
