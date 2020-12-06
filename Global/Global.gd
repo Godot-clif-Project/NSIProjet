@@ -14,6 +14,9 @@ var gameRunning = true
 var ticks: int
 
 var where_particles_should_be: Node
+var camera: Node
+
+var rng: RandomNumberGenerator
 
 func _init():
 	OS.window_size = Vector2(854, 480)
@@ -21,7 +24,8 @@ func _init():
 
 
 func _ready():
-	pass	
+	rng = RandomNumberGenerator.new()
+	rng.randomize()
 
 
 func _physics_process(delta):

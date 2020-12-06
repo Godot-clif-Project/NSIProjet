@@ -82,6 +82,10 @@ const DASH_UP_EXIT_SPEED = 110.0
 
 const BOUNCE_CHECK_DISTANCE = 2 * WALLJUMP_MARGIN
 
+# Camera constants
+
+const DASH_SHAKE_DURATION = .2
+
 
 var in_control_x: bool = true
 var in_control_y: bool = true
@@ -573,6 +577,7 @@ func on_dash():
 	if dash_direction.x:
 		facing = sign(dash_direction.x)
 	jumping = false
+	Global.camera.shake(dash_direction, DASH_SHAKE_DURATION)
 
 
 func refill_dash():
