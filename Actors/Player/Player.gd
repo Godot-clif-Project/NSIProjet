@@ -3,14 +3,14 @@ extends KinematicBody2D
 
 # TO DO:
 
+# Coyote time for bouncing
+
 # When trying to bounce off a wall but the you dash beyond the wall, bounce
 # when you leave the wall instead of at the end of the dash
 
-# Squeeze around walls when dashing
+# Make bunny hops better
 
 # Missing animations: wallslide, landing, changing directions, ledge balancing
-
-# Palette lerping
 
 
 export var facing_left: bool
@@ -89,17 +89,19 @@ const DASH_SQUEEZE_AROUND_CHECK_DISTANCE_MAX = 4
 const BOUNCE_CHECK_DISTANCE = 2 * WALLJUMP_MARGIN
 
 # AG, AL = against, along
-const BOUNCE_UPDIAG_AG_WALL = Vector2()
-const BOUNCE_UPDIAG_AG_CEIL = Vector2()
-const BOUNCE_SIDE_AG_WALL = Vector2()
-const BOUNCE_SIDE_AL_FLOOR = Vector2()
-const BOUNCE_SIDE_AL_CEIL = Vector2()
-const BOUNCE_DOWNDIAG_AG_WALL = Vector2()
-const BOUNCE_DOWNDIAG_AG_FLOOR = Vector2()
-const BOUNCE_DOWN_AG_FLOOR = Vector2()
-const BOUNCE_DOWN_AL_WALL = Vector2()
-const BOUNCE_UP_AL_WALL = Vector2()
-const BOUNCE_UP_AG_CEIL = Vector2()
+const BOUNCE_UPDIAG_AG_WALL = Vector2(-210, -240)
+const BOUNCE_UPDIAG_AG_CEIL = Vector2(190, -240)
+const BOUNCE_SIDE_AG_WALL = Vector2(-260, -80)
+const BOUNCE_SIDE_AL_FLOOR = Vector2(180, -200)
+const BOUNCE_SIDE_AL_CEIL = Vector2(190, -200)
+const BOUNCE_DOWNDIAG_AG_WALL = Vector2(-210, -180)
+const BOUNCE_DOWNDIAG_AG_FLOOR = Vector2(210, -180)
+const BOUNCE_DOWN_AG_FLOOR = Vector2(-20, -130)
+const BOUNCE_DOWN_AL_WALL = Vector2(-100, -130)
+const BOUNCE_UP_AL_WALL = Vector2(-120, -260)
+const BOUNCE_UP_AG_CEIL = Vector2(100, -240)
+const BOUNCE_STICK_TO_CEILING_TIME = .2
+const BOUNCE_REMOVE_CONTROL_TIME = .15
 
 # Camera constants
 
@@ -136,6 +138,7 @@ var dash_cancel_timer: float
 var dash_waiting: bool
 var dashing: bool
 var dash_timer: float
+var stick_to_ceiling_timer: float
 var facing: int
 
 export var bouncing_allowed: bool
@@ -168,6 +171,7 @@ var dash_refill_anim_timer: float
 
 var dash_particles_packed: PackedScene
 var dash_particles: Node
+
 
 onready var anim_dash_raw_offset = anim_dash.offset
 
@@ -427,90 +431,110 @@ func _physics_process(delta):
 			# this code is stupid but we don't have a lot of time left so whatever
 			# i'll try to reduce the copy/paste after the deadline
 			if bouncing_allowed and Input.is_action_pressed("Accept"):
+				var stick_to_ceiling: bool
 				if dash_direction.x != 0:
 					if dash_direction.y < 0:
 						if test_move(
 							transform,
-							Vector2(BOUNCE_CHECK_DISTANCE * sign(dash_direction.x),
+							Vector2(BOUNCE_CHECK_DISTANCE * facing,
 							0)
 						):
 							exit_velocity = vector_mult_only_x(
 								BOUNCE_UPDIAG_AG_WALL,
 								dash_direction.x
 							)
+							facing = -facing
 						elif test_move(transform, Vector2.UP * BOUNCE_CHECK_DISTANCE):
 							exit_velocity = vector_mult_only_x(
 								BOUNCE_UPDIAG_AG_CEIL,
-								dash_direction.x
+								facing
 							)
+							stick_to_ceiling = true
 					elif dash_direction.y == 0:
 						if test_move(
 							transform,
-							Vector2(BOUNCE_CHECK_DISTANCE * sign(dash_direction.x),
+							Vector2(BOUNCE_CHECK_DISTANCE * facing,
 							0)
 						):
 							exit_velocity = vector_mult_only_x(
 								BOUNCE_SIDE_AG_WALL,
 								dash_direction.x
 							)
+							facing = -facing
 						elif test_move(transform, Vector2.DOWN * BOUNCE_CHECK_DISTANCE):
 							exit_velocity = vector_mult_only_x(
 								BOUNCE_SIDE_AL_FLOOR,
-								dash_direction.x
+								facing
 							)
 						elif test_move(transform, Vector2.UP * BOUNCE_CHECK_DISTANCE):
 							exit_velocity = vector_mult_only_x(
 								BOUNCE_SIDE_AL_CEIL,
-								dash_direction.x
+								facing
 							)
+							stick_to_ceiling = true
 					else:
 						if test_move(
 							transform,
-							Vector2(BOUNCE_CHECK_DISTANCE * sign(dash_direction.x),
+							Vector2(BOUNCE_CHECK_DISTANCE * facing,
 							0)
 						):
 							exit_velocity = vector_mult_only_x(
 								BOUNCE_DOWNDIAG_AG_WALL,
 								dash_direction.x
 							)
+							facing = -facing
 						elif test_move(transform, Vector2.DOWN * BOUNCE_CHECK_DISTANCE):
 							exit_velocity = vector_mult_only_x(
 								BOUNCE_DOWNDIAG_AG_FLOOR,
-								dash_direction.x
+								facing
 							)
 				else:
 					if dash_direction.y > 0:
 						if test_move(transform, Vector2.DOWN * BOUNCE_CHECK_DISTANCE):
 							exit_velocity = vector_mult_only_x(
 								BOUNCE_DOWN_AG_FLOOR,
-								dash_direction.x
+								facing
 							)
 						elif test_move(transform, Vector2.RIGHT * facing * BOUNCE_CHECK_DISTANCE):
 							exit_velocity = vector_mult_only_x(
 								BOUNCE_DOWN_AL_WALL,
 								facing
 							)
+							facing = -facing
 						elif test_move(transform, Vector2.RIGHT * -facing * BOUNCE_CHECK_DISTANCE):
 							exit_velocity = vector_mult_only_x(
 								BOUNCE_DOWN_AL_WALL,
 								-facing
 							)
+							facing = -facing
 					elif dash_direction.y < 0:
-						if test_move(transform, Vector2.RIGHT * dash_direction.x * BOUNCE_CHECK_DISTANCE):
+						if test_move(transform, Vector2.RIGHT * facing * BOUNCE_CHECK_DISTANCE):
 							exit_velocity = vector_mult_only_x(
 								BOUNCE_UP_AL_WALL,
 								facing
 							)
-						elif test_move(transform, Vector2.RIGHT * -dash_direction.x * BOUNCE_CHECK_DISTANCE):
+							facing = -facing
+						elif test_move(transform, Vector2.RIGHT * -facing * BOUNCE_CHECK_DISTANCE):
 							exit_velocity = vector_mult_only_x(
 								BOUNCE_UP_AL_WALL,
 								-facing
 							)
+							facing = -facing
+							print("test")
 						elif test_move(transform, Vector2.UP * BOUNCE_CHECK_DISTANCE):
 							exit_velocity = vector_mult_only_x(
 								BOUNCE_UP_AG_CEIL,
-								dash_direction.x
+								facing
 							)
+							stick_to_ceiling = true
+				if exit_velocity != Vector2.ZERO:
+					in_control_x = false
+					in_control_y = false
+					no_control_x_timer = BOUNCE_REMOVE_CONTROL_TIME
+					no_control_y_timer = BOUNCE_REMOVE_CONTROL_TIME
+					on_jump() # to be replaced with on_bounce() eventually
+					if stick_to_ceiling:
+						stick_to_ceiling_timer = BOUNCE_STICK_TO_CEILING_TIME
 			elif rolling_allowed and Input.is_action_pressed("Cancel"):
 				pass
 			if exit_velocity == Vector2.ZERO:
@@ -563,11 +587,12 @@ func _physics_process(delta):
 					position += check_axis * i + collision.remainder
 					squeezed_around = true
 					break
+	
 	if not squeezed_around:
 		if is_on_ceiling():
 			if velocity_conservation_timer.y > 0:
 				velocity_conservation_timer.y -= delta
-			if velocity_conservation_timer.y <= 0:
+			if velocity_conservation_timer.y <= 0 and not stick_to_ceiling_timer:
 				velocity.y = 0
 		else:
 			velocity_conservation_timer.y = VELOCITY_CONSERVATION_TIME
@@ -580,6 +605,11 @@ func _physics_process(delta):
 				velocity.x = 0
 		else:
 			velocity_conservation_timer.x = VELOCITY_CONSERVATION_TIME
+	
+	if stick_to_ceiling_timer > 0.0:
+		stick_to_ceiling_timer -= delta
+		if stick_to_ceiling_timer < 0.0:
+			stick_to_ceiling_timer = 0.0
 	
 	
 	# Animations
