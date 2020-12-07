@@ -165,6 +165,7 @@ Debug4={
 
 2d_physics/layer_1="Player"
 2d_physics/layer_11="Solid ground"
+2d_physics/layer_15="CameraBounds"
 
 [rendering]
 

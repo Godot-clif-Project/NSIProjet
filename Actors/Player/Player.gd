@@ -172,6 +172,8 @@ func _ready():
 	dash_particles = dash_particles_packed.instance()
 	dash_particles.player_reference = self
 	Global.where_particles_should_be.add_child(dash_particles)
+	
+	Global.camera.add_pt_of_interest(self, 1.0, INF, true)
 
 
 func _physics_process(delta):
