@@ -8,6 +8,10 @@ extends KinematicBody2D
 
 # Squeeze around walls when dashing
 
+# Missing animations: wallslide, landing, changing directions, ledge balancing
+
+# Palette lerping
+
 
 export var facing_left: bool
 
