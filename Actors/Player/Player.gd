@@ -611,12 +611,17 @@ func _physics_process(delta):
 	# Change palette
 	
 	if dash_refill_anim_timer > 0:
-		set_palette(palette_white_petals_texture)
+		set_palette_uniform(
+			palette_white_petals_texture,
+			palette_normal_texture,
+			1 - (dash_refill_anim_timer / DASH_REFILL_ANIM_DURATION) *
+			1 - (dash_refill_anim_timer / DASH_REFILL_ANIM_DURATION)
+		)
 		dash_refill_anim_timer -= delta
 	elif not dashing_refreshed:
-		set_palette(palette_dash_texture)
+		set_palette_uniform(palette_dash_texture)
 	else:
-		set_palette(palette_normal_texture)
+		set_palette_uniform(palette_normal_texture)
 	
 	# Particles
 	
@@ -647,10 +652,10 @@ func animationplayer_set_hangtime():
 	set_anim(anim_hangtime, "Hangtime")
 
 
-func set_palette(palette: StreamTexture):
-	if palette_current != palette:
-		palette_current = palette
-		anim_container.material.set_shader_param("palette", palette)
+func set_palette_uniform(palette_a: StreamTexture, palette_b: StreamTexture = null, blend: float = 0.0):
+	anim_container.material.set_shader_param("palette_a", palette_a)
+	anim_container.material.set_shader_param("palette_b", palette_b)
+	anim_container.material.set_shader_param("blend", blend)
 
 
 func on_jump():

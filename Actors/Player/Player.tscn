@@ -9,32 +9,39 @@
 [ext_resource path="res://Aseprite/Main character/Palette nonsense/normal_palette.png" type="Texture" id=7]
 [ext_resource path="res://Aseprite/Main character/UV sprites/plantchar_dash.png" type="Texture" id=8]
 
-[sub_resource type="Shader" id=9]
+[sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
 
-uniform sampler2D palette;
+uniform sampler2D palette_a;
+uniform sampler2D palette_b;
+uniform float blend = 0.0;
 
 void fragment()
 {
 	vec4 spr_color = texture(TEXTURE, UV);
-	vec4 final_color = texture(palette, vec2(spr_color.r, spr_color.g));
+	vec4 final_color = texture(palette_a, spr_color.rg);
+	if (blend > 0.0)
+	{
+		vec4 blend_color = texture(palette_b, spr_color.rg);
+		final_color = mix(final_color, blend_color, blend);
+	}
 	final_color.a = spr_color.a;
 	COLOR = final_color;
 }
 "
 
-[sub_resource type="ShaderMaterial" id=10]
-shader = SubResource( 9 )
-shader_param/palette = ExtResource( 7 )
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/blend = 0.0
+shader_param/palette_a = ExtResource( 7 )
 
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 3.9, 7.9 )
 
-[sub_resource type="Animation" id=11]
+[sub_resource type="Animation" id=4]
 resource_name = "Dash"
 
-[sub_resource type="Animation" id=4]
-resource_name = "Fall"
+[sub_resource type="Animation" id=5]
 length = 0.36
 step = 0.02
 tracks/0/type = "value"
@@ -50,7 +57,7 @@ tracks/0/keys = {
 "values": [ 0, 1, 2 ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=6]
 length = 0.3
 step = 0.05
 tracks/0/type = "value"
@@ -66,7 +73,7 @@ tracks/0/keys = {
 "values": [ 0, 1 ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=7]
 length = 0.9
 loop = true
 step = 0.05
@@ -83,7 +90,7 @@ tracks/0/keys = {
 "values": [ 0, 2, 3, 5 ]
 }
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=8]
 length = 0.41
 step = 0.02
 tracks/0/type = "value"
@@ -113,7 +120,7 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=9]
 length = 0.32
 loop = true
 step = 0.02
@@ -136,7 +143,7 @@ collision_mask = 1024
 script = ExtResource( 2 )
 
 [node name="SpriteContainer" type="Node2D" parent="."]
-material = SubResource( 10 )
+material = SubResource( 2 )
 
 [node name="SpriteIdle" type="Sprite" parent="SpriteContainer"]
 use_parent_material = true
@@ -182,9 +189,9 @@ offset = Vector2( 0, -2.5 )
 shape = SubResource( 3 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Dash = SubResource( 11 )
-anims/Fall = SubResource( 4 )
-anims/Hangtime = SubResource( 5 )
-anims/Idle = SubResource( 6 )
-anims/Jump = SubResource( 7 )
-anims/Run = SubResource( 8 )
+anims/Dash = SubResource( 4 )
+anims/Fall = SubResource( 5 )
+anims/Hangtime = SubResource( 6 )
+anims/Idle = SubResource( 7 )
+anims/Jump = SubResource( 8 )
+anims/Run = SubResource( 9 )
