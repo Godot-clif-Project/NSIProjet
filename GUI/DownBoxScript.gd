@@ -36,11 +36,15 @@ func _ready():
 	Global.connect("DownTalkAnimation",self,"DownTalkAnimation")
 	Global.connect("StopDownTalkAnimation",self,"StopDownTalkAnimation")
 	
-	load_json("errorhandler")
+	load_json(jsonname)
 	hide()
 
 func _process(delta):
-	if jsonname != "" or "errorhandler":
+	if Input.is_action_just_pressed("Debug1"):
+		load_json("CoolTest")
+		start_debug_dialog()
+		proceed_dialog()
+	elif jsonname != "" or "errorhandler":
 		if AnimationFinished == true and DownTweenCompleted == true and Global.inZone == true:
 			if not DialogBoxAppeared:
 				if Input.is_action_just_pressed("Interact"):
@@ -54,7 +58,9 @@ func _process(delta):
 					# Code to make the dialog go faster or skip to the end of 
 					# the text animation goes here
 					pass
-
+func start_debug_dialog():
+	Global.emit_signal("DialogStarted", Global.CutscenePlayerInfo.new(true, Global.DialogPosition.x, 1))
+	Global.DialogStarted = true
 func start_dialog():
 	Global.emit_signal("DialogStarted", Global.CutscenePlayerInfo.new(true, Global.DialogPosition.x, 1))
 	Global.DialogStarted = true
