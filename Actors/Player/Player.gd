@@ -82,6 +82,19 @@ const DASH_UP_EXIT_SPEED = 110.0
 
 const BOUNCE_CHECK_DISTANCE = 2 * WALLJUMP_MARGIN
 
+# AG, AL = against, along
+const BOUNCE_UPDIAG_AG_WALL = Vector2()
+const BOUNCE_UPDIAG_AG_CEIL = Vector2()
+const BOUNCE_SIDE_AG_WALL = Vector2()
+const BOUNCE_SIDE_AL_FLOOR = Vector2()
+const BOUNCE_SIDE_AL_CEIL = Vector2()
+const BOUNCE_DOWNDIAG_AG_WALL = Vector2()
+const BOUNCE_DOWNDIAG_AG_FLOOR = Vector2()
+const BOUNCE_DOWN_AG_FLOOR = Vector2()
+const BOUNCE_DOWN_AL_WALL = Vector2()
+const BOUNCE_UP_AL_WALL = Vector2()
+const BOUNCE_UP_AG_CEIL = Vector2()
+
 # Camera constants
 
 const DASH_SHAKE_DURATION = .2
@@ -376,19 +389,19 @@ func _physics_process(delta):
 		dash_waiting = true
 		velocity *= DASH_PRE_VEL_MULTIPLIER
 		dash_direction = Vector2.ZERO
+		in_control_x = false
+		in_control_y = false
+		apply_gravity = false
+		no_gravity_timer = DASH_DURATION + DASH_DELAY
+		no_control_x_timer = DASH_DURATION + DASH_DELAY
+		no_control_y_timer = DASH_DURATION + DASH_DELAY
 	if dash_waiting:
 		dash_cancel_timer -= delta
 		if dash_cancel_timer <= 0:
 			dashing_refreshed = false
 			dash_waiting = false
 			dashing = true
-			apply_gravity = false
-			in_control_x = false
-			in_control_y = false
 			coyote_timer = 0
-			no_gravity_timer = DASH_DURATION
-			no_control_x_timer = DASH_DURATION
-			no_control_y_timer = DASH_DURATION
 			dash_timer = DASH_DURATION
 			if direction_x != 0 or direction_y != 0:
 				dash_direction = Vector2(direction_x, direction_y).normalized()
@@ -414,44 +427,83 @@ func _physics_process(delta):
 							Vector2(BOUNCE_CHECK_DISTANCE * sign(dash_direction.x),
 							0)
 						):
-							print("diag up against wall")
+							exit_velocity = vector_mult_only_x(
+								BOUNCE_UPDIAG_AG_WALL,
+								dash_direction.x
+							)
 						elif test_move(transform, Vector2.UP * BOUNCE_CHECK_DISTANCE):
-							print("diag up against ceiling")
+							exit_velocity = vector_mult_only_x(
+								BOUNCE_UPDIAG_AG_CEIL,
+								dash_direction.x
+							)
 					elif dash_direction.y == 0:
-						if test_move(transform, Vector2.DOWN * BOUNCE_CHECK_DISTANCE):
-							print("side along floor")
-						elif test_move(
+						if test_move(
 							transform,
 							Vector2(BOUNCE_CHECK_DISTANCE * sign(dash_direction.x),
 							0)
 						):
-							print("side against wall")
+							exit_velocity = vector_mult_only_x(
+								BOUNCE_SIDE_AG_WALL,
+								dash_direction.x
+							)
+						elif test_move(transform, Vector2.DOWN * BOUNCE_CHECK_DISTANCE):
+							exit_velocity = vector_mult_only_x(
+								BOUNCE_SIDE_AL_FLOOR,
+								dash_direction.x
+							)
 						elif test_move(transform, Vector2.UP * BOUNCE_CHECK_DISTANCE):
-							print("side along ceiling")
+							exit_velocity = vector_mult_only_x(
+								BOUNCE_SIDE_AL_CEIL,
+								dash_direction.x
+							)
 					else:
 						if test_move(
 							transform,
 							Vector2(BOUNCE_CHECK_DISTANCE * sign(dash_direction.x),
 							0)
 						):
-							print("diag down against wall")
+							exit_velocity = vector_mult_only_x(
+								BOUNCE_DOWNDIAG_AG_WALL,
+								dash_direction.x
+							)
 						elif test_move(transform, Vector2.DOWN * BOUNCE_CHECK_DISTANCE):
-							print("diag down against floor")
+							exit_velocity = vector_mult_only_x(
+								BOUNCE_DOWNDIAG_AG_FLOOR,
+								dash_direction.x
+							)
 				else:
 					if dash_direction.y > 0:
-						if test_move(transform, Vector2.RIGHT * facing * BOUNCE_CHECK_DISTANCE):
-							print("down along front wall")
+						if test_move(transform, Vector2.DOWN * BOUNCE_CHECK_DISTANCE):
+							exit_velocity = vector_mult_only_x(
+								BOUNCE_DOWN_AG_FLOOR,
+								dash_direction.x
+							)
+						elif test_move(transform, Vector2.RIGHT * facing * BOUNCE_CHECK_DISTANCE):
+							exit_velocity = vector_mult_only_x(
+								BOUNCE_DOWN_AL_WALL,
+								facing
+							)
 						elif test_move(transform, Vector2.RIGHT * -facing * BOUNCE_CHECK_DISTANCE):
-							print("down along back wall")
-						elif test_move(transform, Vector2.DOWN * BOUNCE_CHECK_DISTANCE):
-							print("down against floor")
+							exit_velocity = vector_mult_only_x(
+								BOUNCE_DOWN_AL_WALL,
+								-facing
+							)
 					elif dash_direction.y < 0:
-						if test_move(transform, Vector2.RIGHT * facing * BOUNCE_CHECK_DISTANCE):
-							print("up along front wall")
-						elif test_move(transform, Vector2.RIGHT * -facing * BOUNCE_CHECK_DISTANCE):
-							print("up along back wall")
+						if test_move(transform, Vector2.RIGHT * dash_direction.x * BOUNCE_CHECK_DISTANCE):
+							exit_velocity = vector_mult_only_x(
+								BOUNCE_UP_AL_WALL,
+								facing
+							)
+						elif test_move(transform, Vector2.RIGHT * -dash_direction.x * BOUNCE_CHECK_DISTANCE):
+							exit_velocity = vector_mult_only_x(
+								BOUNCE_UP_AL_WALL,
+								-facing
+							)
 						elif test_move(transform, Vector2.UP * BOUNCE_CHECK_DISTANCE):
-							print("up against ceiling")
+							exit_velocity = vector_mult_only_x(
+								BOUNCE_UP_AG_CEIL,
+								dash_direction.x
+							)
 			elif rolling_allowed and Input.is_action_pressed("Cancel"):
 				pass
 			if exit_velocity == Vector2.ZERO:
@@ -552,6 +604,10 @@ func _physics_process(delta):
 		dash_particles.emitting = true
 	else:
 		dash_particles.emitting = false
+
+
+func vector_mult_only_x(vector: Vector2, x_scalar: float):
+	return Vector2(vector.x * x_scalar, vector.y)
 
 
 func set_anim(new_anim: Sprite, anim: String):

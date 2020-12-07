@@ -53,7 +53,7 @@ func _physics_process(delta):
 #			pass
 
 
-func shake(direction: Vector2, duration: float, force: float = 10.0):
+func shake(direction: Vector2, duration: float, force: float = 15.0):
 	shake_direction = direction
 	shake_timer = duration
 	shake_force = force
