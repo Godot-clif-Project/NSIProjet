@@ -14,6 +14,7 @@ var JsonData
 var DialogBoxAppeared = false
 var IsTalking = false
 var AnimationFinished = true
+var OkFuckThisTroubleshootingTime = false
 
 const MCFrames = preload("res://GUI/Portraits/MC.tres")
 const CoolFrames = preload("res://GUI/Portraits/Cool.tres")
@@ -29,28 +30,19 @@ func load_json(jsonname):
 
 func _init():
 	pass
+
 func _ready():
 	Global.connect("StartDialog",self,"StartDialogCode")
-	
-	# apparently these two signals don't exist
-	Global.connect("DownTalkAnimation",self,"DownTalkAnimation")
-	Global.connect("StopDownTalkAnimation",self,"StopDownTalkAnimation")
 	
 	load_json(jsonname)
 	hide()
 
 func _process(delta):
-	if Input.is_action_just_pressed("Debug1"):
-		load_json("CoolTest")
-		start_debug_dialog()
-		proceed_dialog()
-	elif jsonname != "" or "errorhandler":
+	if jsonname != "" or "errorhandler":
 		if AnimationFinished == true and DownTweenCompleted == true and Global.inZone == true:
 			if not DialogBoxAppeared:
-				if Input.is_action_just_pressed("Interact"):
-					# might be better if there were two separate functions
+				if Input.is_action_just_pressed("Interact") and OkFuckThisTroubleshootingTime == false:
 					start_dialog()
-					proceed_dialog()
 			elif DialogBoxAppeared:
 				if Input.is_action_just_pressed("Accept") or Input.is_action_just_pressed("Interact"):
 					proceed_dialog()
@@ -58,13 +50,13 @@ func _process(delta):
 					# Code to make the dialog go faster or skip to the end of 
 					# the text animation goes here
 					pass
-func start_debug_dialog():
-	Global.emit_signal("DialogStarted", Global.CutscenePlayerInfo.new(true, Global.DialogPosition.x, 1))
-	Global.DialogStarted = true
+	else:
+		print("Invalid JSON!!")
 func start_dialog():
 	Global.emit_signal("DialogStarted", Global.CutscenePlayerInfo.new(true, Global.DialogPosition.x, 1))
-	Global.DialogStarted = true
-
+	proceed_dialog()
+	OkFuckThisTroubleshootingTime = true
+	
 func proceed_dialog():
 	if line < JsonData.size():
 		ChangePortraitPosition()
@@ -88,11 +80,9 @@ func down_text():
 func showDownBox():
 	AnimationMaster.play("Appear")
 	show()
-	DialogBoxAppeared = true
 
 func hideDownBox():
 	AnimationMaster.play("Disappear")
-	DialogBoxAppeared = false
 
 func DownBoxHandler(command):
 	if command == 1:
@@ -110,6 +100,7 @@ func ResetBoxes():
 	TextBox.percent_visible = 0
 	hide()
 	DialogBoxAppeared = false
+	OkFuckThisTroubleshootingTime = false
 	load_json("errorhandler")
 
 func ChangePortraitPosition():
@@ -156,6 +147,7 @@ func _on_DownAnimation_animation_finished(anim_name):
 	match anim_name:
 		"Appear":
 			DialogBoxAppeared = true
+			proceed_dialog()
 		"Disappear":
 			DialogBoxAppeared = false
 		_:
@@ -166,7 +158,6 @@ func _on_DownAnimation_animation_started(anim_name):
 	match anim_name:
 		"Appear":
 			DialogBoxAppeared = false
-			timer.start()
 		"Disappear":
 			DialogBoxAppeared = true
 		_:
