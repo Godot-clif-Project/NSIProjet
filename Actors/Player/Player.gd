@@ -81,6 +81,8 @@ const DASH_EXIT_SPEED = 130.0
 const DASH_DIAG_X_EXIT_SPEED = 200.0
 const DASH_DIAG_Y_EXIT_SPEED = 250.0
 const DASH_UP_EXIT_SPEED = 110.0
+const DASH_SQUEEZE_AROUND_MAX = 3
+const DASH_SQUEEZE_AROUND_CHECK_DISTANCE_MAX = 4
 
 # Bounce constants
 
@@ -399,6 +401,7 @@ func _physics_process(delta):
 		no_gravity_timer = DASH_DURATION + DASH_DELAY
 		no_control_x_timer = DASH_DURATION + DASH_DELAY
 		no_control_y_timer = DASH_DURATION + DASH_DELAY
+		position = position.round()
 	if dash_waiting:
 		dash_cancel_timer -= delta
 		if dash_cancel_timer <= 0:
@@ -547,22 +550,36 @@ func _physics_process(delta):
 				cutscene_info.set_position = false
 	else:
 		move_and_slide(velocity, Vector2.UP)
-	if is_on_ceiling():
-		if velocity_conservation_timer.y > 0:
-			velocity_conservation_timer.y -= delta
-		if velocity_conservation_timer.y <= 0:
+	var squeezed_around: bool
+	if dashing:
+		# Squeezing around corners
+		if get_slide_count():
+			var collision = get_slide_collision(0)
+			var check_axis = Vector2.UP if collision.normal.x else Vector2.RIGHT
+			var check_movement = collision.remainder.clamped(DASH_SQUEEZE_AROUND_CHECK_DISTANCE_MAX)
+			# Assumes DASH_SQUEEZE_AROUND_MAX < 4 which it really should
+			for i in range(-DASH_SQUEEZE_AROUND_MAX, DASH_SQUEEZE_AROUND_MAX + 1):
+				if not test_move(transform.translated(check_axis * i), check_movement):
+					position += check_axis * i + collision.remainder
+					squeezed_around = true
+					break
+	if not squeezed_around:
+		if is_on_ceiling():
+			if velocity_conservation_timer.y > 0:
+				velocity_conservation_timer.y -= delta
+			if velocity_conservation_timer.y <= 0:
+				velocity.y = 0
+		else:
+			velocity_conservation_timer.y = VELOCITY_CONSERVATION_TIME
+		if is_on_floor():
 			velocity.y = 0
-	else:
-		velocity_conservation_timer.y = VELOCITY_CONSERVATION_TIME
-	if is_on_floor():
-		velocity.y = 0
-	if is_on_wall():
-		if velocity_conservation_timer.x > 0:
-			velocity_conservation_timer.x -= delta
-		if velocity_conservation_timer.x <= 0:
-			velocity.x = 0
-	else:
-		velocity_conservation_timer.x = VELOCITY_CONSERVATION_TIME
+		if is_on_wall():
+			if velocity_conservation_timer.x > 0:
+				velocity_conservation_timer.x -= delta
+			if velocity_conservation_timer.x <= 0:
+				velocity.x = 0
+		else:
+			velocity_conservation_timer.x = VELOCITY_CONSERVATION_TIME
 	
 	
 	# Animations
