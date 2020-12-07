@@ -16,6 +16,8 @@ var IsTalking = false
 var AnimationFinished = true
 var OkFuckThisTroubleshootingTime = false
 
+#If we ever need to show the old sprites in use; Change MC/Cool.tres to MC/CoolOld.tres
+#Unknown didn't change through versions; so who cares about them (I do)
 const MCFrames = preload("res://GUI/Portraits/MC.tres")
 const CoolFrames = preload("res://GUI/Portraits/Cool.tres")
 const UnknownFrames = preload("res://GUI/Portraits/Unknown.tres")

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/PaletteSwap2.png-18385c3b02b971df2fbd20d1f53b773d.stex"
+path="res://.import/PaletteSwapModel.png-1dffbf2d1bce719fcb1e3d3ee8d2290f.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Aseprite/Portraits/Main Character/PaletteSwap2.png"
-dest_files=[ "res://.import/PaletteSwap2.png-18385c3b02b971df2fbd20d1f53b773d.stex" ]
+source_file="res://Aseprite/Portraits/Palette Swap/PaletteSwapModel.png"
+dest_files=[ "res://.import/PaletteSwapModel.png-1dffbf2d1bce719fcb1e3d3ee8d2290f.stex" ]
 
 [params]
 
