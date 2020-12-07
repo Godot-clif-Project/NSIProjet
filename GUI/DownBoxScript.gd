@@ -40,11 +40,7 @@ func _ready():
 	hide()
 
 func _process(delta):
-	if Input.is_action_just_pressed("Debug1"):
-		load_json("CoolTest")
-		start_debug_dialog()
-		proceed_dialog()
-	elif jsonname != "" or "errorhandler":
+	if jsonname != "" or "errorhandler":
 		if AnimationFinished == true and DownTweenCompleted == true and Global.inZone == true:
 			if not DialogBoxAppeared:
 				if Input.is_action_just_pressed("Interact"):
@@ -58,12 +54,8 @@ func _process(delta):
 					# Code to make the dialog go faster or skip to the end of 
 					# the text animation goes here
 					pass
-func start_debug_dialog():
-	Global.emit_signal("DialogStarted", Global.CutscenePlayerInfo.new(true, Global.DialogPosition.x, 1))
-	Global.DialogStarted = true
 func start_dialog():
 	Global.emit_signal("DialogStarted", Global.CutscenePlayerInfo.new(true, Global.DialogPosition.x, 1))
-	Global.DialogStarted = true
 
 func proceed_dialog():
 	if line < JsonData.size():
@@ -88,11 +80,9 @@ func down_text():
 func showDownBox():
 	AnimationMaster.play("Appear")
 	show()
-	DialogBoxAppeared = true
 
 func hideDownBox():
 	AnimationMaster.play("Disappear")
-	DialogBoxAppeared = false
 
 func DownBoxHandler(command):
 	if command == 1:
