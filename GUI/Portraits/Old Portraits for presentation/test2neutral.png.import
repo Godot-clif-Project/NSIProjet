@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/test1neutral.png-f873d6d44194eb1bfc1af169ff93c1b7.stex"
+path="res://.import/test2neutral.png-00c7b399092508c9c7b363ced4c08545.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://GUI/Portraits/test1neutral.png"
-dest_files=[ "res://.import/test1neutral.png-f873d6d44194eb1bfc1af169ff93c1b7.stex" ]
+source_file="res://GUI/Portraits/Old Portraits for presentation/test2neutral.png"
+dest_files=[ "res://.import/test2neutral.png-00c7b399092508c9c7b363ced4c08545.stex" ]
 
 [params]
 
