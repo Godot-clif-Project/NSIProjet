@@ -418,12 +418,16 @@ func _physics_process(delta):
 						elif test_move(transform, Vector2.UP * BOUNCE_CHECK_DISTANCE):
 							print("diag up against ceiling")
 					elif dash_direction.y == 0:
-						if test_move(
+						if test_move(transform, Vector2.DOWN * BOUNCE_CHECK_DISTANCE):
+							print("side along floor")
+						elif test_move(
 							transform,
 							Vector2(BOUNCE_CHECK_DISTANCE * sign(dash_direction.x),
 							0)
 						):
 							print("side against wall")
+						elif test_move(transform, Vector2.UP * BOUNCE_CHECK_DISTANCE):
+							print("side along ceiling")
 					else:
 						if test_move(
 							transform,
@@ -434,16 +438,20 @@ func _physics_process(delta):
 						elif test_move(transform, Vector2.DOWN * BOUNCE_CHECK_DISTANCE):
 							print("diag down against floor")
 				else:
-					if (
-						dash_direction.y > 0 and
-						test_move(transform, Vector2.DOWN * BOUNCE_CHECK_DISTANCE)
-					):
-						print("down against floor")
-					elif (
-						dash_direction.y < 0 and
-						test_move(transform, Vector2.UP * BOUNCE_CHECK_DISTANCE)
-					):
-						print("up against ceiling")
+					if dash_direction.y > 0:
+						if test_move(transform, Vector2.RIGHT * facing * BOUNCE_CHECK_DISTANCE):
+							print("down along front wall")
+						elif test_move(transform, Vector2.RIGHT * -facing * BOUNCE_CHECK_DISTANCE):
+							print("down along back wall")
+						elif test_move(transform, Vector2.DOWN * BOUNCE_CHECK_DISTANCE):
+							print("down against floor")
+					elif dash_direction.y < 0:
+						if test_move(transform, Vector2.RIGHT * facing * BOUNCE_CHECK_DISTANCE):
+							print("up along front wall")
+						elif test_move(transform, Vector2.RIGHT * -facing * BOUNCE_CHECK_DISTANCE):
+							print("up along back wall")
+						elif test_move(transform, Vector2.UP * BOUNCE_CHECK_DISTANCE):
+							print("up against ceiling")
 			elif rolling_allowed and Input.is_action_pressed("Cancel"):
 				pass
 			if exit_velocity == Vector2.ZERO:
