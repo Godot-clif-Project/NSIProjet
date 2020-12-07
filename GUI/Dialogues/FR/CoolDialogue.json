@@ -9,7 +9,7 @@
  },
  {
    "ID": "TestLevel",
-   "command": 1,
+   "command": 2,
    "name": "Cool",
    "text": "[shake rate=15 level=10]S-Salut.[/shake]",
    "emotion": "neutral",
