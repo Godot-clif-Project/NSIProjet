@@ -1,0 +1,82 @@
+[
+ {
+   "ID": "TestLevel",
+   "command": 1,
+   "name": "MC",
+   "text": "Hey !",
+   "emotion": "happy",
+   "position": 0
+ },
+ {
+   "ID": "TestLevel",
+   "command": 1,
+   "name": "Cool",
+   "text": "[shake rate=15 level=10]S-Salut.[/shake]",
+   "emotion": "neutral",
+   "position": 1
+ },
+ {
+   "ID": "TestLevel",
+   "command": 0,
+   "name": "MC",
+   "text": "Qu'est-ce que tu fais...?",
+   "emotion": "neutral",
+   "position": 0
+ },
+ {
+   "ID": "TestLevel",
+   "command": 1,
+   "name": "Cool",
+   "text": "Je [shake rate=15 level=5]m'entraîne[/shake],\nça se voit pas ?",
+   "emotion": "neutral",
+   "position": 1
+ },
+ {
+   "ID": "TestLevel",
+   "command": 0,
+   "name": "MC",
+   "text": "Ah... Mais pourquoi tu t'entraînes ?",
+   "emotion": "neutral",
+   "position": 0
+ },
+ {
+   "ID": "TestLevel",
+   "command": 0,
+   "name": "Cool",
+   "text": "Je m'entraîne...à [wave amp=30 freq=5][color=red]ROULER![/color][/wave]",
+   "emotion": "happy",
+   "position": 1
+ },
+ {
+   "ID": "TestLevel",
+   "command": 0,
+   "name": "MC",
+   "text": "Oh !!! Je vois !!",
+   "emotion": "happy",
+   "position": 0
+ },
+ {
+   "ID": "TestLevel",
+   "command": 0,
+   "name": "MC",
+   "text": "...Quand tu sauras faire, tu pourras m'apprendre ??",
+   "emotion": "neutral",
+   "position": 0
+ },
+ {
+   "ID": "TestLevel",
+   "command": 0,
+   "name": "Cool",
+   "text": "[wave amp=30 freq=5]Haha, bien sûr ![/wave]",
+   "emotion": "happy",
+   "position": 1
+ },
+ {
+   "ID": "TestLevel",
+   "command": 0,
+   "name": "MC",
+   "text": "Merci !!",
+   "emotion": "happy",
+   "position": 0
+ }
+]

@@ -734,4 +734,5 @@ func DialogStartedCode(playerInfo):
 		facing = cutsc_dir if cutsc_dir else facing
 	else:
 		cutscene_velocity = 0
+		print("should have stopped moving")
 		Global.emit_signal("CutscenePlayerStoppedMoving", true)

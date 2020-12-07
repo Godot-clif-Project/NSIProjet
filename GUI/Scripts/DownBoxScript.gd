@@ -15,6 +15,7 @@ var DialogBoxAppeared = false
 var IsTalking = false
 var AnimationFinished = true
 var OkFuckThisTroubleshootingTime = false
+var DoesFileExist = false
 
 #If we ever need to show the old sprites in use; Change MC/Cool.tres to MC/CoolOld.tres
 #Unknown didn't change through versions; so who cares about them (I do)
@@ -23,10 +24,25 @@ const CoolFrames = preload("res://GUI/Portraits/Cool.tres")
 const UnknownFrames = preload("res://GUI/Portraits/Unknown.tres")
 
 export var jsonname = "errorhandler"
+export var lang = "FR"
 
 func load_json(jsonname):
 	var file = File.new();
-	file.open("res://GUI/Dialogues/"+jsonname+".json", file.READ);
+	match lang:
+		"FR":
+			DoesFileExist = file.file_exists("res://GUI/Dialogues/FR/"+jsonname+".json")
+			if DoesFileExist == true:
+				file.open("res://GUI/Dialogues/FR/"+jsonname+".json", file.READ);
+			else:
+				file.open("res://GUI/Dialogues/EN/"+jsonname+".json", file.READ);
+		"EN":
+			DoesFileExist = file.file_exists("res://GUI/Dialogues/EN/"+jsonname+".json")
+			if DoesFileExist == true:
+				file.open("res://GUI/Dialogues/EN/"+jsonname+".json", file.READ);
+			else:
+				file.open("res://GUI/Dialogues/FR/"+jsonname+".json", file.READ);
+		_:
+			file.open("res://GUI/Dialogues/FR/"+jsonname+".json", file.READ);
 	JsonData = parse_json(file.get_as_text())
 	file.close()
 
@@ -35,6 +51,7 @@ func _init():
 
 func _ready():
 	Global.connect("StartDialog",self,"StartDialogCode")
+	Global.connect("CutscenePlayerStoppedMoving",self,"init_dialog")
 	
 	load_json(jsonname)
 	hide()
@@ -56,9 +73,14 @@ func _process(delta):
 		print("Invalid JSON!!")
 func start_dialog():
 	Global.emit_signal("DialogStarted", Global.CutscenePlayerInfo.new(true, Global.DialogPosition.x, 1))
-	proceed_dialog()
-	OkFuckThisTroubleshootingTime = true
-	
+
+func init_dialog(shushubidu):
+	if shushubidu == true:
+		proceed_dialog()
+		OkFuckThisTroubleshootingTime = true
+	else:
+		print("yo what the fuck")
+
 func proceed_dialog():
 	if line < JsonData.size():
 		ChangePortraitPosition()
