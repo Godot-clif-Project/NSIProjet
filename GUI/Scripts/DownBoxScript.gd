@@ -1,4 +1,11 @@
 extends Control
+
+# Command List in JSON:
+# 0 : Simple Text
+# 1 : Show Box
+# 2 : Show Animation (in progress)
+# 3 : Hide Box (to be added)
+
 onready var TextBox = $DownDialogBox/DownTextMargin/DownText
 onready var NameBox = $DownDialogBox/NinePatchRect2/DownNameMargin/DownName
 onready var Portrait = $DownDialogBox/DownPortraitMargin/DownPortraitTexture
@@ -155,6 +162,8 @@ func StopDownTalkAnimation():
 func StartDialogCode(jsonname):
 	if Global.DialogStarted == false:
 		load_json(jsonname)
+
+
 
 func _on_Tween_tween_completed(object, key):
 	DownTweenCompleted = true

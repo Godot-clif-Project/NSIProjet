@@ -4,15 +4,15 @@
    "command": 1,
    "name": "MC",
    "text": "Hey !",
-   "emotion": "happy",
+   "animationn": "",
    "position": 0
  },
  {
    "ID": "TestLevel",
-   "command": 2,
+   "command": 0,
    "name": "Cool",
    "text": "[shake rate=15 level=10]S-Salut.[/shake]",
-   "emotion": "neutral",
+   "animationn": "MorningRoutine",
    "position": 1
  },
  {
@@ -20,15 +20,15 @@
    "command": 0,
    "name": "MC",
    "text": "Qu'est-ce que tu fais...?",
-   "emotion": "neutral",
+   "animationn": "",
    "position": 0
  },
  {
    "ID": "TestLevel",
-   "command": 1,
+   "command": 0,
    "name": "Cool",
-   "text": "Je [shake rate=15 level=5]m'entraîne[/shake],\nça se voit pas ?",
-   "emotion": "neutral",
+   "text": "Je [shake rate=15 level=10]m'entraîne[/shake], ça se voit pas?",
+   "animationn": "",
    "position": 1
  },
  {
@@ -36,23 +36,23 @@
    "command": 0,
    "name": "MC",
    "text": "Ah... Mais pourquoi tu t'entraînes ?",
-   "emotion": "neutral",
+   "animationn": "",
    "position": 0
  },
  {
    "ID": "TestLevel",
    "command": 0,
    "name": "Cool",
-   "text": "Je m'entraîne...à [wave amp=30 freq=5][color=red]ROULER![/color][/wave]",
-   "emotion": "happy",
+   "text": "Je m'entraîne... à [wave amp=30 freq=5][color=red]ROULER![/color][/wave]",
+   "animationn": "",
    "position": 1
  },
  {
    "ID": "TestLevel",
    "command": 0,
    "name": "MC",
-   "text": "Oh !!! Je vois !!",
-   "emotion": "happy",
+   "text": "Oh !!! Je vois !!!",
+   "animationn": "",
    "position": 0
  },
  {
@@ -60,7 +60,7 @@
    "command": 0,
    "name": "MC",
    "text": "...Quand tu sauras faire, tu pourras m'apprendre ??",
-   "emotion": "neutral",
+   "animationn": "",
    "position": 0
  },
  {
@@ -68,15 +68,15 @@
    "command": 0,
    "name": "Cool",
    "text": "[wave amp=30 freq=5]Haha, bien sûr ![/wave]",
-   "emotion": "happy",
+   "animationn": "",
    "position": 1
  },
  {
    "ID": "TestLevel",
    "command": 0,
    "name": "MC",
-   "text": "Merci !!",
-   "emotion": "happy",
+   "text": "Merci !!!",
+   "animationn": "",
    "position": 0
  }
 ]
