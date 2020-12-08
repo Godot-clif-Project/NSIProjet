@@ -5,12 +5,20 @@ extends KinematicBody2D
 
 # Coyote time for bouncing
 
-# When trying to bounce off a wall but the you dash beyond the wall, bounce
-# when you leave the wall instead of at the end of the dash
-
 # Make bunny hops better
 
+# for the two things above: MOMENTUM CONSERVATION JUST LIKE IN C******
+
+# Bring back super dash, maybe hyper if i want to make the diag down dashes
+# better, also wall bounces
+
+# Simplify the *actual* bounces, make it so that you have to hold dash AND jump
+# and it only takes into account the wall normal, keeping the velocity of
+# whatever the other direction was if dashing diagonally
+
+
 # Missing animations: wallslide, landing, changing directions, ledge balancing
+# rolling
 
 
 export var facing_left: bool
@@ -25,18 +33,18 @@ const JUMP_FORCE = -230.0
 const JUMP_TIME = .1
 const COYOTE_TIME = .1
 const COYOTE_TIME_WHEN_DASHING = .07
-const JUMP_SPBOOST_MULTIPLIER = 1.3
-const JUMP_SPBOOST_MAX = RUN_SPEED_MAX * JUMP_SPBOOST_MULTIPLIER
+const JUMP_SPBOOST_MULTIPLIER = 1.38
+const JUMP_SPBOOST_MAX = RUN_SPEED_MAX * JUMP_SPBOOST_MULTIPLIER * JUMP_SPBOOST_MULTIPLIER
 const STICKY_LANDING_MIN = 20.0
 const STICKY_LANDING_FORCE = 70.0
-const GRAVMOD_SHORTHOP_MULTIPLIER = 4.8
+const GRAVMOD_SHORTHOP_MULTIPLIER = 4.9
 const GRAVMOD_SHORTHOP_BEGIN = JUMP_FORCE
-const GRAVMOD_SHORTHOP_END = JUMP_FORCE * .28
+const GRAVMOD_SHORTHOP_END = JUMP_FORCE * .275
 const GRAVMOD_BIGLEAP_MULTIPLIER = .7
 const GRAVMOD_BIGLEAP_BEGIN = JUMP_FORCE * .2
 const GRAVMOD_BIGLEAP_END = -GRAVMOD_BIGLEAP_BEGIN
 const WALLJUMP_FORCE = JUMP_FORCE * .8
-const WALLJUMP_PUSH = JUMP_SPBOOST_MAX
+const WALLJUMP_PUSH = RUN_SPEED_MAX * 1.3
 const WALLJUMP_PUSH_NEUTRAL = JUMP_SPBOOST_MAX
 const WALLJUMP_MARGIN = 1.5
 const WALLJUMP_CONTROL_REMOVED_TIME = .15
@@ -58,6 +66,7 @@ const CORRECTION_FRIC_TEMP = .95
 const CORRECTION_FRIC_ATTENUATED_TEMP = .97
 const CORRECTION_FRIC_ATTENUATED_AIR_TEMP = .985
 const AIR_Y_FRICTION_TEMP = CORRECTION_FRIC_TEMP
+const CORRECTION_EVEN_MORE_FOR_JUMP_SPBOOSTS_TEMP = .97
 
 # Animation constants
 
@@ -293,6 +302,11 @@ func _physics_process(delta):
 						RUN_FRIC_TEMP if grounded else AIR_FRIC_TEMP
 					))
 				) * sign(velocity.x)
+			if abs(velocity.x) < JUMP_SPBOOST_MAX:
+				velocity.x -= min(
+					abs(velocity.x) - RUN_SPEED_MAX,
+					abs(velocity.x) * (1 - CORRECTION_EVEN_MORE_FOR_JUMP_SPBOOSTS_TEMP)
+				) * sign(velocity.x)
 		else:
 			if (not direction_x) or direction_x * velocity.x < 0:
 				# will have to figure out how to timestep this later
@@ -391,6 +405,7 @@ func _physics_process(delta):
 					no_control_y_timer = WALLJUMP_CONTROL_REMOVED_TIME_NEUTRAL
 				grounded = false
 				on_jump()
+				print(velocity.x)
 	
 	# Dash
 	
