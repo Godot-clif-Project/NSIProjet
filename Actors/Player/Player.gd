@@ -238,10 +238,13 @@ func _physics_process(delta):
 			if direction_x == 0 and speed_excess > 0:
 				velocity.x -= sign(velocity.x) * min(STICKY_LANDING_FORCE, speed_excess)
 			grounded = true
-	elif test_move(transform, Vector2(0, get_safe_margin())):
-		grounded = true
-	elif grounded:
-		grounded = false
+	else:
+		var test_grounded = move_and_collide(Vector2(0, get_safe_margin()), true, true, true)
+		if test_grounded and test_grounded.normal == Vector2.UP:
+				grounded = true
+				print("fuck")
+		elif grounded:
+			grounded = false
 	
 	if grounded:
 		jumping = false
