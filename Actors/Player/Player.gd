@@ -242,7 +242,6 @@ func _physics_process(delta):
 		var test_grounded = move_and_collide(Vector2(0, get_safe_margin()), true, true, true)
 		if test_grounded and test_grounded.normal == Vector2.UP:
 				grounded = true
-				print("fuck")
 		elif grounded:
 			grounded = false
 	

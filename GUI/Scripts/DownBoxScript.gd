@@ -162,6 +162,7 @@ func StopDownTalkAnimation():
 func StartDialogCode(jsonname):
 	if Global.DialogStarted == false:
 		load_json(jsonname)
+		Global.DialogStarted = true
 
 
 
