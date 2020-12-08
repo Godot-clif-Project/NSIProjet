@@ -405,7 +405,6 @@ func _physics_process(delta):
 					no_control_y_timer = WALLJUMP_CONTROL_REMOVED_TIME_NEUTRAL
 				grounded = false
 				on_jump()
-				print(velocity.x)
 	
 	# Dash
 	
@@ -537,7 +536,6 @@ func _physics_process(delta):
 								-facing
 							)
 							facing = -facing
-							print("test")
 						elif test_move(transform, Vector2.UP * BOUNCE_CHECK_DISTANCE):
 							exit_velocity = vector_mult_only_x(
 								BOUNCE_UP_AG_CEIL,
