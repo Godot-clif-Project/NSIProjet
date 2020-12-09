@@ -651,13 +651,20 @@ func DialogStartedCode(playerInfo):
 	apply_gravity = true
 	cutscene_info = playerInfo
 	if playerInfo.set_position:
-		var cutsc_dir = sign(playerInfo.position_x - global_position.x)
-		cutscene_velocity = (
-			cutsc_dir *
-			(playerInfo.movement_speed if playerInfo.movement_speed > 0 else
-			CUTSCENE_WALKING_SPEED)
-		)
-		facing = cutsc_dir if cutsc_dir else facing
+		if playerInfo.position_x == global_position.x:
+			Global.emit_signal("CutscenePlayerStoppedMoving", true)
+			if cutscene_info.facing:
+				facing = cutscene_info.facing
+			cutscene_velocity = 0
+			cutscene_info.set_position = false
+		else:
+			var cutsc_dir = sign(playerInfo.position_x - global_position.x)
+			cutscene_velocity = (
+				cutsc_dir *
+				(playerInfo.movement_speed if playerInfo.movement_speed > 0 else
+				CUTSCENE_WALKING_SPEED)
+			)
+			facing = cutsc_dir if cutsc_dir else facing
 	else:
 		cutscene_velocity = 0
 		Global.emit_signal("CutscenePlayerStoppedMoving", true)

@@ -28,6 +28,11 @@ func _ready():
 	rng.randomize()
 
 
+func _process(delta):
+	if Input.is_action_just_pressed("fucking_restart"):
+		get_tree().reload_current_scene()
+
+
 func _physics_process(delta):
 	if gameRunning:
 		ticks += 1
