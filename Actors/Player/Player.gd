@@ -583,12 +583,13 @@ func _physics_process(delta):
 
 
 func collider_transform():
-	return transform.scaled(
-		(
-			collider.shape.extents -
-			Vector2(get_safe_margin(), get_safe_margin())
-		) / collider.shape.extents
-	)
+#	return transform.scaled(
+#		(
+#			collider.shape.extents -
+#			Vector2(get_safe_margin(), get_safe_margin())
+#		) / collider.shape.extents
+#	).translated(Vector2(get_safe_margin(), get_safe_margin()))
+	return transform
 
 
 func set_anim(new_anim: Sprite, anim: String):
