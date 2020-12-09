@@ -5,8 +5,6 @@ extends KinematicBody2D
 
 # Coyote time for bouncing
 
-# Make bunny hops better
-
 # for the two things above: MOMENTUM CONSERVATION JUST LIKE IN C******
 
 # Bring back super dash, maybe hyper if i want to make the diag down dashes
@@ -95,21 +93,14 @@ const DASH_SQUEEZE_AROUND_CHECK_DISTANCE_MAX = 4
 
 # Bounce constants
 
+const BOUNCE_TIME = .1
 const BOUNCE_CHECK_DISTANCE = 2 * WALLJUMP_MARGIN
 
-# AG, AL = against, along
-const BOUNCE_UPDIAG_AG_WALL = Vector2(-210, -240)
-const BOUNCE_UPDIAG_AG_CEIL = Vector2(190, -240)
-const BOUNCE_SIDE_AG_WALL = Vector2(-260, -80)
-const BOUNCE_SIDE_AL_FLOOR = Vector2(180, -200)
-const BOUNCE_SIDE_AL_CEIL = Vector2(190, -200)
-const BOUNCE_DOWNDIAG_AG_WALL = Vector2(-210, -180)
-const BOUNCE_DOWNDIAG_AG_FLOOR = Vector2(210, -180)
-const BOUNCE_DOWN_AG_FLOOR = Vector2(-20, -130)
-const BOUNCE_DOWN_AL_WALL = Vector2(-100, -130)
-const BOUNCE_UP_AL_WALL = Vector2(-120, -260)
-const BOUNCE_UP_AG_CEIL = Vector2(100, -240)
-const BOUNCE_STICK_TO_CEILING_TIME = .2
+const BOUNCE_FROM_CORNER = Vector2(-150, -150)
+const BOUNCE_FROM_FLOOR = Vector2(0, -150)
+const BOUNCE_FROM_SIDE = Vector2(-150, -50)
+const BOUNCE_FROM_TOP = Vector2(0, 150)
+
 const BOUNCE_REMOVE_CONTROL_TIME = .15
 
 # Camera constants
@@ -131,6 +122,7 @@ var direction_x: int
 var direction_y: int
 var jump_timer: float
 var coyote_timer: float
+var bounce_timer: float
 
 var grounded: bool
 var wallsliding: bool
@@ -156,6 +148,8 @@ export var rolling_allowed: bool
 var in_cutscene: bool
 var cutscene_info # Global.CutscenePlayerInfo
 var cutscene_velocity
+
+onready var collider = $CollisionShape2D
 
 onready var animation_player = $AnimationPlayer
 onready var anim_container = $SpriteContainer
@@ -205,10 +199,10 @@ func _ready():
 	dash_particles.player_reference = self
 	Global.where_particles_should_be.add_child(dash_particles)
 	
-	Global.camera.add_pt_of_interest(self, 1.0, INF, true)
+	Global.camera.add_pt_of_interest(self, 1.0, INF, true)	
 
 
-func _physics_process(delta):
+func _physics_process(delta):	
 	direction_x = (
 		int(Input.is_action_pressed("Right")) -
 		int(Input.is_action_pressed("Left"))
@@ -264,7 +258,7 @@ func _physics_process(delta):
 	# Note from the future: lmao no that didn't help you're still stuck with this mess
 	if is_on_wall():
 		if test_move(
-			transform,
+			collider_transform(),
 			Vector2(sign(velocity.x) * get_safe_margin(), 0)
 		):
 			last_wall_normal = -int(sign(velocity.x))
@@ -382,10 +376,10 @@ func _physics_process(delta):
 	if in_control_y:
 		if jump_timer:
 			var wall_normal: int
-			if test_move(transform, Vector2(WALLJUMP_MARGIN * facing, 0)):
+			if test_move(collider_transform(), Vector2(WALLJUMP_MARGIN * facing, 0)):
 				wall_normal = -facing
 				last_wall_normal = wall_normal
-			elif test_move(transform, Vector2(WALLJUMP_MARGIN * (-facing), 0)):
+			elif test_move(collider_transform(), Vector2(WALLJUMP_MARGIN * (-facing), 0)):
 				wall_normal = facing
 				last_wall_normal = wall_normal
 			
@@ -443,115 +437,8 @@ func _physics_process(delta):
 		if dash_timer <= 0:
 			dashing = false
 			var exit_velocity: Vector2
-			# Bouncing
-			# this code is stupid but we don't have a lot of time left so whatever
-			# i'll try to reduce the copy/paste after the deadline
-			if bouncing_allowed and Input.is_action_pressed("Accept"):
-				var stick_to_ceiling: bool
-				if dash_direction.x != 0:
-					if dash_direction.y < 0:
-						if test_move(
-							transform,
-							Vector2(BOUNCE_CHECK_DISTANCE * facing,
-							0)
-						):
-							exit_velocity = vector_mult_only_x(
-								BOUNCE_UPDIAG_AG_WALL,
-								dash_direction.x
-							)
-							facing = -facing
-						elif test_move(transform, Vector2.UP * BOUNCE_CHECK_DISTANCE):
-							exit_velocity = vector_mult_only_x(
-								BOUNCE_UPDIAG_AG_CEIL,
-								facing
-							)
-							stick_to_ceiling = true
-					elif dash_direction.y == 0:
-						if test_move(
-							transform,
-							Vector2(BOUNCE_CHECK_DISTANCE * facing,
-							0)
-						):
-							exit_velocity = vector_mult_only_x(
-								BOUNCE_SIDE_AG_WALL,
-								dash_direction.x
-							)
-							facing = -facing
-						elif test_move(transform, Vector2.DOWN * BOUNCE_CHECK_DISTANCE):
-							exit_velocity = vector_mult_only_x(
-								BOUNCE_SIDE_AL_FLOOR,
-								facing
-							)
-						elif test_move(transform, Vector2.UP * BOUNCE_CHECK_DISTANCE):
-							exit_velocity = vector_mult_only_x(
-								BOUNCE_SIDE_AL_CEIL,
-								facing
-							)
-							stick_to_ceiling = true
-					else:
-						if test_move(
-							transform,
-							Vector2(BOUNCE_CHECK_DISTANCE * facing,
-							0)
-						):
-							exit_velocity = vector_mult_only_x(
-								BOUNCE_DOWNDIAG_AG_WALL,
-								dash_direction.x
-							)
-							facing = -facing
-						elif test_move(transform, Vector2.DOWN * BOUNCE_CHECK_DISTANCE):
-							exit_velocity = vector_mult_only_x(
-								BOUNCE_DOWNDIAG_AG_FLOOR,
-								facing
-							)
-				else:
-					if dash_direction.y > 0:
-						if test_move(transform, Vector2.DOWN * BOUNCE_CHECK_DISTANCE):
-							exit_velocity = vector_mult_only_x(
-								BOUNCE_DOWN_AG_FLOOR,
-								facing
-							)
-						elif test_move(transform, Vector2.RIGHT * facing * BOUNCE_CHECK_DISTANCE):
-							exit_velocity = vector_mult_only_x(
-								BOUNCE_DOWN_AL_WALL,
-								facing
-							)
-							facing = -facing
-						elif test_move(transform, Vector2.RIGHT * -facing * BOUNCE_CHECK_DISTANCE):
-							exit_velocity = vector_mult_only_x(
-								BOUNCE_DOWN_AL_WALL,
-								-facing
-							)
-							facing = -facing
-					elif dash_direction.y < 0:
-						if test_move(transform, Vector2.RIGHT * facing * BOUNCE_CHECK_DISTANCE):
-							exit_velocity = vector_mult_only_x(
-								BOUNCE_UP_AL_WALL,
-								facing
-							)
-							facing = -facing
-						elif test_move(transform, Vector2.RIGHT * -facing * BOUNCE_CHECK_DISTANCE):
-							exit_velocity = vector_mult_only_x(
-								BOUNCE_UP_AL_WALL,
-								-facing
-							)
-							facing = -facing
-						elif test_move(transform, Vector2.UP * BOUNCE_CHECK_DISTANCE):
-							exit_velocity = vector_mult_only_x(
-								BOUNCE_UP_AG_CEIL,
-								facing
-							)
-							stick_to_ceiling = true
-				if exit_velocity != Vector2.ZERO:
-					in_control_x = false
-					in_control_y = false
-					no_control_x_timer = BOUNCE_REMOVE_CONTROL_TIME
-					no_control_y_timer = BOUNCE_REMOVE_CONTROL_TIME
-					on_jump() # to be replaced with on_bounce() eventually
-					if stick_to_ceiling:
-						stick_to_ceiling_timer = BOUNCE_STICK_TO_CEILING_TIME
-			elif rolling_allowed and Input.is_action_pressed("Cancel"):
-				pass
+			if rolling_allowed and Input.is_action_pressed("Cancel"):
+				bounce_timer = BOUNCE_TIME
 			if exit_velocity == Vector2.ZERO:
 				var exit_vel: Vector2
 				if dash_direction.y == -1.0:
@@ -567,6 +454,20 @@ func _physics_process(delta):
 				exit_velocity.y = min(abs(velocity.y), exit_vel.y) * sign(velocity.y)
 			
 			velocity = exit_velocity
+	
+	# Bouncing
+	
+	if bounce_timer > 0:
+		if Input.is_action_pressed("Cancel"):
+			if jump_timer > 0 or Input.is_action_pressed("Accept"):
+				var bounce_from: Vector2
+				bounce_from.x = test_move(collider_transform(), dash_direction.project(Vector2.RIGHT) * BOUNCE_CHECK_DISTANCE)
+				bounce_from.y = test_move(collider_transform(), dash_direction.project(Vector2.DOWN) * BOUNCE_CHECK_DISTANCE)
+				print(bounce_from)
+		else:
+			bounce_timer = 0.0
+		bounce_timer -= delta
+	
 	
 	# Apply velocity
 	
@@ -594,12 +495,16 @@ func _physics_process(delta):
 		# Squeezing around corners
 		if get_slide_count():
 			var collision = get_slide_collision(0)
-			var check_axis = Vector2.UP if collision.normal.x else Vector2.RIGHT
+			var check_axis = Vector2.DOWN if collision.normal.x else Vector2.RIGHT
 			var check_movement = collision.remainder.clamped(DASH_SQUEEZE_AROUND_CHECK_DISTANCE_MAX)
 			# Assumes DASH_SQUEEZE_AROUND_MAX < 4 which it really should
-			for i in range(-DASH_SQUEEZE_AROUND_MAX, DASH_SQUEEZE_AROUND_MAX + 1):
-				if not test_move(transform.translated(check_axis * i), check_movement):
+			for i in range(DASH_SQUEEZE_AROUND_MAX + 1):
+				if not test_move(collider_transform().translated(check_axis * i), check_movement):
 					position += check_axis * i + collision.remainder
+					squeezed_around = true
+					break
+				if not test_move(collider_transform().translated(check_axis * -i), check_movement):
+					position += check_axis * -i + collision.remainder
 					squeezed_around = true
 					break
 	
@@ -677,8 +582,13 @@ func _physics_process(delta):
 		dash_particles.emitting = false
 
 
-func vector_mult_only_x(vector: Vector2, x_scalar: float):
-	return Vector2(vector.x * x_scalar, vector.y)
+func collider_transform():
+	return transform.scaled(
+		(
+			collider.shape.extents -
+			Vector2(get_safe_margin(), get_safe_margin())
+		) / collider.shape.extents
+	)
 
 
 func set_anim(new_anim: Sprite, anim: String):
@@ -749,5 +659,4 @@ func DialogStartedCode(playerInfo):
 		facing = cutsc_dir if cutsc_dir else facing
 	else:
 		cutscene_velocity = 0
-		print("should have stopped moving")
 		Global.emit_signal("CutscenePlayerStoppedMoving", true)
