@@ -159,10 +159,11 @@ onready var anim_jump = $SpriteContainer/SpriteJump
 onready var anim_hangtime = $SpriteContainer/SpriteHangtime
 onready var anim_fall = $SpriteContainer/SpriteFall
 onready var anim_dash = $SpriteContainer/SpriteDash
+onready var anim_roll = $SpriteContainer/SpriteRoll
 
 onready var anim_current
 onready var anim_list = [anim_idle, anim_run, anim_jump, anim_hangtime,
-						 anim_fall, anim_dash]
+						 anim_fall, anim_dash, anim_roll]
 
 var palette_normal_texture: StreamTexture
 var palette_dash_texture: StreamTexture

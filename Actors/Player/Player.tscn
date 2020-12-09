@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Aseprite/Main character/UV sprites/plantchar_fall.png" type="Texture" id=1]
 [ext_resource path="res://Actors/Player/Player.gd" type="Script" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Aseprite/Main character/UV sprites/plantchar_run.png" type="Texture" id=6]
 [ext_resource path="res://Aseprite/Main character/Palette nonsense/normal_palette.png" type="Texture" id=7]
 [ext_resource path="res://Aseprite/Main character/UV sprites/plantchar_dash.png" type="Texture" id=8]
+[ext_resource path="res://Aseprite/Main character/UV sprites/plantchar_roll.png" type="Texture" id=9]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
@@ -120,6 +121,23 @@ tracks/1/keys = {
 } ]
 }
 
+[sub_resource type="Animation" id=10]
+resource_name = "Roll"
+length = 0.25
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath("SpriteContainer/SpriteRoll:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.08, 0.15, 0.25 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
+}
+
 [sub_resource type="Animation" id=9]
 length = 0.32
 loop = true
@@ -185,6 +203,13 @@ use_parent_material = true
 texture = ExtResource( 8 )
 offset = Vector2( 0, -2.5 )
 
+[node name="SpriteRoll" type="Sprite" parent="SpriteContainer"]
+visible = false
+use_parent_material = true
+texture = ExtResource( 9 )
+offset = Vector2( 0, -2.5 )
+hframes = 4
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 3 )
 
@@ -194,4 +219,5 @@ anims/Fall = SubResource( 5 )
 anims/Hangtime = SubResource( 6 )
 anims/Idle = SubResource( 7 )
 anims/Jump = SubResource( 8 )
+anims/Roll = SubResource( 10 )
 anims/Run = SubResource( 9 )
