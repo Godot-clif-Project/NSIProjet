@@ -181,7 +181,7 @@ __meta__ = {
 
 [node name="DownName" type="Label" parent="DownDialogBox/NinePatchRect2/DownNameMargin"]
 margin_right = 42.0
-margin_bottom = 19.0
+margin_bottom = 17.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource( 2 )

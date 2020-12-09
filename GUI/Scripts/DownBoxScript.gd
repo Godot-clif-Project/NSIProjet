@@ -14,6 +14,7 @@ onready var DownTween = $DownDialogBox/Tween
 onready var BloopSound = $BloopSound
 onready var timer = $Timer
 
+var HowManyCharacters = 0
 var DownTweenCompleted = true
 var dialog
 var line = 0
@@ -29,6 +30,7 @@ var DoesFileExist = false
 const MCFrames = preload("res://GUI/Portraits/MC.tres")
 const CoolFrames = preload("res://GUI/Portraits/Cool.tres")
 const UnknownFrames = preload("res://GUI/Portraits/Unknown.tres")
+const TextSpeed = 0.1
 
 export var jsonname = "errorhandler"
 export var lang = "FR"
@@ -49,6 +51,7 @@ func load_json(jsonname):
 			else:
 				file.open("res://GUI/Dialogues/FR/"+jsonname+".json", file.READ);
 		_:
+			print("fix your language")
 			file.open("res://GUI/Dialogues/FR/"+jsonname+".json", file.READ);
 	JsonData = parse_json(file.get_as_text())
 	file.close()
@@ -64,7 +67,7 @@ func _ready():
 	hide()
 
 func _process(delta):
-	if jsonname != "" or "errorhandler":
+	if jsonname != "":
 		if AnimationFinished == true and DownTweenCompleted == true and Global.inZone == true:
 			if not DialogBoxAppeared:
 				if Input.is_action_just_pressed("Interact") and OkFuckThisTroubleshootingTime == false:
@@ -98,13 +101,14 @@ func proceed_dialog():
 		if DialogBoxAppeared == true:
 			hideDownBox()
 			Global.emit_signal("DialogFinished")
-		yield(AnimationMaster,"animation_finished")
-		ResetBoxes()
+			yield(AnimationMaster,"animation_finished")
+			ResetBoxes()
 		
 func down_text():
 	TextBox.bbcode_text = "[center]"+JsonData[line].text
 	NameBox.text = JsonData[line].name
 	TextBox.percent_visible = 0
+#	DownTween.playback_speed = HowManyCharacters * TextSpeed
 	DownTween.interpolate_property(TextBox, "percent_visible", 0,1,0.4, Tween.TRANS_LINEAR,Tween.EASE_IN)
 	DownTween.start()
 
@@ -115,12 +119,21 @@ func showDownBox():
 func hideDownBox():
 	AnimationMaster.play("Disappear")
 
+func count_character_count():
+	HowManyCharacters = 0
+	for character in JsonData[line].text:
+		HowManyCharacters += 1
+	print(HowManyCharacters)
+	down_text()
+	line += 1
+
 func DownBoxHandler(command):
 	if command == 1:
 		if DialogBoxAppeared == false:
 			showDownBox()
 	if DialogBoxAppeared == true:
 		if line < JsonData.size():
+#			count_character_count()
 			down_text()
 			line += 1
 
@@ -129,10 +142,8 @@ func ResetBoxes():
 	Global.DialogStarted = false
 	line = 0
 	TextBox.percent_visible = 0
-	hide()
 	DialogBoxAppeared = false
 	OkFuckThisTroubleshootingTime = false
-	load_json("errorhandler")
 
 func ChangePortraitPosition():
 	if JsonData[line].position == 0:
