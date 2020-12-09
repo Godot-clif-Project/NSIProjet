@@ -192,7 +192,7 @@ func _on_DownAnimation_animation_finished(anim_name):
 	match anim_name:
 		"Appear":
 			DialogBoxAppeared = true
-			proceed_dialog()
+#			proceed_dialog()
 		"Disappear":
 			DialogBoxAppeared = false
 		_:
