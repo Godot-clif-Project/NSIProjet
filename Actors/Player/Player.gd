@@ -203,7 +203,6 @@ func _ready():
 
 
 func _physics_process(delta):
-	anim_container.rotate(.1)
 	direction_x = (
 		int(Input.is_action_pressed("Right")) -
 		int(Input.is_action_pressed("Left"))
