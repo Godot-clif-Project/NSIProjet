@@ -12,7 +12,7 @@
    "command": 4,
    "name": "Cool",
    "text": "[shake rate=15 level=10]S-Salut.[/shake]",
-   "characterpos": "",
+   "characterpos": "Pos2",
    "position": 1
  },
  {

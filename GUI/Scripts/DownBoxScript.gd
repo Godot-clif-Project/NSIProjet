@@ -25,6 +25,7 @@ var AnimationFinished = true
 var OkFuckThisTroubleshootingTime = false
 var DoesFileExist = false
 var IsItHiddenByCode = false
+var CharaPos
 
 #DEBUG VAR
 var DebugPosTest
@@ -34,7 +35,6 @@ var DebugPosTest
 const MCFrames = preload("res://GUI/Portraits/MC.tres")
 const CoolFrames = preload("res://GUI/Portraits/Cool.tres")
 const UnknownFrames = preload("res://GUI/Portraits/Unknown.tres")
-const TextSpeed = 0.1
 
 export var jsonname = "errorhandler"
 export var lang = "FR"
@@ -135,23 +135,32 @@ func count_character_count():
 	line += 1
 
 func DownBoxHandler(command):
+	if command != 4: #Since it should be checked for every command...
+		CheckIfCharacterShouldBeMoved()
+	else: #Command 4 moves characters.
+		MoveCharacter()
 	if command == 1: # Show Box
 		if DialogBoxAppeared == false:
 			showDownBox()
 		elif IsItHiddenByCode == true:
 			show()
-	if command == 2: # Hide Box
+	elif command == 2: # Hide Box
 		if DialogBoxAppeared == true:
 			hide()
 			IsItHiddenByCode = true
-	if command == 4: # Move Character (depends on name, will have to be defined.)
-		pass
 	if DialogBoxAppeared == true:
 		if line < JsonData.size():
 #			count_character_count()
 			down_text()
 			line += 1
-
+func CheckIfCharacterShouldBeMoved():
+	if JsonData[line].characterpos != "":
+		print("characterpos is not empty! Forcing movement!")
+		MoveCharacter()
+func MoveCharacter():
+	print("Here, the character should be...at ",JsonData[line].characterpos,".")
+	CharaPos = get_node(JsonData[line].ID+JsonData[line].characterpos).global_position
+	print(CharaPos.x)
 func ResetBoxes():
 	hide()
 	Global.DialogStarted = false
