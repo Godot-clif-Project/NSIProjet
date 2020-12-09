@@ -96,12 +96,13 @@ const DASH_SQUEEZE_AROUND_CHECK_DISTANCE_MAX = 4
 const BOUNCE_TIME = .1
 const BOUNCE_CHECK_DISTANCE = 2 * WALLJUMP_MARGIN
 
-const BOUNCE_FROM_CORNER = Vector2(-150, -150)
-const BOUNCE_FROM_FLOOR = Vector2(0, -150)
-const BOUNCE_FROM_SIDE = Vector2(-150, -50)
-const BOUNCE_FROM_TOP = Vector2(0, 150)
+const BOUNCE_FROM_FLOOR = Vector2(0, -280)
+const BOUNCE_FROM_SIDE = Vector2(-300, -80)
+const BOUNCE_FROM_CEILING = Vector2(0, 400)
 
-const BOUNCE_REMOVE_CONTROL_TIME = .15
+const BOUNCE_REMOVE_CONTROL_TIME = .2
+
+const BOUNCE_DURATION = .2
 
 # Camera constants
 
@@ -123,6 +124,7 @@ var direction_y: int
 var jump_timer: float
 var coyote_timer: float
 var bounce_timer: float
+var bounce_bounce_timer: float
 
 var grounded: bool
 var wallsliding: bool
@@ -461,13 +463,48 @@ func _physics_process(delta):
 		if Input.is_action_pressed("Cancel"):
 			if jump_timer > 0 or Input.is_action_pressed("Accept"):
 				var bounce_from: Vector2
-				bounce_from.x = test_move(collider_transform(), dash_direction.project(Vector2.RIGHT) * BOUNCE_CHECK_DISTANCE)
-				bounce_from.y = test_move(collider_transform(), dash_direction.project(Vector2.DOWN) * BOUNCE_CHECK_DISTANCE)
-				print(bounce_from)
+				
+				if (dash_direction.x and (not dash_direction.y) and
+					test_move(
+						collider_transform(),
+						dash_direction.project(Vector2.RIGHT) *
+						BOUNCE_CHECK_DISTANCE
+					)):
+					bounce_from.x = sign(dash_direction.x)
+				if (dash_direction.y and (not dash_direction.x) and
+					test_move(
+						collider_transform(),
+						dash_direction.project(Vector2.DOWN) *
+						BOUNCE_CHECK_DISTANCE
+					)):
+					bounce_from.y = sign(dash_direction.y)
+				
+				if bounce_from:
+					bounce_timer = 0.0
+					in_control_x = false
+					no_control_x_timer = BOUNCE_REMOVE_CONTROL_TIME
+					in_control_y = false
+					no_control_y_timer = BOUNCE_REMOVE_CONTROL_TIME
+					if bounce_from.x:
+						velocity.x = BOUNCE_FROM_SIDE.x * bounce_from.x
+						velocity.y = BOUNCE_FROM_SIDE.y
+						facing = -bounce_from.x
+					if bounce_from.y:
+						if bounce_from.y > 0:
+							velocity = BOUNCE_FROM_FLOOR
+						else:
+							velocity = BOUNCE_FROM_CEILING
+					on_bounce()
+					bounce_bounce_timer = BOUNCE_DURATION
 		else:
 			bounce_timer = 0.0
 		bounce_timer -= delta
 	
+	# haha boing boing
+	if bounce_bounce_timer > 0:
+		bounce_bounce_timer -= delta
+		if bounce_bounce_timer < 0:
+			bounce_bounce_timer = 0
 	
 	# Apply velocity
 	
@@ -491,7 +528,7 @@ func _physics_process(delta):
 	else:
 		move_and_slide(velocity, Vector2.UP)
 	var squeezed_around: bool
-	if dashing:
+	if (dashing and not Input.is_action_pressed("Accept")) or bounce_bounce_timer:
 		# Squeezing around corners
 		if get_slide_count():
 			var collision = get_slide_collision(0)
@@ -626,6 +663,12 @@ func on_dash():
 		facing = sign(dash_direction.x)
 	jumping = false
 	Global.camera.shake(dash_direction, DASH_SHAKE_DURATION)
+
+
+func on_bounce():
+	set_anim(anim_jump, "Jump")
+	dashing = false
+	dashing_allowed = true
 
 
 func refill_dash():
