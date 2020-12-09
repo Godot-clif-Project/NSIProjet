@@ -43,7 +43,7 @@ const GRAVMOD_BIGLEAP_BEGIN = JUMP_FORCE * .2
 const GRAVMOD_BIGLEAP_END = -GRAVMOD_BIGLEAP_BEGIN
 const WALLJUMP_FORCE = JUMP_FORCE * .8
 const WALLJUMP_PUSH = RUN_SPEED_MAX * 1.3
-const WALLJUMP_PUSH_NEUTRAL = JUMP_SPBOOST_MAX
+const WALLJUMP_PUSH_NEUTRAL = RUN_SPEED_MAX * 1.3
 const WALLJUMP_MARGIN = 1.5
 const WALLJUMP_CONTROL_REMOVED_TIME = .15
 const WALLJUMP_CONTROL_REMOVED_TIME_NEUTRAL = 0.0
@@ -59,7 +59,7 @@ const WALLSLIDE_MAX_SPEED = 80.0
 const WALLSLIDE_FCOUNT = 2
 
 const RUN_FRIC_TEMP = .72
-const AIR_FRIC_TEMP = .83
+const AIR_FRIC_TEMP = .85
 const CORRECTION_FRIC_TEMP = .95
 const CORRECTION_FRIC_ATTENUATED_TEMP = .97
 const CORRECTION_FRIC_ATTENUATED_AIR_TEMP = .985
@@ -202,7 +202,8 @@ func _ready():
 	Global.camera.add_pt_of_interest(self, 1.0, INF, true)	
 
 
-func _physics_process(delta):	
+func _physics_process(delta):
+	anim_container.rotate(.1)
 	direction_x = (
 		int(Input.is_action_pressed("Right")) -
 		int(Input.is_action_pressed("Left"))
