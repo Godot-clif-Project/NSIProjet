@@ -4,15 +4,15 @@
    "command": 1,
    "name": "MC",
    "text": "Hey !",
-   "animationn": "",
+   "characterpos": "",
    "position": 0
  },
  {
    "ID": "TestLevel",
-   "command": 0,
+   "command": 4,
    "name": "Cool",
    "text": "[shake rate=15 level=10]S-Salut.[/shake]",
-   "animationn": "MorningRoutine",
+   "characterpos": "",
    "position": 1
  },
  {
@@ -20,7 +20,7 @@
    "command": 0,
    "name": "MC",
    "text": "Qu'est-ce que tu fais...?",
-   "animationn": "",
+   "characterpos": "Pos1",
    "position": 0
  },
  {
@@ -28,7 +28,7 @@
    "command": 0,
    "name": "Cool",
    "text": "Je [shake rate=15 level=10]m'entraîne[/shake], ça se voit pas?",
-   "animationn": "",
+   "characterpos": "",
    "position": 1
  },
  {
@@ -36,7 +36,7 @@
    "command": 0,
    "name": "MC",
    "text": "Ah... Mais pourquoi tu t'entraînes ?",
-   "animationn": "",
+   "characterpos": "",
    "position": 0
  },
  {
@@ -44,23 +44,31 @@
    "command": 0,
    "name": "Cool",
    "text": "Je m'entraîne... à [wave amp=30 freq=5][color=red]ROULER![/color][/wave]",
-   "animationn": "",
+   "characterpos": "",
    "position": 1
  },
  {
    "ID": "TestLevel",
    "command": 0,
    "name": "Cool",
-   "text": "Sache que",
-   "animationn": "",
-   "position": 0
+   "text": "Sache que:",
+   "characterpos": "",
+   "position": 1
  },
  {
    "ID": "TestLevel",
    "command": 2,
+   "name": "Cool",
+   "text": "",
+   "characterpos": "Pos2",
+   "position": 1
+ },
+ {
+   "ID": "TestLevel",
+   "command": 0,
    "name": "MC",
    "text": "",
-   "animationn": "",
+   "characterpos": "",
    "position": 0
  },
  {
@@ -68,7 +76,7 @@
    "command": 1,
    "name": "Cool",
    "text": "[wave amp=30 freq=5]...Rien.[/wave]",
-   "animationn": "",
+   "characterpos": "",
    "position": 1
  },
  {
@@ -76,7 +84,7 @@
    "command": 0,
    "name": "MC",
    "text": "pourquoi y'avait plus rien...?",
-   "animationn": "",
+   "characterpos": "",
    "position": 0
  }
 ]

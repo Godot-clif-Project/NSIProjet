@@ -26,6 +26,9 @@ var OkFuckThisTroubleshootingTime = false
 var DoesFileExist = false
 var IsItHiddenByCode = false
 
+#DEBUG VAR
+var DebugPosTest
+
 #If we ever need to show the old sprites in use; Change MC/Cool.tres to MC/CoolOld.tres
 #Unknown didn't change through versions; so who cares about them (I do)
 const MCFrames = preload("res://GUI/Portraits/MC.tres")
@@ -61,6 +64,8 @@ func _init():
 	pass
 
 func _ready():
+	DebugPosTest = get_node("TestLevelPos1")
+	print(DebugPosTest.global_position)
 	Global.connect("StartDialog",self,"StartDialogCode")
 	Global.connect("CutscenePlayerStoppedMoving",self,"init_dialog")
 	
@@ -130,15 +135,17 @@ func count_character_count():
 	line += 1
 
 func DownBoxHandler(command):
-	if command == 1:
+	if command == 1: # Show Box
 		if DialogBoxAppeared == false:
 			showDownBox()
 		elif IsItHiddenByCode == true:
 			show()
-	if command == 2:
+	if command == 2: # Hide Box
 		if DialogBoxAppeared == true:
 			hide()
 			IsItHiddenByCode = true
+	if command == 4: # Move Character (depends on name, will have to be defined.)
+		pass
 	if DialogBoxAppeared == true:
 		if line < JsonData.size():
 #			count_character_count()
