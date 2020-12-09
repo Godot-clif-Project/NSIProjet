@@ -50,24 +50,24 @@
  {
    "ID": "TestLevel",
    "command": 0,
-   "name": "MC",
-   "text": "Oh !!! Je vois !!!",
-   "animationn": "",
-   "position": 0
- },
- {
-   "ID": "TestLevel",
-   "command": 0,
-   "name": "MC",
-   "text": "...Quand tu sauras faire, tu pourras m'apprendre ??",
-   "animationn": "",
-   "position": 0
- },
- {
-   "ID": "TestLevel",
-   "command": 0,
    "name": "Cool",
-   "text": "[wave amp=30 freq=5]Haha, bien sûr ![/wave]",
+   "text": "Sache que",
+   "animationn": "",
+   "position": 0
+ },
+ {
+   "ID": "TestLevel",
+   "command": 2,
+   "name": "MC",
+   "text": "",
+   "animationn": "",
+   "position": 0
+ },
+ {
+   "ID": "TestLevel",
+   "command": 1,
+   "name": "Cool",
+   "text": "[wave amp=30 freq=5]...Rien.[/wave]",
    "animationn": "",
    "position": 1
  },
@@ -75,7 +75,7 @@
    "ID": "TestLevel",
    "command": 0,
    "name": "MC",
-   "text": "Merci !!!",
+   "text": "pourquoi y'avait plus rien...?",
    "animationn": "",
    "position": 0
  }

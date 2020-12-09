@@ -24,6 +24,7 @@ var IsTalking = false
 var AnimationFinished = true
 var OkFuckThisTroubleshootingTime = false
 var DoesFileExist = false
+var IsItHiddenByCode = false
 
 #If we ever need to show the old sprites in use; Change MC/Cool.tres to MC/CoolOld.tres
 #Unknown didn't change through versions; so who cares about them (I do)
@@ -107,10 +108,11 @@ func proceed_dialog():
 func down_text():
 	TextBox.bbcode_text = "[center]"+JsonData[line].text
 	NameBox.text = JsonData[line].name
-	TextBox.percent_visible = 0
 #	DownTween.playback_speed = HowManyCharacters * TextSpeed
-	DownTween.interpolate_property(TextBox, "percent_visible", 0,1,0.4, Tween.TRANS_LINEAR,Tween.EASE_IN)
-	DownTween.start()
+	if JsonData[line].text != "":
+		TextBox.percent_visible = 0
+		DownTween.interpolate_property(TextBox, "percent_visible", 0,1,0.4, Tween.TRANS_LINEAR,Tween.EASE_IN)
+		DownTween.start()
 
 func showDownBox():
 	AnimationMaster.play("Appear")
@@ -131,6 +133,12 @@ func DownBoxHandler(command):
 	if command == 1:
 		if DialogBoxAppeared == false:
 			showDownBox()
+		elif IsItHiddenByCode == true:
+			show()
+	if command == 2:
+		if DialogBoxAppeared == true:
+			hide()
+			IsItHiddenByCode = true
 	if DialogBoxAppeared == true:
 		if line < JsonData.size():
 #			count_character_count()
