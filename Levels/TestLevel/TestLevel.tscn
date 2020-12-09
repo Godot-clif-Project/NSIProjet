@@ -66,3 +66,9 @@ margin_left = 0.0
 margin_top = 250.0
 margin_right = 0.0
 margin_bottom = 250.0
+
+[node name="TestLevelPos1" type="Position2D" parent="Camera2D/DownBox"]
+position = Vector2( 0.400436, -207.843 )
+
+[node name="TestLevelPos2" type="Position2D" parent="Camera2D/DownBox"]
+position = Vector2( 116.295, -206.811 )
