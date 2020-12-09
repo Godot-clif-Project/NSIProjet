@@ -27,9 +27,6 @@ var DoesFileExist = false
 var IsItHiddenByCode = false
 var CharaPos
 
-#DEBUG VAR
-var DebugPosTest
-
 #If we ever need to show the old sprites in use; Change MC/Cool.tres to MC/CoolOld.tres
 #Unknown didn't change through versions; so who cares about them (I do)
 const MCFrames = preload("res://GUI/Portraits/MC.tres")
@@ -64,8 +61,6 @@ func _init():
 	pass
 
 func _ready():
-	DebugPosTest = get_node("TestLevelPos1")
-	print(DebugPosTest.global_position)
 	Global.connect("StartDialog",self,"StartDialogCode")
 	Global.connect("CutscenePlayerStoppedMoving",self,"init_dialog")
 	
