@@ -10,10 +10,6 @@ extends KinematicBody2D
 # Bring back super dash, maybe hyper if i want to make the diag down dashes
 # better, also wall bounces
 
-# Simplify the *actual* bounces, make it so that you have to hold dash AND jump
-# and it only takes into account the wall normal, keeping the velocity of
-# whatever the other direction was if dashing diagonally
-
 
 # Missing animations: wallslide, landing, changing directions, ledge balancing
 # rolling
@@ -95,9 +91,10 @@ const DASH_SQUEEZE_AROUND_CHECK_DISTANCE_MAX = 4
 
 const BOUNCE_TIME = .1
 const BOUNCE_CHECK_DISTANCE = 2 * WALLJUMP_MARGIN
+const BOUNCE_DASH_HOLD_TIME = .06
 
 const BOUNCE_FROM_FLOOR = Vector2(0, -280)
-const BOUNCE_FROM_SIDE = Vector2(-300, -80)
+const BOUNCE_FROM_SIDE = Vector2(-280, -80)
 const BOUNCE_FROM_CEILING = Vector2(0, 400)
 
 const BOUNCE_REMOVE_CONTROL_TIME = .2
@@ -125,6 +122,7 @@ var jump_timer: float
 var coyote_timer: float
 var bounce_timer: float
 var bounce_bounce_timer: float
+var bounce_dash_holder: float
 
 var grounded: bool
 var wallsliding: bool
@@ -461,6 +459,9 @@ func _physics_process(delta):
 	
 	if bounce_timer > 0:
 		if Input.is_action_pressed("Cancel"):
+			bounce_dash_holder = BOUNCE_DASH_HOLD_TIME
+			
+		if bounce_dash_holder > 0:
 			if jump_timer > 0 or Input.is_action_pressed("Accept"):
 				var bounce_from: Vector2
 				
@@ -492,13 +493,15 @@ func _physics_process(delta):
 					if bounce_from.y:
 						if bounce_from.y > 0:
 							velocity = BOUNCE_FROM_FLOOR
+							refill_dash()
 						else:
 							velocity = BOUNCE_FROM_CEILING
 					on_bounce()
 					bounce_bounce_timer = BOUNCE_DURATION
-		else:
-			bounce_timer = 0.0
+			bounce_dash_holder -= delta
 		bounce_timer -= delta
+	else:
+		bounce_dash_holder = 0
 	
 	# haha boing boing
 	if bounce_bounce_timer > 0:
