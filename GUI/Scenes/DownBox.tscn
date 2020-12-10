@@ -214,7 +214,7 @@ anims/RightPortrait = SubResource( 4 )
 
 [node name="BloopSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 6 )
-volume_db = -20.0
+bus = "GUI SFX"
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.5
