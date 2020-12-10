@@ -82,11 +82,12 @@ func _process(delta):
 					start_dialog()
 			elif DialogBoxAppeared:
 				if Input.is_action_just_pressed("Accept") or Input.is_action_just_pressed("Interact"):
-					FastForward = false
 					proceed_dialog()
 				if Input.is_action_just_pressed("Cancel"):
 					FastForward = true
 					proceed_dialog()
+				if Input.is_action_just_released("Cancel"):
+					FastForward = false
 	else:
 		print("Invalid JSON!!")
 func start_dialog():
