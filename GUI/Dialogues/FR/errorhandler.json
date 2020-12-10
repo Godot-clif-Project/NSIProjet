@@ -1,0 +1,10 @@
+[
+ {
+   "ID": "TestLevel",
+   "command": 1,
+   "name": "test1",
+   "text": "no json file loaded or is incorrect....woopsie",
+   "emotion": "sad",
+   "position": 0
+ }
+]

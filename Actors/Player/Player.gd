@@ -182,6 +182,8 @@ onready var anim_dash_raw_offset = anim_dash.offset
 func _ready():
 	Global.connect("DialogFinished",self,"DialogFinishedCode")
 	Global.connect("DialogStarted",self,"DialogStartedCode")
+	#what's up?
+	Global.connect("MoveCharacter",self,"ForcedMoveCutscene")
 	
 	set_anim(anim_idle, "Idle")
 	dashing_allowed = true
@@ -715,3 +717,11 @@ func DialogStartedCode(playerInfo):
 	else:
 		cutscene_velocity = 0
 		Global.emit_signal("CutscenePlayerStoppedMoving", true)
+
+func ForcedMoveCutscene(character,xaxis):
+	match character:
+		"MC":
+			#walk to xaxis
+			pass
+		_:
+			pass

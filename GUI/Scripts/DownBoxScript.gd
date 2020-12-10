@@ -26,12 +26,19 @@ var OkFuckThisTroubleshootingTime = false
 var DoesFileExist = false
 var IsItHiddenByCode = false
 var CharaPos
+var FastForward = false
 
 #If we ever need to show the old sprites in use; Change MC/Cool.tres to MC/CoolOld.tres
 #Unknown didn't change through versions; so who cares about them (I do)
+
+#Portrait Consts
 const MCFrames = preload("res://GUI/Portraits/MC.tres")
 const CoolFrames = preload("res://GUI/Portraits/Cool.tres")
 const UnknownFrames = preload("res://GUI/Portraits/Unknown.tres")
+
+#Player/NPC Consts
+onready var MCEntity = get_node("/root/TestScene/Player")
+onready var CoolEntity = get_node("/root/TestScene/Cool")
 
 export var jsonname = "errorhandler"
 export var lang = "FR"
@@ -75,11 +82,11 @@ func _process(delta):
 					start_dialog()
 			elif DialogBoxAppeared:
 				if Input.is_action_just_pressed("Accept") or Input.is_action_just_pressed("Interact"):
+					FastForward = false
 					proceed_dialog()
 				if Input.is_action_just_pressed("Cancel"):
-					# Code to make the dialog go faster or skip to the end of 
-					# the text animation goes here
-					pass
+					FastForward = true
+					proceed_dialog()
 	else:
 		print("Invalid JSON!!")
 func start_dialog():
@@ -110,9 +117,12 @@ func down_text():
 	NameBox.text = JsonData[line].name
 #	DownTween.playback_speed = HowManyCharacters * TextSpeed
 	if JsonData[line].text != "":
-		TextBox.percent_visible = 0
-		DownTween.interpolate_property(TextBox, "percent_visible", 0,1,0.4, Tween.TRANS_LINEAR,Tween.EASE_IN)
-		DownTween.start()
+		if FastForward == false:
+			TextBox.percent_visible = 0
+			DownTween.interpolate_property(TextBox, "percent_visible", 0,1,0.4, Tween.TRANS_LINEAR,Tween.EASE_IN)
+			DownTween.start()
+		else:
+			TextBox.percent_visible = 100
 
 func showDownBox():
 	AnimationMaster.play("Appear")
@@ -130,10 +140,6 @@ func count_character_count():
 	line += 1
 
 func DownBoxHandler(command):
-	if command != 4: #Since it should be checked for every command...
-		CheckIfCharacterShouldBeMoved()
-	else: #Command 4 moves characters.
-		MoveCharacter()
 	if command == 1: # Show Box
 		if DialogBoxAppeared == false:
 			showDownBox()
@@ -145,17 +151,24 @@ func DownBoxHandler(command):
 			IsItHiddenByCode = true
 	if DialogBoxAppeared == true:
 		if line < JsonData.size():
+			CheckIfCharacterShouldBeMoved()
 #			count_character_count()
 			down_text()
 			line += 1
 func CheckIfCharacterShouldBeMoved():
 	if JsonData[line].characterpos != "":
+		CharaPos = get_node(JsonData[line].ID+JsonData[line].characterpos).global_position
 		print("characterpos is not empty! Forcing movement!")
-		MoveCharacter()
-func MoveCharacter():
+		MoveCharacter(JsonData[line].name)
+
+func MoveCharacter(Character):
+	match Character:
+		"MC":
+			Global.emit_signal("MoveCharacter","MC",CharaPos.x)
+		"Cool":
+			Global.emit_signal("MoveCharacter","Cool",CharaPos.x)
 	print("Here, the character should be...at ",JsonData[line].characterpos,".")
-	CharaPos = get_node(JsonData[line].ID+JsonData[line].characterpos).global_position
-	print(CharaPos.x)
+
 func ResetBoxes():
 	hide()
 	Global.DialogStarted = false
@@ -163,6 +176,7 @@ func ResetBoxes():
 	TextBox.percent_visible = 0
 	DialogBoxAppeared = false
 	OkFuckThisTroubleshootingTime = false
+#	Global.emit_signal("ResetPosition","Cool")
 
 func ChangePortraitPosition():
 	if JsonData[line].position == 0:

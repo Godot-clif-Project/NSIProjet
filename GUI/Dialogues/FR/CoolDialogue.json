@@ -60,7 +60,7 @@
    "command": 2,
    "name": "Cool",
    "text": "",
-   "characterpos": "Pos2",
+   "characterpos": "Pos1",
    "position": 1
  },
  {
@@ -76,14 +76,14 @@
    "command": 1,
    "name": "Cool",
    "text": "[wave amp=30 freq=5]...Rien.[/wave]",
-   "characterpos": "",
+   "characterpos": "Pos0",
    "position": 1
  },
  {
    "ID": "TestLevel",
    "command": 0,
    "name": "MC",
-   "text": "pourquoi y'avait plus rien...?",
+   "text": "Comment a-t-il fait...?",
    "characterpos": "",
    "position": 0
  }
