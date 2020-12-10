@@ -7,8 +7,12 @@ var outline_shader: Shader
 var outline_material: ShaderMaterial
 
 var can_interract: bool
+onready var Position = get_global_position()
 
 func _ready():
+	Global.connect("MoveCharacter",self,"ForcedMoveCutscene")
+	Global.connect("ResetPosition",self,"ResetPosition")
+	
 	playing = true
 	outline_shader = preload("res://Shaders/outline.shader")
 	outline_material = ShaderMaterial.new()
@@ -42,8 +46,21 @@ func _process(delta):
 
 func _on_Area2D_body_entered(body: Node2D):
 	Global.DialogPosition = $Position2D.global_position
-	Global.inZone = true
+	if Global.DialogStarted == false:
+		Global.inZone = true
 
 func _on_Area2D_body_exited(area):
-	Global.inZone = false
+	if Global.DialogStarted == false:
+		Global.inZone = false
 
+func ForcedMoveCutscene(character,xaxis):
+	match character:
+		"Cool":
+			set_global_position(Vector2(xaxis,Position.y))
+		_:
+			pass
+
+#func ResetPosition(character):
+#	match character:
+#		"Cool":
+#			set_global_position(Position)

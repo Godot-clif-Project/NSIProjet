@@ -6,6 +6,10 @@ signal DialogFinished()
 signal CutscenePlayerStoppedMoving(
 	did_they_manage_to_reach_the_specified_position_though_im_really_curious_this_is_a_bool
 )
+signal MoveCharacter(charaname,xaxis)
+#vraiment useless, reset position; mais...Je laisse là au cas où !
+signal ResetPosition(charaname)
+
 var DialogStarted = false
 var DialogPosition = Vector2(0,0)
 var inZone = false
