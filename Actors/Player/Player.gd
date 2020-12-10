@@ -124,6 +124,8 @@ var bounce_timer: float
 var bounce_bounce_timer: float
 var bounce_dash_holder: float
 
+var rolling: bool
+
 var grounded: bool
 var wallsliding: bool
 var actually_wallsliding: bool
@@ -687,8 +689,8 @@ func DialogFinishedCode():
 	in_cutscene = false
 	dashing_allowed = true
 
+
 func DialogStartedCode(playerInfo):
-	dash_waiting = false
 	in_cutscene = true
 	in_control_x = false
 	in_control_y = false
@@ -698,6 +700,11 @@ func DialogStartedCode(playerInfo):
 	refill_dash()
 	dashing = false
 	apply_gravity = true
+	force_move(playerInfo)
+	
+
+
+func force_move(playerInfo):
 	cutscene_info = playerInfo
 	if playerInfo.set_position:
 		if playerInfo.position_x == global_position.x:
@@ -717,6 +724,7 @@ func DialogStartedCode(playerInfo):
 	else:
 		cutscene_velocity = 0
 		Global.emit_signal("CutscenePlayerStoppedMoving", true)
+
 
 func ForcedMoveCutscene(character,xaxis):
 	match character:
