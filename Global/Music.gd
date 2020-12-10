@@ -3,13 +3,11 @@ extends AudioStreamPlayer
 
 onready var thing_to_play_on_top = $LoopThingy
 
-var previous_position: float
-
 
 func _ready():
+	connect("finished", self, "properly_loop")
 	play()
 
-func _process(delta):
-	if get_playback_position() < previous_position:
-		thing_to_play_on_top.play()
-	previous_position = get_playback_position()
+
+func properly_loop():
+	thing_to_play_on_top.play()

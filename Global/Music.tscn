@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Music/EXPORT/loop.wav" type="AudioStream" id=1]
-[ext_resource path="res://Music/EXPORT/repeat.wav" type="AudioStream" id=2]
+[ext_resource path="res://Music/EXPORT/properly_looped.wav" type="AudioStream" id=2]
 [ext_resource path="res://Global/Music.gd" type="Script" id=3]
 
 [node name="Music" type="AudioStreamPlayer"]
