@@ -6,6 +6,8 @@ extends Control
 # 2 : Show Animation (in progress)
 # 3 : Hide Box (to be added)
 
+onready var NextIndicator = $DownDialogBox/NextIndicator
+onready var NextAnimator = $DownDialogBox/NextIndicator/IndicatorAnimation
 onready var TextBox = $DownDialogBox/DownTextMargin/DownText
 onready var NameBox = $DownDialogBox/NinePatchRect2/DownNameMargin/DownName
 onready var Portrait = $DownDialogBox/DownPortraitMargin/DownPortraitTexture
@@ -215,11 +217,15 @@ func _on_Tween_tween_completed(object, key):
 	DownTweenCompleted = true
 	BloopSound.stop()
 	StopDownTalkAnimation()
+	NextAnimator.play("Next")
+	NextIndicator.show()
 
 func _on_Tween_tween_started(object, key):
 	DownTweenCompleted = false
 	BloopSound.play()
 	DownTalkAnimation()
+	NextAnimator.play("Reset")
+	NextIndicator.hide()
 
 
 func _on_DownAnimation_animation_finished(anim_name):

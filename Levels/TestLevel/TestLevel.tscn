@@ -59,6 +59,7 @@ rolling_allowed = true
 
 [node name="Camera2D" parent="." instance=ExtResource( 7 )]
 position = Vector2( 1, 0 )
+z_index = 100
 
 [node name="DownBox" parent="Camera2D" instance=ExtResource( 4 )]
 anchor_top = 1.0
