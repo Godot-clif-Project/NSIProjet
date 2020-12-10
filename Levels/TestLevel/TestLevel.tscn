@@ -74,4 +74,4 @@ position = Vector2( 0.400436, -207.843 )
 position = Vector2( 116.295, -206.811 )
 
 [node name="TestLevelPos0" type="Position2D" parent="Camera2D/DownBox"]
-position = Vector2( 77.1719, -242.703 )
+position = Vector2( 76, -242.703 )
