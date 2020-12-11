@@ -32,6 +32,8 @@ func _input(delta):
 	elif Input.is_key_pressed((KEY_4)) and GoodPressesUntilEasterEgg == 9:
 		GoodPressesUntilEasterEgg = 0
 		OS.shell_open("https://youtu.be/qfS6ZevQhd0")
+	else:
+		GoodPressesUntilEasterEgg = 0
 		
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
