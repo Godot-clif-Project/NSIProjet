@@ -19,6 +19,8 @@ extends KinematicBody2D
 
 # more particles!!!!
 
+# More squash and stretch in general
+
 
 export var facing_left: bool
 
@@ -130,6 +132,7 @@ var bounce_bounce_timer: float
 var bounce_dash_holder: float
 
 var rolling: bool
+var rolling_visually: bool
 
 var grounded: bool
 var wallsliding: bool
@@ -243,6 +246,12 @@ func _physics_process(delta):
 			if no_gravity_timer <= 0:
 				no_gravity_timer = 0
 				apply_gravity = true
+	
+	# Rolling
+	if Input.is_action_pressed("Roll"):
+		rolling = true
+	else:
+		rolling = false
 	
 	# Landing and Sticky Landing
 	
@@ -585,23 +594,30 @@ func _physics_process(delta):
 	
 	# Animations
 	
-	if dashing:
-		set_anim(anim_dash, "Dash")
-		anim_dash.offset = (
-			anim_dash_raw_offset +
-			Vector2(int(dash_direction.x != 0), int(dash_direction.y != 0))
-		)
+	if rolling:
+		if not rolling_visually:
+			set_anim(anim_roll, "Roll")
+			rolling_visually = true
+	elif rolling_visually:
+		set_anim(anim_roll, "Unroll")
 	else:
-		if grounded:
-			if abs(velocity.x) > RUNNING_THRESHOLD and not wallsliding:
-				set_anim(anim_run, "Run")
-			else:
-				set_anim(anim_idle, "Idle")
+		if dashing:
+			set_anim(anim_dash, "Dash")
+			anim_dash.offset = (
+				anim_dash_raw_offset +
+				Vector2(int(dash_direction.x != 0), int(dash_direction.y != 0))
+			)
 		else:
-			if anim_current == anim_run or anim_current == anim_idle:
-				set_anim(anim_idle, "Hangtime")
-			if velocity.y >= FALLING_THRESHOLD:
-				set_anim(anim_fall, "Fall")
+			if grounded:
+				if abs(velocity.x) > RUNNING_THRESHOLD and not wallsliding:
+					set_anim(anim_run, "Run")
+				else:
+					set_anim(anim_idle, "Idle")
+			else:
+				if anim_current == anim_run or anim_current == anim_idle:
+					set_anim(anim_idle, "Hangtime")
+				if velocity.y >= FALLING_THRESHOLD:
+					set_anim(anim_fall, "Fall")
 	
 	if anim_container.scale.x == -1:
 		if facing > 0:
@@ -660,7 +676,11 @@ func animationplayer_set_hangtime():
 
 
 func animationplayer_set_rolling():
-	pass
+	set_anim(anim_rolling, "Rolling")
+
+
+func animationplayer_deroll():
+	rolling_visually = false
 
 
 func set_palette_uniform(palette_a: StreamTexture, palette_b: StreamTexture = null, blend: float = 0.0):
@@ -674,7 +694,8 @@ func set_palette_uniform(palette_a: StreamTexture, palette_b: StreamTexture = nu
 
 func on_jump():
 	jumping = true
-	set_anim(anim_jump, "Jump")
+	if not rolling_visually:
+		set_anim(anim_jump, "Jump")
 	dashing = false
 	dashing_allowed = true
 
@@ -687,7 +708,8 @@ func on_dash():
 
 
 func on_bounce():
-	set_anim(anim_jump, "Jump")
+	if not rolling_visually:
+		set_anim(anim_jump, "Jump")
 	dashing = false
 	dashing_allowed = true
 

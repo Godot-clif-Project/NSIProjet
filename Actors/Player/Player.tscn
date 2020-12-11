@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://Aseprite/Main character/UV sprites/plantchar_fall.png" type="Texture" id=1]
 [ext_resource path="res://Actors/Player/Player.gd" type="Script" id=2]
@@ -111,8 +111,8 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id=9]
 resource_name = "Roll"
-length = 0.25
-step = 0.01
+length = 0.1
+step = 0.02
 tracks/0/type = "value"
 tracks/0/path = NodePath("SpriteContainer/SpriteRoll:frame")
 tracks/0/interp = 1
@@ -120,10 +120,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.08, 0.15 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
+"times": PoolRealArray( 0, 0.04 ),
+"transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ 0, 1, 2 ]
+"values": [ 1, 2 ]
 }
 tracks/1/type = "method"
 tracks/1/path = NodePath(".")
@@ -132,13 +132,17 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0.25 ),
+"times": PoolRealArray( 0.1 ),
 "transitions": PoolRealArray( 1 ),
 "values": [ {
 "args": [  ],
 "method": "animationplayer_set_rolling"
 } ]
 }
+
+[sub_resource type="Animation" id=11]
+resource_name = "Rolling"
+length = 0.001
 
 [sub_resource type="Animation" id=10]
 length = 0.32
@@ -155,6 +159,37 @@ tracks/0/keys = {
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2, 3 ]
+}
+
+[sub_resource type="Animation" id=12]
+resource_name = "Unroll"
+length = 0.1
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath("SpriteContainer/SpriteRoll:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.04 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 1, 0 ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.1 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "animationplayer_deroll"
+} ]
 }
 
 [node name="Player" type="KinematicBody2D"]
@@ -207,15 +242,15 @@ texture = ExtResource( 8 )
 offset = Vector2( 0, -2.5 )
 
 [node name="SpriteRoll" type="Sprite" parent="SpriteContainer"]
-visible = false
 use_parent_material = true
 texture = ExtResource( 9 )
 offset = Vector2( 0, -2.5 )
 hframes = 4
 
 [node name="SpriteRolling" type="Sprite" parent="SpriteContainer"]
+visible = false
 material = SubResource( 2 )
-position = Vector2( 0, 4 )
+position = Vector2( 0, 3 )
 hframes = 4
 frame = 3
 
@@ -236,4 +271,6 @@ anims/Hangtime = SubResource( 6 )
 anims/Idle = SubResource( 7 )
 anims/Jump = SubResource( 8 )
 anims/Roll = SubResource( 9 )
+anims/Rolling = SubResource( 11 )
 anims/Run = SubResource( 10 )
+anims/Unroll = SubResource( 12 )
