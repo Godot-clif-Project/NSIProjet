@@ -121,3 +121,4 @@ __meta__ = {
 script = ExtResource( 8 )
 
 [node name="PauseMenu" parent="Camera2D" instance=ExtResource( 9 )]
+z_index = 3
