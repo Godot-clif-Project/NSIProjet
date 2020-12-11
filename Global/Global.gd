@@ -25,6 +25,9 @@ var rng: RandomNumberGenerator
 var fullscreen: bool
 var window_normal_size = Vector2(854, 480)
 
+onready var tree = get_tree()
+
+
 func _init():
 	OS.window_size = window_normal_size
 
@@ -38,7 +41,7 @@ func _ready():
 
 func _process(delta):
 	if Input.is_action_just_pressed("fucking_restart"):
-		get_tree().reload_current_scene()
+		tree.reload_current_scene()
 	if Input.is_action_just_pressed("Fullscreen"):
 		if fullscreen:
 			OS.window_maximized = false
@@ -54,6 +57,8 @@ func _process(delta):
 			OS.window_maximized = true
 			Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 			fullscreen = true
+	if Input.is_action_just_pressed("Pause"):
+		tree.paused = !tree.paused
 
 
 func _physics_process(delta):
