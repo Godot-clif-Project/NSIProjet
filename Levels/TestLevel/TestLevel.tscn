@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Levels/TestLevel/sky.png" type="Texture" id=1]
 [ext_resource path="res://Tiles/Tiles.tscn" type="PackedScene" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Actors/TestNPC/TestNPC.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Global/WhereParticlesShouldBe.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Global/Camera2D.tscn" type="PackedScene" id=7]
+[ext_resource path="res://GUI/Quirks/QuirkPlayer.gd" type="Script" id=8]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
@@ -99,12 +100,12 @@ position = Vector2( 116.295, -206.811 )
 [node name="TestLevelPos0" type="Position2D" parent="Camera2D/GUI/DownBox"]
 position = Vector2( 76, -242.703 )
 
-[node name="TOP" type="BackBufferCopy" parent="Camera2D"]
+[node name="TOP hehe" type="BackBufferCopy" parent="Camera2D"]
 z_index = 2
 copy_mode = 2
 rect = Rect2( -160, -90, 320, 180 )
 
-[node name="ColorRect2" type="ColorRect" parent="Camera2D/TOP"]
+[node name="ColorRect2" type="ColorRect" parent="Camera2D/TOP hehe"]
 material = SubResource( 4 )
 margin_left = -160.0
 margin_top = -90.0
@@ -114,3 +115,6 @@ color = Color( 1, 1, 1, 0 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="EasterEggManager" type="Node" parent="Camera2D"]
+script = ExtResource( 8 )
