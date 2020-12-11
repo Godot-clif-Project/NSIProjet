@@ -19,3 +19,10 @@ func _process(delta):
 	elif paused_update:
 		visible = false
 		paused_update = false
+
+
+func _on_Resume_label_input(event):
+	if event is InputEventMouseButton:
+		print("please")
+		visible = false
+		paused_update = false
