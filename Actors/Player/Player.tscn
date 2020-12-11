@@ -12,12 +12,12 @@
 [ext_resource path="res://Shaders/outline_and_palette.shader" type="Shader" id=10]
 [ext_resource path="res://Shaders/palette.shader" type="Shader" id=11]
 
-[sub_resource type="ShaderMaterial" id=2]
+[sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 11 )
 shader_param/blend = 0.0
 shader_param/palette_a = ExtResource( 7 )
 
-[sub_resource type="ShaderMaterial" id=11]
+[sub_resource type="ShaderMaterial" id=2]
 shader = ExtResource( 10 )
 shader_param/blend = 0.0
 shader_param/texture_size = Vector2( 80, 25 )
@@ -163,7 +163,7 @@ collision_mask = 1024
 script = ExtResource( 2 )
 
 [node name="SpriteContainer" type="Node2D" parent="."]
-material = SubResource( 2 )
+material = SubResource( 1 )
 
 [node name="SpriteIdle" type="Sprite" parent="SpriteContainer"]
 visible = false
@@ -214,9 +214,15 @@ offset = Vector2( 0, -2.5 )
 hframes = 4
 
 [node name="SpriteRolling" type="Sprite" parent="SpriteContainer"]
-material = SubResource( 11 )
+material = SubResource( 2 )
+position = Vector2( 0, 4 )
+hframes = 4
+frame = 3
+
+[node name="Sprite" type="Sprite" parent="SpriteContainer/SpriteRolling"]
+use_parent_material = true
 texture = ExtResource( 9 )
-offset = Vector2( 0, -2.5 )
+offset = Vector2( -1, -4.5 )
 hframes = 4
 frame = 3
 

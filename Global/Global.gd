@@ -22,8 +22,11 @@ var camera: Node
 
 var rng: RandomNumberGenerator
 
+var fullscreen: bool
+var window_normal_size = Vector2(854, 480)
+
 func _init():
-	OS.window_size = Vector2(854, 480)
+	OS.window_size = window_normal_size
 
 
 func _ready():
@@ -37,7 +40,20 @@ func _process(delta):
 	if Input.is_action_just_pressed("fucking_restart"):
 		get_tree().reload_current_scene()
 	if Input.is_action_just_pressed("Fullscreen"):
-		OS.window_fullscreen = not OS.window_fullscreen
+		if fullscreen:
+			OS.window_maximized = false
+			OS.window_size = window_normal_size
+			OS.center_window()
+			OS.window_borderless = false
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+			fullscreen = false
+		else:
+#			OS.window_size = OS.get_screen_size()
+#			OS.window_position = Vector2(0, 0)
+			OS.window_borderless = true
+			OS.window_maximized = true
+			Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+			fullscreen = true
 
 
 func _physics_process(delta):

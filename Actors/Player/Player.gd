@@ -17,6 +17,8 @@ extends KinematicBody2D
 # Missing animations: wallslide, landing, changing directions, ledge balancing
 # rolling
 
+# more particles!!!!
+
 
 export var facing_left: bool
 
