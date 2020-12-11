@@ -3,13 +3,16 @@ extends KinematicBody2D
 
 # TO DO:
 
-# Coyote time for bouncing
+# Coyote time for bouncing / not for the wall but for the input
+# also the delay before bouncing is now a feature (combined with dash cancelling
+# so that it's consistent)
 
 # for the two things above: MOMENTUM CONSERVATION JUST LIKE IN C******
 
-# Bring back super dash, maybe hyper if i want to make the diag down dashes
-# better, also wall bounces
+# Bring back dash cancelling + see point above (when dashing change the momentum
+# memory by something less than the actual velocity)
 
+# maybe fix down diagonal dashes
 
 # Missing animations: wallslide, landing, changing directions, ledge balancing
 # rolling
@@ -162,10 +165,11 @@ onready var anim_hangtime = $SpriteContainer/SpriteHangtime
 onready var anim_fall = $SpriteContainer/SpriteFall
 onready var anim_dash = $SpriteContainer/SpriteDash
 onready var anim_roll = $SpriteContainer/SpriteRoll
+onready var anim_rolling = $SpriteContainer/SpriteRolling
 
 onready var anim_current
 onready var anim_list = [anim_idle, anim_run, anim_jump, anim_hangtime,
-						 anim_fall, anim_dash, anim_roll]
+						 anim_fall, anim_dash, anim_roll, anim_rolling]
 
 var palette_normal_texture: StreamTexture
 var palette_dash_texture: StreamTexture
@@ -204,7 +208,7 @@ func _ready():
 	dash_particles.player_reference = self
 	Global.where_particles_should_be.add_child(dash_particles)
 	
-	Global.camera.add_pt_of_interest(self, 1.0, INF, true)	
+	Global.camera.add_pt_of_interest(self, 1.0, INF, true)
 
 
 func _physics_process(delta):
@@ -653,10 +657,17 @@ func animationplayer_set_hangtime():
 	set_anim(anim_hangtime, "Hangtime")
 
 
+func animationplayer_set_rolling():
+	pass
+
+
 func set_palette_uniform(palette_a: StreamTexture, palette_b: StreamTexture = null, blend: float = 0.0):
 	anim_container.material.set_shader_param("palette_a", palette_a)
 	anim_container.material.set_shader_param("palette_b", palette_b)
 	anim_container.material.set_shader_param("blend", blend)
+	anim_rolling.material.set_shader_param("palette_a", palette_a)
+	anim_rolling.material.set_shader_param("palette_b", palette_b)
+	anim_rolling.material.set_shader_param("blend", blend)
 
 
 func on_jump():

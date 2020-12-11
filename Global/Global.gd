@@ -24,17 +24,20 @@ var rng: RandomNumberGenerator
 
 func _init():
 	OS.window_size = Vector2(854, 480)
-	OS.center_window()
 
 
 func _ready():
 	rng = RandomNumberGenerator.new()
 	rng.randomize()
+	OS.window_borderless = false
+	OS.center_window()
 
 
 func _process(delta):
 	if Input.is_action_just_pressed("fucking_restart"):
 		get_tree().reload_current_scene()
+	if Input.is_action_just_pressed("Fullscreen"):
+		OS.window_fullscreen = not OS.window_fullscreen
 
 
 func _physics_process(delta):
