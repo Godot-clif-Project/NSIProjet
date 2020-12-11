@@ -221,7 +221,6 @@ __meta__ = {
 
 [node name="DownPortraitTexture" type="AnimatedSprite" parent="DownDialogBox/DownPortraitMargin"]
 position = Vector2( 25, 25 )
-z_index = 2
 frames = ExtResource( 3 )
 
 [node name="NextIndicator" type="Sprite" parent="DownDialogBox"]
