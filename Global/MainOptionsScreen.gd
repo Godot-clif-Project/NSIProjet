@@ -38,7 +38,7 @@ func _on_Main_visibility_changed():
 func _on_Main_hide():
 	currentSelection = 0
 	set_process_input(false)
-	for number in ButtonList.size():
+	for number in (ButtonList.size() -1):
 		ButtonList[number].set("custom_colors/font_color",Color(1,1,1))
 
 func send_signal(Selection):

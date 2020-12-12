@@ -4,14 +4,24 @@ signal MusicOptionsPressed()
 signal InputOptionsPressed()
 signal ReturnButtonPressed()
 
-onready var ButtonContainer = get_node("VBoxContainer")
+onready var ButtonContainer = get_node("ScrollContainer/VBoxContainer")
+var OptionList = []
 var ButtonList = []
+var LabelList = []
 
 var currentSelection = 0
 var previousSelection = 0
 
 func _ready():
-	ButtonList = ButtonContainer.get_children()
+	OptionList = ButtonContainer.get_children()
+	for number in (OptionList.size()):
+		var ButtonSelected = find_node("Button")
+		var LabelSelected = find_node("Label")
+		ButtonList.append(ButtonSelected)
+		LabelList.append(LabelSelected)
+
+func _process(delta):
+	print(currentSelection)
 
 func _input(event):
 	previousSelection = currentSelection
@@ -23,14 +33,18 @@ func _input(event):
 	if Input.is_action_just_pressed("menu_confirm"):
 		send_signal(currentSelection)
 	UpdateSelectionCheck()
+
 func UpdateSelectionCheck():
-	if currentSelection > (ButtonList.size() -1):
+	if currentSelection > (OptionList.size() -1):
 		currentSelection = 0
 	UpdateSelection()
 
 func UpdateSelection():
 	ButtonList[previousSelection].set("custom_colors/font_color",Color(1,1,1))
 	ButtonList[currentSelection].set("custom_colors/font_color", Color(1,0,0))
+
+	LabelList[previousSelection].set("custom_colors/font_color",Color(1,1,1))
+	LabelList[currentSelection].set("custom_colors/font_color", Color(1,0,0))
 
 func _on_Main_visibility_changed():
 	currentSelection = 0
