@@ -52,7 +52,6 @@ __meta__ = {
 }
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="Options Menu"]
-
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -491,6 +490,7 @@ __meta__ = {
 margin_top = 75.0
 margin_right = 177.0
 margin_bottom = 91.0
+mouse_filter = 0
 theme = ExtResource( 2 )
 text = "Quit"
 align = 1
