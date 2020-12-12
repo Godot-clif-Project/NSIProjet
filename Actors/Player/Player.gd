@@ -24,6 +24,7 @@ extends KinematicBody2D
 
 export var facing_left: bool
 
+
 # Physics constants
 
 const RUN_SPEED_MAX = 90.0
@@ -68,6 +69,18 @@ const CORRECTION_FRIC_ATTENUATED_TEMP = .97
 const CORRECTION_FRIC_ATTENUATED_AIR_TEMP = .985
 const AIR_Y_FRICTION_TEMP = CORRECTION_FRIC_TEMP
 const CORRECTION_EVEN_MORE_FOR_JUMP_SPBOOSTS_TEMP = .97
+
+# Dangerous constants
+
+const EXTENTS_DEFAULT = Vector2(3.9, 7.9)
+const HITBOX_OFFSET_DEFAULT = Vector2(0.0, 0.0)
+
+const EXTENTS_ROLLING = Vector2(3.9, 3.9)
+const HITBOX_OFFSET_ROLLING = Vector2(0.0, 4.0)
+
+# Rolling constants
+
+const ROLLING_MIN_DURATION = .1
 
 # Animation constants
 
@@ -133,6 +146,7 @@ var bounce_dash_holder: float
 
 var rolling: bool
 var rolling_visually: bool
+var unroll_cooldown: float
 
 var grounded: bool
 var wallsliding: bool
@@ -248,10 +262,28 @@ func _physics_process(delta):
 				apply_gravity = true
 	
 	# Rolling
+	
+	if unroll_cooldown > 0:
+		unroll_cooldown -= delta
+		if unroll_cooldown < 0:
+			unroll_cooldown = 0
+	
 	if Input.is_action_pressed("Roll"):
 		rolling = true
-	else:
-		rolling = false
+		unroll_cooldown = ROLLING_MIN_DURATION
+		collider.shape.extents = EXTENTS_ROLLING
+		collider.position = HITBOX_OFFSET_ROLLING
+	elif not unroll_cooldown and rolling:
+		var temp_pos: Vector2 = position
+		align_to_grid()
+		collider.shape.extents = EXTENTS_DEFAULT
+		collider.position = HITBOX_OFFSET_DEFAULT
+		if test_move(transform, Vector2.ZERO):
+			position = temp_pos
+			collider.shape.extents = EXTENTS_ROLLING
+			collider.position = HITBOX_OFFSET_ROLLING
+		else:
+			rolling = false
 	
 	# Landing and Sticky Landing
 	
@@ -435,7 +467,7 @@ func _physics_process(delta):
 		no_gravity_timer = DASH_DURATION + DASH_DELAY
 		no_control_x_timer = DASH_DURATION + DASH_DELAY
 		no_control_y_timer = DASH_DURATION + DASH_DELAY
-		position = position.round()
+		align_to_grid()
 	if dash_waiting:
 		dash_cancel_timer -= delta
 		if dash_cancel_timer <= 0:
@@ -659,6 +691,10 @@ func collider_transform():
 	return transform
 
 
+func align_to_grid():
+	position = position.round()
+
+
 func set_anim(new_anim: Sprite, anim: String):
 	if not anim_current == new_anim:
 		for spr in anim_list:
@@ -693,6 +729,7 @@ func set_palette_uniform(palette_a: StreamTexture, palette_b: StreamTexture = nu
 
 
 func on_jump():
+	align_to_grid()
 	jumping = true
 	if not rolling_visually:
 		set_anim(anim_jump, "Jump")
