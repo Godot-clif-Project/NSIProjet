@@ -82,6 +82,9 @@ const HITBOX_OFFSET_ROLLING = Vector2(0.0, 4.0)
 
 const ROLLING_MIN_DURATION = .1
 
+const ROLLING_ROTATION_ON_GROUND = .8
+const ROLLING_ROTATION_IN_AIR = .2
+
 # Animation constants
 
 const RUNNING_THRESHOLD = 10.0
@@ -294,9 +297,10 @@ func _physics_process(delta):
 	
 	if is_on_floor():
 		if not grounded:
-			var speed_excess: float = abs(velocity.x) - STICKY_LANDING_MIN
-			if direction_x == 0 and speed_excess > 0:
-				velocity.x -= sign(velocity.x) * min(STICKY_LANDING_FORCE, speed_excess)
+			if not rolling:
+				var speed_excess: float = abs(velocity.x) - STICKY_LANDING_MIN
+				if direction_x == 0 and speed_excess > 0:
+					velocity.x -= sign(velocity.x) * min(STICKY_LANDING_FORCE, speed_excess)
 			grounded = true
 	else:
 		var test_grounded = move_and_collide(Vector2(0, get_safe_margin()), true, true, true)
@@ -635,10 +639,15 @@ func _physics_process(delta):
 		if not rolling_visually:
 			set_anim(anim_roll, "Roll")
 			rolling_visually = true
-		if grounded:
-			ang_vel = (velocity.x * facing) / (4 * PI)
-		true_rotation += ang_vel * delta
-		true_rotation = fmod(true_rotation, 2 * PI)
+		ang_vel = lerp(
+			ang_vel,
+			(velocity.x * facing) / (4 * PI),
+			ROLLING_ROTATION_ON_GROUND if grounded else ROLLING_ROTATION_IN_AIR
+		)
+		true_rotation = fmod(
+			true_rotation + ang_vel * delta,
+			2 * PI
+		)
 		anim_rolling.rotation = round(true_rotation * 4) * (PI / 4)
 	elif rolling_visually:
 		set_anim(anim_roll, "Unroll")

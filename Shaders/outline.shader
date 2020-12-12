@@ -13,5 +13,5 @@ void fragment()
 	sample += texture(TEXTURE, vec2(UV.x, UV.y - offset.y)).a;
 	sample = min(sample, 1.0);
 	vec4 texture_color = texture(TEXTURE, UV);
-	COLOR = vec4(bool(texture_color.a) ? texture_color.rgb : outline_color.rgb, sample);
+	COLOR = bool(texture_color.a) ? texture_color.rgba : vec4(outline_color.rgb, sample);
 }

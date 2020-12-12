@@ -29,5 +29,5 @@ void fragment()
 	}
 	final_color.a = spr_color.a;
 	
-	COLOR = vec4(bool(final_color.a) ? final_color.rgb : outline_color.rgb, sample);
+	COLOR = bool(final_color.a) ? final_color.rgba : vec4(outline_color.rgb, sample);
 }
