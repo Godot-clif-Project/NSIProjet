@@ -756,7 +756,7 @@ func on_bounce():
 
 
 func refill_dash():
-	if not dashing_refreshed:
+	if dashing_allowed and not dashing_refreshed and not dashing:
 		dashing_refreshed = true
 		dash_refill_anim_timer = DASH_REFILL_ANIM_DURATION
 
