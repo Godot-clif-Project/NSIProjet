@@ -312,6 +312,7 @@ script = ExtResource( 6 )
 action = "Interact"
 
 [node name="Music Options Menu" type="Node2D" parent="."]
+visible = false
 
 [node name="MusicOptions" type="Label" parent="Music Options Menu"]
 margin_left = -150.5

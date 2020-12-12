@@ -17,6 +17,7 @@ var WorldSFXVolume
 
 func _ready():
 	visible = false
+	mainpause.hide()
 	optionsmenu.hide()
 	musicoptionsmenu.hide()
 	inputoptionsmenu.hide()
@@ -33,6 +34,9 @@ func _process(delta):
 	elif paused_update:
 		visible = false
 		paused_update = false
+		optionsmenu.hide()
+		musicoptionsmenu.hide()
+		inputoptionsmenu.hide()
 
 # Main Menu Buttons
 
