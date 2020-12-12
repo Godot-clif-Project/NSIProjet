@@ -1,7 +1,11 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Global/PauseMenu.gd" type="Script" id=1]
 [ext_resource path="res://GUI/Menu.tres" type="Theme" id=2]
+[ext_resource path="res://GUI/NextIndicator.png" type="Texture" id=3]
+[ext_resource path="res://GUI/OptionButtons.tres" type="Theme" id=4]
+[ext_resource path="res://GUI/NextIndicatorLight.png" type="Texture" id=5]
+[ext_resource path="res://Global/RemapButton.gd" type="Script" id=6]
 
 [node name="PauseMenu" type="Node2D"]
 pause_mode = 2
@@ -18,9 +22,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Options" type="Node2D" parent="."]
+[node name="Options Menu" type="Node2D" parent="."]
+visible = false
 
-[node name="Options" type="Label" parent="Options"]
+[node name="Options" type="Label" parent="Options Menu"]
 margin_left = -150.5
 margin_top = -82.0
 margin_right = 150.5
@@ -32,7 +37,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Return" type="Label" parent="Options"]
+[node name="Return" type="Label" parent="Options Menu"]
 margin_left = -150.5
 margin_top = 68.0
 margin_right = 150.5
@@ -46,47 +51,399 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Options"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Options Menu"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -88.0
-margin_top = -61.0
-margin_right = 88.0
+margin_left = -88.5
+margin_top = -63.0
+margin_right = 88.5
+margin_bottom = 63.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Music Options" type="Label" parent="Options Menu/VBoxContainer2"]
+margin_top = 45.0
+margin_right = 177.0
 margin_bottom = 61.0
+mouse_filter = 0
+theme = ExtResource( 2 )
+text = "Music"
+align = 1
+valign = 1
+
+[node name="Input Options" type="Label" parent="Options Menu/VBoxContainer2"]
+margin_top = 65.0
+margin_right = 177.0
+margin_bottom = 81.0
+mouse_filter = 0
+theme = ExtResource( 2 )
+text = "Input"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Input Options Menu" type="Node2D" parent="."]
+visible = false
+
+[node name="InputOptions" type="Label" parent="Input Options Menu"]
+margin_left = -150.5
+margin_top = -82.0
+margin_right = 150.5
+margin_bottom = -66.0
+theme = ExtResource( 2 )
+text = "Input Options"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InputReturn" type="Label" parent="Input Options Menu"]
+margin_left = -150.5
+margin_top = 68.0
+margin_right = 150.5
+margin_bottom = 84.0
+mouse_filter = 0
+theme = ExtResource( 2 )
+text = "Return"
+align = 2
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Input Options Menu"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -100.0
+margin_top = -60.7027
+margin_right = 100.0
+margin_bottom = 61.2973
 scroll_horizontal_enabled = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Options/ScrollContainer"]
-margin_right = 68.0
-margin_bottom = 16.0
+[node name="VBoxContainer" type="VBoxContainer" parent="Input Options Menu/ScrollContainer"]
+margin_right = 184.0
+margin_bottom = 178.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Options/ScrollContainer/VBoxContainer"]
-margin_right = 68.0
-margin_bottom = 16.0
+[node name="Remap Button Left" type="HBoxContainer" parent="Input Options Menu/ScrollContainer/VBoxContainer"]
+margin_right = 184.0
+margin_bottom = 22.0
 alignment = 1
 
-[node name="Label" type="Label" parent="Options/ScrollContainer/VBoxContainer/HBoxContainer"]
-margin_right = 32.0
-margin_bottom = 16.0
-theme = ExtResource( 2 )
-text = "test"
+[node name="Label" type="Label" parent="Input Options Menu/ScrollContainer/VBoxContainer/Remap Button Left"]
+margin_top = 3.0
+margin_right = 80.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+theme = ExtResource( 4 )
+text = "Move Left"
+align = 1
 
-[node name="Label2" type="Label" parent="Options/ScrollContainer/VBoxContainer/HBoxContainer"]
-margin_left = 36.0
-margin_right = 68.0
-margin_bottom = 16.0
+[node name="Button" type="Button" parent="Input Options Menu/ScrollContainer/VBoxContainer/Remap Button Left"]
+margin_left = 84.0
+margin_right = 184.0
+margin_bottom = 22.0
+rect_min_size = Vector2( 100, 0 )
+theme = ExtResource( 4 )
+toggle_mode = true
+script = ExtResource( 6 )
+
+[node name="Remap Button Right" type="HBoxContainer" parent="Input Options Menu/ScrollContainer/VBoxContainer"]
+margin_top = 26.0
+margin_right = 184.0
+margin_bottom = 48.0
+alignment = 1
+
+[node name="Label" type="Label" parent="Input Options Menu/ScrollContainer/VBoxContainer/Remap Button Right"]
+margin_top = 3.0
+margin_right = 80.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+theme = ExtResource( 4 )
+text = "Move Right"
+align = 1
+
+[node name="Button" type="Button" parent="Input Options Menu/ScrollContainer/VBoxContainer/Remap Button Right"]
+margin_left = 84.0
+margin_right = 184.0
+margin_bottom = 22.0
+rect_min_size = Vector2( 100, 0 )
+theme = ExtResource( 4 )
+toggle_mode = true
+script = ExtResource( 6 )
+action = "Right"
+
+[node name="Remap Button Up" type="HBoxContainer" parent="Input Options Menu/ScrollContainer/VBoxContainer"]
+margin_top = 52.0
+margin_right = 184.0
+margin_bottom = 74.0
+alignment = 1
+
+[node name="Label" type="Label" parent="Input Options Menu/ScrollContainer/VBoxContainer/Remap Button Up"]
+margin_top = 3.0
+margin_right = 80.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+theme = ExtResource( 4 )
+text = "Move Up"
+align = 1
+
+[node name="Button" type="Button" parent="Input Options Menu/ScrollContainer/VBoxContainer/Remap Button Up"]
+margin_left = 84.0
+margin_right = 184.0
+margin_bottom = 22.0
+rect_min_size = Vector2( 100, 0 )
+theme = ExtResource( 4 )
+toggle_mode = true
+script = ExtResource( 6 )
+action = "Up"
+
+[node name="Remap Button Down" type="HBoxContainer" parent="Input Options Menu/ScrollContainer/VBoxContainer"]
+margin_top = 78.0
+margin_right = 184.0
+margin_bottom = 100.0
+alignment = 1
+
+[node name="Label" type="Label" parent="Input Options Menu/ScrollContainer/VBoxContainer/Remap Button Down"]
+margin_top = 3.0
+margin_right = 80.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+theme = ExtResource( 4 )
+text = "Move Down"
+align = 1
+
+[node name="Button" type="Button" parent="Input Options Menu/ScrollContainer/VBoxContainer/Remap Button Down"]
+margin_left = 84.0
+margin_right = 184.0
+margin_bottom = 22.0
+rect_min_size = Vector2( 100, 0 )
+theme = ExtResource( 4 )
+toggle_mode = true
+script = ExtResource( 6 )
+action = "Down"
+
+[node name="Remap Button Accept" type="HBoxContainer" parent="Input Options Menu/ScrollContainer/VBoxContainer"]
+margin_top = 104.0
+margin_right = 184.0
+margin_bottom = 126.0
+alignment = 1
+
+[node name="Label" type="Label" parent="Input Options Menu/ScrollContainer/VBoxContainer/Remap Button Accept"]
+margin_top = 3.0
+margin_right = 80.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+theme = ExtResource( 4 )
+text = "Accept"
+align = 1
+
+[node name="Button" type="Button" parent="Input Options Menu/ScrollContainer/VBoxContainer/Remap Button Accept"]
+margin_left = 84.0
+margin_right = 184.0
+margin_bottom = 22.0
+rect_min_size = Vector2( 100, 0 )
+theme = ExtResource( 4 )
+toggle_mode = true
+script = ExtResource( 6 )
+action = "Accept"
+
+[node name="Remap Button Cancel" type="HBoxContainer" parent="Input Options Menu/ScrollContainer/VBoxContainer"]
+margin_top = 130.0
+margin_right = 184.0
+margin_bottom = 152.0
+alignment = 1
+
+[node name="Label" type="Label" parent="Input Options Menu/ScrollContainer/VBoxContainer/Remap Button Cancel"]
+margin_top = 3.0
+margin_right = 80.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+theme = ExtResource( 4 )
+text = "Cancel"
+align = 1
+
+[node name="Button" type="Button" parent="Input Options Menu/ScrollContainer/VBoxContainer/Remap Button Cancel"]
+margin_left = 84.0
+margin_right = 184.0
+margin_bottom = 22.0
+rect_min_size = Vector2( 100, 0 )
+theme = ExtResource( 4 )
+toggle_mode = true
+script = ExtResource( 6 )
+action = "Cancel"
+
+[node name="Remap Button Interact" type="HBoxContainer" parent="Input Options Menu/ScrollContainer/VBoxContainer"]
+margin_top = 156.0
+margin_right = 184.0
+margin_bottom = 178.0
+alignment = 1
+
+[node name="Label" type="Label" parent="Input Options Menu/ScrollContainer/VBoxContainer/Remap Button Interact"]
+margin_top = 3.0
+margin_right = 80.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+theme = ExtResource( 4 )
+text = "Interact"
+align = 1
+
+[node name="Button" type="Button" parent="Input Options Menu/ScrollContainer/VBoxContainer/Remap Button Interact"]
+margin_left = 84.0
+margin_right = 184.0
+margin_bottom = 22.0
+rect_min_size = Vector2( 100, 0 )
+theme = ExtResource( 4 )
+toggle_mode = true
+script = ExtResource( 6 )
+action = "Interact"
+
+[node name="Music Options Menu" type="Node2D" parent="."]
+
+[node name="MusicOptions" type="Label" parent="Music Options Menu"]
+margin_left = -150.5
+margin_top = -82.0
+margin_right = 150.5
+margin_bottom = -66.0
 theme = ExtResource( 2 )
-text = "test"
+text = "Music Options"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="MusicReturn" type="Label" parent="Music Options Menu"]
+margin_left = -150.5
+margin_top = 68.0
+margin_right = 150.5
+margin_bottom = 84.0
+mouse_filter = 0
+theme = ExtResource( 2 )
+text = "Return"
+align = 2
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Music Options Menu"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -100.0
+margin_top = -60.7027
+margin_right = 100.0
+margin_bottom = 61.2973
+scroll_horizontal_enabled = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Music Options Menu/ScrollContainer"]
+margin_right = 176.0
+margin_bottom = 113.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MUSIC Volume" type="HBoxContainer" parent="Music Options Menu/ScrollContainer/VBoxContainer"]
+margin_right = 176.0
+margin_bottom = 35.0
+alignment = 1
+
+[node name="Label" type="Label" parent="Music Options Menu/ScrollContainer/VBoxContainer/MUSIC Volume"]
+margin_right = 72.0
+margin_bottom = 35.0
+size_flags_horizontal = 3
+theme = ExtResource( 4 )
+text = "Music
+Volume"
+align = 1
+autowrap = true
+
+[node name="MusicSlider" type="HSlider" parent="Music Options Menu/ScrollContainer/VBoxContainer/MUSIC Volume"]
+margin_left = 76.0
+margin_right = 176.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 100, 0 )
+size_flags_vertical = 1
+custom_icons/grabber_disabled = ExtResource( 3 )
+custom_icons/grabber_highlight = ExtResource( 5 )
+custom_icons/grabber = ExtResource( 3 )
+max_value = 10.0
+tick_count = 10
+ticks_on_borders = true
+
+[node name="WORLD SFX Volume" type="HBoxContainer" parent="Music Options Menu/ScrollContainer/VBoxContainer"]
+margin_top = 39.0
+margin_right = 176.0
+margin_bottom = 74.0
+alignment = 1
+
+[node name="Label" type="Label" parent="Music Options Menu/ScrollContainer/VBoxContainer/WORLD SFX Volume"]
+margin_right = 72.0
+margin_bottom = 35.0
+size_flags_horizontal = 3
+theme = ExtResource( 2 )
+text = "World SFX
+Volume"
+align = 1
+
+[node name="WorldSFXSlider" type="HSlider" parent="Music Options Menu/ScrollContainer/VBoxContainer/WORLD SFX Volume"]
+margin_left = 76.0
+margin_right = 176.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 100, 0 )
+size_flags_vertical = 1
+custom_icons/grabber_disabled = ExtResource( 3 )
+custom_icons/grabber_highlight = ExtResource( 5 )
+custom_icons/grabber = ExtResource( 3 )
+max_value = 10.0
+tick_count = 10
+ticks_on_borders = true
+
+[node name="GUI SFX Volume" type="HBoxContainer" parent="Music Options Menu/ScrollContainer/VBoxContainer"]
+margin_top = 78.0
+margin_right = 176.0
+margin_bottom = 113.0
+alignment = 1
+
+[node name="Label" type="Label" parent="Music Options Menu/ScrollContainer/VBoxContainer/GUI SFX Volume"]
+margin_right = 72.0
+margin_bottom = 35.0
+size_flags_horizontal = 3
+theme = ExtResource( 4 )
+text = "GUI SFX
+Volume"
+align = 1
+autowrap = true
+
+[node name="GUISFXSlider" type="HSlider" parent="Music Options Menu/ScrollContainer/VBoxContainer/GUI SFX Volume"]
+margin_left = 76.0
+margin_right = 176.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 100, 0 )
+size_flags_vertical = 1
+custom_icons/grabber_disabled = ExtResource( 3 )
+custom_icons/grabber_highlight = ExtResource( 5 )
+custom_icons/grabber = ExtResource( 3 )
+max_value = 10.0
+tick_count = 10
+ticks_on_borders = true
 
 [node name="Main" type="Node2D" parent="."]
 visible = false
@@ -140,7 +497,34 @@ valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="gui_input" from="Options/Return" to="." method="_on_Return_gui_input"]
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Main"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -63.5
+margin_top = -82.0
+margin_right = 63.5
+margin_bottom = -42.0
+rect_clip_content = false
+mouse_filter = 2
+theme = ExtResource( 2 )
+bbcode_enabled = true
+bbcode_text = "[center][wave]Break time...[/wave][/center]"
+text = "Break time..."
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="gui_input" from="Options Menu/Return" to="." method="_on_Return_gui_input"]
+[connection signal="gui_input" from="Options Menu/VBoxContainer2/Music Options" to="." method="_on_Music_Options_gui_input"]
+[connection signal="gui_input" from="Options Menu/VBoxContainer2/Input Options" to="." method="_on_Input_Options_gui_input"]
+[connection signal="gui_input" from="Input Options Menu/InputReturn" to="." method="_on_InputReturn_gui_input"]
+[connection signal="gui_input" from="Music Options Menu/MusicReturn" to="." method="_on_MusicReturn_gui_input"]
+[connection signal="value_changed" from="Music Options Menu/ScrollContainer/VBoxContainer/MUSIC Volume/MusicSlider" to="." method="_on_MusicSlider_value_changed"]
+[connection signal="value_changed" from="Music Options Menu/ScrollContainer/VBoxContainer/WORLD SFX Volume/WorldSFXSlider" to="." method="_on_WorldSFXSlider_value_changed"]
+[connection signal="value_changed" from="Music Options Menu/ScrollContainer/VBoxContainer/GUI SFX Volume/GUISFXSlider" to="." method="_on_GUISFXSlider_value_changed"]
 [connection signal="gui_input" from="Main/VBoxContainer/Resume" to="." method="_on_Resume_gui_input"]
 [connection signal="gui_input" from="Main/VBoxContainer/Options" to="." method="_on_Options_gui_input"]
 [connection signal="gui_input" from="Main/VBoxContainer/Quit" to="." method="_on_Quit_gui_input"]

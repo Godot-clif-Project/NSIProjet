@@ -14,6 +14,8 @@ var DialogStarted = false
 var DialogPosition = Vector2(0,0)
 var inZone = false
 
+var settings
+
 var gameRunning = true
 var ticks: int
 
