@@ -7,9 +7,13 @@ const MUSIC_VOLUME = -26.0
 
 const MUSIC_ATTENUATION_WHEN_PAUSED = .3
 
+var TEMP_change_loops_after = 20.0
+
 var gui_sfx_id: int
 var world_sfx_id: int
 var music_id: int
+
+var TEMP_on_looped_loop: bool
 
 var paused_update: bool
 
@@ -19,7 +23,7 @@ onready var thing_to_play_on_top = $LoopThingy
 
 
 func _ready():
-	connect("finished", self, "properly_loop")
+#	connect("finished", self, "properly_loop")
 	play()
 	gui_sfx_id = AudioServer.get_bus_index("GUI SFX")
 	world_sfx_id = AudioServer.get_bus_index("World SFX")
@@ -30,6 +34,13 @@ func _ready():
 
 
 func _process(delta):
+	if not TEMP_on_looped_loop:
+		if get_playback_position() > TEMP_change_loops_after:
+			stop()
+			thing_to_play_on_top.play(
+				get_playback_position() + AudioServer.get_time_since_last_mix()
+			)
+			TEMP_on_looped_loop = true
 	if tree.paused:
 		if not paused_update:
 			AudioServer.set_bus_volume_db(
@@ -46,5 +57,5 @@ func ratio_to_decibel(ratio: float) -> float:
 	return 20 * (log(ratio) / log(10.0))
 
 
-func properly_loop():
-	thing_to_play_on_top.play()
+#func properly_loop():
+#	thing_to_play_on_top.play()
