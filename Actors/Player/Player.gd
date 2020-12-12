@@ -741,14 +741,18 @@ func on_dash():
 	if dash_direction.x:
 		facing = sign(dash_direction.x)
 	jumping = false
+	coyote_timer = 0
 	Global.camera.shake(dash_direction, DASH_SHAKE_DURATION)
 
 
 func on_bounce():
 	if not rolling_visually:
 		set_anim(anim_jump, "Jump")
+	jumping = false
 	dashing = false
 	dashing_allowed = true
+	coyote_timer = 0
+	jump_timer = 0
 
 
 func refill_dash():
