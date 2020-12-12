@@ -47,7 +47,6 @@ func ResumeButtonPressed():
 	tree.paused = false
 
 func OptionsButtonPressed():
-	print("done")
 	mainpause.hide()
 	optionsmenu.show()
 
