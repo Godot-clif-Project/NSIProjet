@@ -143,18 +143,18 @@ points = PoolVector2Array( 0, 0, 8, 0, 8, 8, 0, 8 )
 [sub_resource type="ConvexPolygonShape2D" id=47]
 points = PoolVector2Array( 0, 0, 8, 0, 8, 8, 0, 8 )
 
-[sub_resource type="ConvexPolygonShape2D" id=49]
+[sub_resource type="ConvexPolygonShape2D" id=48]
 points = PoolVector2Array( 0, 0, 8, 0, 8, 8, 0, 8 )
 
-[sub_resource type="TileSet" id=48]
+[sub_resource type="TileSet" id=49]
 0/name = "grass_8.png 0"
 0/texture = ExtResource( 1 )
 0/tex_offset = Vector2( 0, 0 )
 0/modulate = Color( 1, 1, 1, 1 )
 0/region = Rect2( 0, 0, 64, 48 )
 0/tile_mode = 1
-0/autotile/bitmask_mode = 1
-0/autotile/bitmask_flags = [ Vector2( 0, 0 ), 432, Vector2( 0, 1 ), 438, Vector2( 0, 2 ), 54, Vector2( 0, 3 ), 248, Vector2( 0, 4 ), 59, Vector2( 0, 5 ), 446, Vector2( 1, 0 ), 504, Vector2( 1, 1 ), 511, Vector2( 1, 2 ), 63, Vector2( 1, 3 ), 184, Vector2( 1, 4 ), 58, Vector2( 1, 5 ), 251, Vector2( 2, 0 ), 216, Vector2( 2, 1 ), 219, Vector2( 2, 2 ), 27, Vector2( 2, 3 ), 440, Vector2( 2, 4 ), 62, Vector2( 2, 5 ), 506, Vector2( 3, 0 ), 255, Vector2( 3, 1 ), 507, Vector2( 3, 2 ), 182, Vector2( 3, 3 ), 178, Vector2( 3, 4 ), 434, Vector2( 3, 5 ), 191, Vector2( 4, 0 ), 447, Vector2( 4, 1 ), 510, Vector2( 4, 2 ), 155, Vector2( 4, 3 ), 154, Vector2( 4, 4 ), 218, Vector2( 4, 5 ), 186, Vector2( 5, 0 ), 176, Vector2( 5, 1 ), 50, Vector2( 5, 2 ), 187, Vector2( 5, 3 ), 250, Vector2( 5, 4 ), 254, Vector2( 5, 5 ), 48, Vector2( 6, 0 ), 152, Vector2( 6, 1 ), 26, Vector2( 6, 2 ), 190, Vector2( 6, 3 ), 442, Vector2( 6, 4 ), 443, Vector2( 6, 5 ), 56, Vector2( 7, 1 ), 16, Vector2( 7, 2 ), 144, Vector2( 7, 3 ), 146, Vector2( 7, 4 ), 18, Vector2( 7, 5 ), 24 ]
+0/autotile/bitmask_mode = 2
+0/autotile/bitmask_flags = [ Vector2( 0, 0 ), 4522416, Vector2( 0, 1 ), 4260278, Vector2( 0, 2 ), 21037110, Vector2( 0, 3 ), 327928, Vector2( 0, 4 ), 20971579, Vector2( 0, 5 ), 446, Vector2( 1, 0 ), 328184, Vector2( 1, 1 ), 186, Vector2( 1, 2 ), 20971583, Vector2( 1, 3 ), 327864, Vector2( 1, 4 ), 20971578, Vector2( 1, 5 ), 251, Vector2( 2, 0 ), 17105112, Vector2( 2, 1 ), 17039579, Vector2( 2, 2 ), 21233691, Vector2( 2, 3 ), 328120, Vector2( 2, 4 ), 20971582, Vector2( 2, 5 ), 506, Vector2( 3, 0 ), 255, Vector2( 3, 1 ), 507, Vector2( 3, 2 ), 4260022, Vector2( 3, 3 ), 4260018, Vector2( 3, 4 ), 4260274, Vector2( 3, 5 ), 191, Vector2( 4, 0 ), 447, Vector2( 4, 1 ), 510, Vector2( 4, 2 ), 17039515, Vector2( 4, 3 ), 17039514, Vector2( 4, 4 ), 17039578, Vector2( 4, 5 ), 186, Vector2( 5, 0 ), 4522160, Vector2( 5, 1 ), 21037106, Vector2( 5, 2 ), 187, Vector2( 5, 3 ), 250, Vector2( 5, 4 ), 254, Vector2( 5, 5 ), 21299248, Vector2( 6, 0 ), 17105048, Vector2( 6, 1 ), 21233690, Vector2( 6, 2 ), 190, Vector2( 6, 3 ), 442, Vector2( 6, 4 ), 443, Vector2( 6, 5 ), 21299256, Vector2( 7, 0 ), 511, Vector2( 7, 1 ), 21299216, Vector2( 7, 2 ), 21299344, Vector2( 7, 3 ), 21299346, Vector2( 7, 4 ), 21299218, Vector2( 7, 5 ), 21299224 ]
 0/autotile/icon_coordinate = Vector2( 0, 0 )
 0/autotile/tile_size = Vector2( 8, 8 )
 0/autotile/spacing = 0
@@ -451,32 +451,17 @@ points = PoolVector2Array( 0, 0, 8, 0, 8, 8, 0, 8 )
 "one_way_margin": 1.0,
 "shape": SubResource( 47 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
-} ]
-0/z_index = 0
-1/name = "grass_8.png 1"
-1/texture = ExtResource( 1 )
-1/tex_offset = Vector2( 0, 0 )
-1/modulate = Color( 1, 1, 1, 1 )
-1/region = Rect2( 56, 0, 8, 8 )
-1/tile_mode = 0
-1/occluder_offset = Vector2( 0, 0 )
-1/navigation_offset = Vector2( 0, 0 )
-1/shape_offset = Vector2( 0, 0 )
-1/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-1/shape = SubResource( 49 )
-1/shape_one_way = false
-1/shape_one_way_margin = 1.0
-1/shapes = [ {
-"autotile_coord": Vector2( 0, 0 ),
+}, {
+"autotile_coord": Vector2( 7, 0 ),
 "one_way": false,
 "one_way_margin": 1.0,
-"shape": SubResource( 49 ),
+"shape": SubResource( 48 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
 } ]
-1/z_index = 0
+0/z_index = 0
 
 [node name="TileMap" type="TileMap"]
-tile_set = SubResource( 48 )
+tile_set = SubResource( 49 )
 cell_size = Vector2( 8, 8 )
 collision_layer = 1024
 collision_mask = 0
