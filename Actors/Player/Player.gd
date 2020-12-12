@@ -614,7 +614,7 @@ func _physics_process(delta):
 				else:
 					set_anim(anim_idle, "Idle")
 			else:
-				if anim_current == anim_run or anim_current == anim_idle:
+				if anim_current == anim_run or anim_current == anim_idle or anim_current == anim_roll:
 					set_anim(anim_idle, "Hangtime")
 				if velocity.y >= FALLING_THRESHOLD:
 					set_anim(anim_fall, "Fall")
