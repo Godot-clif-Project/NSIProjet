@@ -1,6 +1,11 @@
 extends KinematicBody2D
 
 
+# all of these states.... all of these conditions.... this could have been done
+# more easily by storing the constants into variables and then modifying said
+# variables
+
+
 # TO DO:
 
 # Coyote time for bouncing / not for the wall but for the input
@@ -62,6 +67,7 @@ const WALLSLIDE_GRAVITY = 350.0
 const WALLSLIDE_MAX_SPEED = 80.0
 const WALLSLIDE_FCOUNT = 2
 
+# actually not temporary lmao
 const RUN_FRIC_TEMP = .72
 const AIR_FRIC_TEMP = .85
 const CORRECTION_FRIC_TEMP = .95
@@ -69,6 +75,8 @@ const CORRECTION_FRIC_ATTENUATED_TEMP = .97
 const CORRECTION_FRIC_ATTENUATED_AIR_TEMP = .985
 const AIR_Y_FRICTION_TEMP = CORRECTION_FRIC_TEMP
 const CORRECTION_EVEN_MORE_FOR_JUMP_SPBOOSTS_TEMP = .97
+const ROLLING_FRIC_ON_GROUND = .985
+const ROLLING_FRIC_IN_AIR = 1.0
 
 # Dangerous constants
 
@@ -84,6 +92,9 @@ const ROLLING_MIN_DURATION = .1
 
 const ROLLING_ROTATION_ON_GROUND = .8
 const ROLLING_ROTATION_IN_AIR = .2
+
+const ROLL_MAX_SPEED = 50.0
+const ROLL_ACCEL = 50.0
 
 # Animation constants
 
@@ -334,41 +345,50 @@ func _physics_process(delta):
 			wallsliding = false
 	
 	# Acceleration and friction nonsense
+	# this is a huge mess, see line 4
+	# @ future me, have fun refactoring (or probably not)
 	
 	if in_control_x:
-		if abs(velocity.x) > RUN_SPEED_MAX:
-			if direction_x == 0:
-				velocity.x -= min(
-					abs(velocity.x) - RUN_SPEED_MAX,
-					abs(velocity.x) * (1 - CORRECTION_FRIC_TEMP)
-				) * sign(velocity.x)
-			elif sign(direction_x) == sign(velocity.x):
-				velocity.x -= min(
-					abs(velocity.x) - RUN_SPEED_MAX,
-					abs(velocity.x) * (1 - (
-						CORRECTION_FRIC_ATTENUATED_TEMP if grounded else
-						CORRECTION_FRIC_ATTENUATED_AIR_TEMP
-					))
-				) * sign(velocity.x)
+		if rolling:
+			# fuck this i'm using a simpler code
+			if abs(velocity.x) < ROLL_MAX_SPEED and direction_x:
+				velocity.x += direction_x * ROLL_ACCEL * delta
 			else:
-				velocity.x -= min(
-					abs(velocity.x) - RUN_SPEED_MAX,
-					abs(velocity.x) * (1 - CORRECTION_FRIC_TEMP * (
-						RUN_FRIC_TEMP if grounded else AIR_FRIC_TEMP
-					))
-				) * sign(velocity.x)
-			if abs(velocity.x) < JUMP_SPBOOST_MAX:
-				velocity.x -= min(
-					abs(velocity.x) - RUN_SPEED_MAX,
-					abs(velocity.x) * (1 - CORRECTION_EVEN_MORE_FOR_JUMP_SPBOOSTS_TEMP)
-				) * sign(velocity.x)
+				velocity.x *= ROLLING_FRIC_ON_GROUND if grounded else ROLLING_FRIC_IN_AIR
 		else:
-			if (not direction_x) or direction_x * velocity.x < 0:
-				# will have to figure out how to timestep this later
-				velocity.x *= RUN_FRIC_TEMP if grounded else AIR_FRIC_TEMP
-			if direction_x:
-				velocity.x += (RUN_ACC if grounded else RUN_AIR_ACC) * delta * direction_x
-				velocity.x = clamp(velocity.x, -RUN_SPEED_MAX, RUN_SPEED_MAX)
+			if abs(velocity.x) > RUN_SPEED_MAX:
+				if direction_x == 0:
+					velocity.x -= min(
+						abs(velocity.x) - RUN_SPEED_MAX,
+						abs(velocity.x) * (1 - CORRECTION_FRIC_TEMP)
+					) * sign(velocity.x)
+				elif sign(direction_x) == sign(velocity.x):
+					velocity.x -= min(
+						abs(velocity.x) - RUN_SPEED_MAX,
+						abs(velocity.x) * (1 - (
+							CORRECTION_FRIC_ATTENUATED_TEMP if grounded else
+							CORRECTION_FRIC_ATTENUATED_AIR_TEMP
+						))
+					) * sign(velocity.x)
+				else:
+					velocity.x -= min(
+						abs(velocity.x) - RUN_SPEED_MAX,
+						abs(velocity.x) * (1 - CORRECTION_FRIC_TEMP * (
+							RUN_FRIC_TEMP if grounded else AIR_FRIC_TEMP
+						))
+					) * sign(velocity.x)
+				if abs(velocity.x) < JUMP_SPBOOST_MAX:
+					velocity.x -= min(
+						abs(velocity.x) - RUN_SPEED_MAX,
+						abs(velocity.x) * (1 - CORRECTION_EVEN_MORE_FOR_JUMP_SPBOOSTS_TEMP)
+					) * sign(velocity.x)
+			else:
+				if (not direction_x) or direction_x * velocity.x < 0:
+					# will have to figure out how to timestep this later
+					velocity.x *= RUN_FRIC_TEMP if grounded else AIR_FRIC_TEMP
+				if direction_x:
+					velocity.x += (RUN_ACC if grounded else RUN_AIR_ACC) * delta * direction_x
+					velocity.x = clamp(velocity.x, -RUN_SPEED_MAX, RUN_SPEED_MAX)
 	
 	# Variable Height Jump and Fastfalling and Wallsliding
 	
@@ -641,7 +661,7 @@ func _physics_process(delta):
 			rolling_visually = true
 		ang_vel = lerp(
 			ang_vel,
-			(velocity.x * facing) / (4 * PI),
+			(velocity.x) / (4 * PI),
 			ROLLING_ROTATION_ON_GROUND if grounded else ROLLING_ROTATION_IN_AIR
 		)
 		true_rotation = fmod(
@@ -649,6 +669,8 @@ func _physics_process(delta):
 			2 * PI
 		)
 		anim_rolling.rotation = round(true_rotation * 4) * (PI / 4)
+		if facing < 0:
+			anim_rolling.rotation = PI - anim_rolling.rotation
 	elif rolling_visually:
 		set_anim(anim_roll, "Unroll")
 	else:
