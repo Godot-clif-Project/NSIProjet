@@ -147,6 +147,8 @@ var bounce_dash_holder: float
 var rolling: bool
 var rolling_visually: bool
 var unroll_cooldown: float
+var ang_vel: float
+var true_rotation: float
 
 var grounded: bool
 var wallsliding: bool
@@ -269,10 +271,13 @@ func _physics_process(delta):
 			unroll_cooldown = 0
 	
 	if Input.is_action_pressed("Roll"):
-		rolling = true
-		unroll_cooldown = ROLLING_MIN_DURATION
-		collider.shape.extents = EXTENTS_ROLLING
-		collider.position = HITBOX_OFFSET_ROLLING
+		if not rolling:
+			rolling = true
+			unroll_cooldown = ROLLING_MIN_DURATION
+			collider.shape.extents = EXTENTS_ROLLING
+			collider.position = HITBOX_OFFSET_ROLLING
+			true_rotation = 0
+			reset_rotation()
 	elif not unroll_cooldown and rolling:
 		var temp_pos: Vector2 = position
 		align_to_grid()
@@ -630,6 +635,11 @@ func _physics_process(delta):
 		if not rolling_visually:
 			set_anim(anim_roll, "Roll")
 			rolling_visually = true
+		if grounded:
+			ang_vel = (velocity.x * facing) / (4 * PI)
+		true_rotation += ang_vel * delta
+		true_rotation = fmod(true_rotation, 2 * PI)
+		anim_rolling.rotation = round(true_rotation * 4) * (PI / 4)
 	elif rolling_visually:
 		set_anim(anim_roll, "Unroll")
 	else:
@@ -726,6 +736,12 @@ func set_palette_uniform(palette_a: StreamTexture, palette_b: StreamTexture = nu
 	anim_rolling.material.set_shader_param("palette_a", palette_a)
 	anim_rolling.material.set_shader_param("palette_b", palette_b)
 	anim_rolling.material.set_shader_param("blend", blend)
+
+
+func reset_rotation():
+	anim_rolling.rotation = 0
+	ang_vel = 0
+	true_rotation = 0
 
 
 func on_jump():
