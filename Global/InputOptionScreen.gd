@@ -13,6 +13,7 @@ var currentSelection = 0
 var previousSelection = 0
 
 func _ready():
+	set_process_input(false)
 	OptionList = ButtonContainer.get_children()
 	for number in (OptionList.size()):
 		var ButtonSelected = find_node("Button")
