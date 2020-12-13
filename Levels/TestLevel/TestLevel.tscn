@@ -117,3 +117,4 @@ __meta__ = {
 }
 
 [node name="PauseMenu" parent="Camera2D" instance=ExtResource( 9 )]
+visible = false

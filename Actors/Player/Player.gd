@@ -97,6 +97,14 @@ const ROLLING_ROTATION_IN_AIR = .2
 const ROLL_MAX_SPEED = 50.0
 const ROLL_ACCEL = 50.0
 
+const ROLL_JUMP_FORCE = -170.0
+const ROLL_JUMP_SPBOOST = 1.0
+
+const ROLL_WALLJUMP_FORCE = -150.0
+const ROLL_WALLJUMP_PUSH = ROLL_MAX_SPEED
+
+const ROLL_DASH_EXIT_VEL_RATIO = .85
+
 # Animation constants
 
 const RUNNING_THRESHOLD = 10.0
@@ -166,6 +174,7 @@ var rolling_visually: bool
 var unroll_cooldown: float
 var ang_vel: float
 var true_rotation: float
+var can_roll: bool
 
 var grounded: bool
 var wallsliding: bool
@@ -233,6 +242,7 @@ func _ready():
 	dashing_allowed = true
 	dashing_refreshed = true
 	facing = -1 if facing_left else 1
+	can_roll = true
 	
 	palette_normal_texture = preload("res://Aseprite/Main character/Palette nonsense/normal_palette.png")
 	palette_dash_texture = preload("res://Aseprite/Main character/Palette nonsense/dash_palette.png")
@@ -258,7 +268,10 @@ func _physics_process(delta):
 		int(Input.is_action_pressed("Down")) -
 		int(Input.is_action_pressed("Up"))
 	)
-	if direction_x == sign(velocity.x) and direction_x != 0 and in_control_x:
+	if rolling:
+		if velocity.x:
+			facing = sign(velocity.x)
+	elif direction_x == sign(velocity.x) and direction_x != 0 and in_control_x:
 		facing = direction_x
 	
 	if in_cutscene:
@@ -287,7 +300,7 @@ func _physics_process(delta):
 		if unroll_cooldown < 0:
 			unroll_cooldown = 0
 	
-	if Input.is_action_pressed("Roll"):
+	if Input.is_action_pressed("Roll") and can_roll:
 		if not rolling:
 			rolling = true
 			unroll_cooldown = ROLLING_MIN_DURATION
@@ -449,9 +462,9 @@ func _physics_process(delta):
 		jump_timer = 0
 		coyote_timer = 0
 		move_and_collide(Vector2(0, last_ground_y - position.y))
-		velocity.y = JUMP_FORCE
+		velocity.y = ROLL_JUMP_FORCE if rolling else JUMP_FORCE
 		if abs(velocity.x) < JUMP_SPBOOST_MAX:
-			velocity.x *= JUMP_SPBOOST_MULTIPLIER
+			velocity.x *= ROLL_JUMP_SPBOOST if rolling else JUMP_SPBOOST_MULTIPLIER
 			velocity.x = clamp(velocity.x, -JUMP_SPBOOST_MAX, JUMP_SPBOOST_MAX)
 		jump_timer = 0
 		coyote_timer = 0
@@ -474,9 +487,10 @@ func _physics_process(delta):
 			
 			if wall_normal:
 				jump_timer = 0
-				velocity.y = WALLJUMP_FORCE
-				velocity.x = (WALLJUMP_PUSH if direction_x else
-					WALLJUMP_PUSH_NEUTRAL) * wall_normal
+				velocity.y = ROLL_WALLJUMP_FORCE if rolling else WALLJUMP_FORCE
+				velocity.x = (ROLL_WALLJUMP_PUSH if rolling else
+					(WALLJUMP_PUSH if direction_x else
+					WALLJUMP_PUSH_NEUTRAL)) * wall_normal
 				in_control_x = false
 				in_control_y = false
 				if direction_x:
@@ -492,7 +506,7 @@ func _physics_process(delta):
 	# Dash
 	
 	if (Input.is_action_just_pressed("Cancel") and dashing_allowed and
-			dashing_refreshed and not in_cutscene):
+			dashing_refreshed and not (in_cutscene or rolling)):
 		dashing_allowed = false
 		dash_cancel_timer = DASH_DELAY
 		dash_waiting = true
@@ -542,7 +556,10 @@ func _physics_process(delta):
 				exit_velocity.x = min(abs(velocity.x), exit_vel.x) * sign(velocity.x)
 				exit_velocity.y = min(abs(velocity.y), exit_vel.y) * sign(velocity.y)
 			
-			velocity = exit_velocity
+			if rolling:
+				velocity = lerp(velocity, exit_velocity, ROLL_DASH_EXIT_VEL_RATIO)
+			else:
+				velocity = exit_velocity
 	
 	# Bouncing
 	
@@ -678,7 +695,7 @@ func _physics_process(delta):
 		)
 		anim_rolling.rotation = round(true_rotation * 4 / PI) / 4 * PI
 		if facing < 0:
-			anim_rolling.rotation = PI - anim_rolling.rotation
+			anim_rolling.rotation = PI - anim_rolling.rotation + ROLL_FACING_LEFT_ROTATION_OFFSET
 	elif rolling_visually:
 		set_anim(anim_roll, "Unroll")
 	else:
@@ -782,7 +799,7 @@ func reset_rotation():
 	if facing == 1:
 		true_rotation = 0
 	else:
-		true_rotation = PI
+		true_rotation = PI + ROLL_FACING_LEFT_ROTATION_OFFSET
 
 
 func on_jump():
@@ -820,6 +837,7 @@ func refill_dash():
 
 func DialogFinishedCode():
 	in_cutscene = false
+	can_roll = true
 	dashing_allowed = true
 
 
@@ -829,10 +847,11 @@ func DialogStartedCode(playerInfo):
 	in_control_y = false
 	no_control_x_timer = 0
 	no_control_y_timer = 0
-	dashing_allowed = false
 	refill_dash()
+	dashing_allowed = false
 	dashing = false
 	apply_gravity = true
+	can_roll = false
 	force_move(playerInfo)
 	
 
