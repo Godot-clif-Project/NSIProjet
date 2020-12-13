@@ -96,11 +96,11 @@ func start_dialog():
 	Global.emit_signal("DialogStarted", Global.CutscenePlayerInfo.new(true, Global.DialogPosition.x, 1))
 
 func init_dialog(shushubidu):
-	if shushubidu == true:
-		proceed_dialog()
-		OkFuckThisTroubleshootingTime = true
-	else:
+	if not shushubidu:
 		print("yo what the fuck")
+	NameBox.text = JsonData[line].name
+	proceed_dialog()
+	OkFuckThisTroubleshootingTime = true
 
 func proceed_dialog():
 	if line < JsonData.size():
@@ -132,6 +132,7 @@ func showDownBox():
 	show()
 
 func hideDownBox():
+	NextIndicator.hide()
 	AnimationMaster.play("Disappear")
 
 func count_character_count():
