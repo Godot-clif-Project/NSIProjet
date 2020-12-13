@@ -77,6 +77,7 @@ const AIR_Y_FRICTION_TEMP = CORRECTION_FRIC_TEMP
 const CORRECTION_EVEN_MORE_FOR_JUMP_SPBOOSTS_TEMP = .97
 const ROLLING_FRIC_ON_GROUND = .985
 const ROLLING_FRIC_IN_AIR = 1.0
+const ROLLING_FRIC_HOLDING = 1.0
 
 # Dangerous constants
 
@@ -106,6 +107,8 @@ const CUTSCENE_WALKING_SPEED = 65.0
 const DASH_REFILL_ANIM_DURATION = .1
 
 const DASH_POSITION_OFFSET = 1
+
+const ROLL_FACING_LEFT_ROTATION_OFFSET = .8
 
 # Dash constants
 
@@ -354,7 +357,12 @@ func _physics_process(delta):
 			if abs(velocity.x) < ROLL_MAX_SPEED and direction_x:
 				velocity.x += direction_x * ROLL_ACCEL * delta
 			else:
-				velocity.x *= ROLLING_FRIC_ON_GROUND if grounded else ROLLING_FRIC_IN_AIR
+				velocity.x *= (
+					ROLLING_FRIC_HOLDING if sign(direction_x) == sign(velocity.x)
+					else (
+					ROLLING_FRIC_ON_GROUND if grounded else ROLLING_FRIC_IN_AIR
+					)
+				)
 		else:
 			if abs(velocity.x) > RUN_SPEED_MAX:
 				if direction_x == 0:
@@ -661,14 +669,14 @@ func _physics_process(delta):
 			rolling_visually = true
 		ang_vel = lerp(
 			ang_vel,
-			(velocity.x) / (4 * PI),
+			(velocity.x) / (2 * PI),
 			ROLLING_ROTATION_ON_GROUND if grounded else ROLLING_ROTATION_IN_AIR
 		)
 		true_rotation = fmod(
 			true_rotation + ang_vel * delta,
 			2 * PI
 		)
-		anim_rolling.rotation = round(true_rotation * 4) * (PI / 4)
+		anim_rolling.rotation = round(true_rotation * 4 / PI) / 4 * PI
 		if facing < 0:
 			anim_rolling.rotation = PI - anim_rolling.rotation
 	elif rolling_visually:
@@ -770,9 +778,11 @@ func set_palette_uniform(palette_a: StreamTexture, palette_b: StreamTexture = nu
 
 
 func reset_rotation():
-	anim_rolling.rotation = 0
 	ang_vel = 0
-	true_rotation = 0
+	if facing == 1:
+		true_rotation = 0
+	else:
+		true_rotation = PI
 
 
 func on_jump():
