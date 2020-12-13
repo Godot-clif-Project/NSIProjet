@@ -20,8 +20,6 @@ func _ready():
 		ButtonList.append(ButtonSelected)
 		LabelList.append(LabelSelected)
 
-func _process(delta):
-	print(currentSelection)
 
 func _input(event):
 	previousSelection = currentSelection

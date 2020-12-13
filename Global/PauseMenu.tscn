@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Global/PauseMenu.gd" type="Script" id=1]
 [ext_resource path="res://GUI/Menu.tres" type="Theme" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Global/MainOptionsScreen.gd" type="Script" id=7]
 [ext_resource path="res://Global/OptionsMenuScript.gd" type="Script" id=8]
 [ext_resource path="res://Global/InputOptionScreen.gd" type="Script" id=9]
+[ext_resource path="res://Global/MusicOptionsScript.gd" type="Script" id=10]
 
 [node name="PauseMenu" type="Node2D"]
 pause_mode = 2
@@ -389,6 +390,7 @@ __meta__ = {
 
 [node name="Music Options Menu" type="Node2D" parent="."]
 visible = false
+script = ExtResource( 10 )
 
 [node name="MusicOptions" type="Label" parent="Music Options Menu"]
 margin_left = -150.5
@@ -452,7 +454,7 @@ Volume"
 align = 1
 autowrap = true
 
-[node name="MusicSlider" type="HSlider" parent="Music Options Menu/ScrollContainer/VBoxContainer/MUSIC Volume"]
+[node name="Slider" type="HSlider" parent="Music Options Menu/ScrollContainer/VBoxContainer/MUSIC Volume"]
 margin_left = 76.0
 margin_right = 176.0
 margin_bottom = 35.0
@@ -480,7 +482,7 @@ text = "World SFX
 Volume"
 align = 1
 
-[node name="WorldSFXSlider" type="HSlider" parent="Music Options Menu/ScrollContainer/VBoxContainer/WORLD SFX Volume"]
+[node name="Slider" type="HSlider" parent="Music Options Menu/ScrollContainer/VBoxContainer/WORLD SFX Volume"]
 margin_left = 76.0
 margin_right = 176.0
 margin_bottom = 35.0
@@ -509,7 +511,7 @@ Volume"
 align = 1
 autowrap = true
 
-[node name="GUISFXSlider" type="HSlider" parent="Music Options Menu/ScrollContainer/VBoxContainer/GUI SFX Volume"]
+[node name="Slider" type="HSlider" parent="Music Options Menu/ScrollContainer/VBoxContainer/GUI SFX Volume"]
 margin_left = 76.0
 margin_right = 176.0
 margin_bottom = 35.0
@@ -543,7 +545,10 @@ ticks_on_borders = true
 [connection signal="hide" from="Input Options Menu" to="Input Options Menu" method="_on_Main_hide"]
 [connection signal="visibility_changed" from="Input Options Menu" to="Input Options Menu" method="_on_Main_visibility_changed"]
 [connection signal="gui_input" from="Input Options Menu/ScrollContainer/VBoxContainer/InputReturn" to="." method="_on_InputReturn_gui_input"]
+[connection signal="draw" from="Music Options Menu" to="Music Options Menu" method="_on_Main_draw"]
+[connection signal="hide" from="Music Options Menu" to="Music Options Menu" method="_on_Main_hide"]
+[connection signal="visibility_changed" from="Music Options Menu" to="Music Options Menu" method="_on_Main_visibility_changed"]
 [connection signal="gui_input" from="Music Options Menu/MusicReturn" to="." method="_on_MusicReturn_gui_input"]
-[connection signal="value_changed" from="Music Options Menu/ScrollContainer/VBoxContainer/MUSIC Volume/MusicSlider" to="." method="_on_MusicSlider_value_changed"]
-[connection signal="value_changed" from="Music Options Menu/ScrollContainer/VBoxContainer/WORLD SFX Volume/WorldSFXSlider" to="." method="_on_WorldSFXSlider_value_changed"]
-[connection signal="value_changed" from="Music Options Menu/ScrollContainer/VBoxContainer/GUI SFX Volume/GUISFXSlider" to="." method="_on_GUISFXSlider_value_changed"]
+[connection signal="value_changed" from="Music Options Menu/ScrollContainer/VBoxContainer/MUSIC Volume/Slider" to="." method="_on_MusicSlider_value_changed"]
+[connection signal="value_changed" from="Music Options Menu/ScrollContainer/VBoxContainer/WORLD SFX Volume/Slider" to="." method="_on_WorldSFXSlider_value_changed"]
+[connection signal="value_changed" from="Music Options Menu/ScrollContainer/VBoxContainer/GUI SFX Volume/Slider" to="." method="_on_GUISFXSlider_value_changed"]

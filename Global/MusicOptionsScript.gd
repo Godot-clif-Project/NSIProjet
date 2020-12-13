@@ -1,18 +1,26 @@
 extends Node2D
 
-signal ResumeButtonPressed()
-signal OptionsButtonPressed()
-signal QuitButtonPressed()
+signal MusicOptionsPressed()
+signal InputOptionsPressed()
+signal ReturnButtonPressed()
 
-onready var ButtonContainer = get_node("VBoxContainer")
+onready var ButtonContainer = get_node("ScrollContainer/VBoxContainer")
+var OptionList = []
 var ButtonList = []
+var LabelList = []
 
 var currentSelection = 0
 var previousSelection = 0
 
 func _ready():
 	set_process_input(false)
-	ButtonList = ButtonContainer.get_children()
+	OptionList = ButtonContainer.get_children()
+	for number in (OptionList.size()):
+		var ButtonSelected = find_node("Slider")
+		var LabelSelected = find_node("Label")
+		ButtonList.append(ButtonSelected)
+		LabelList.append(LabelSelected)
+
 
 func _input(event):
 	previousSelection = currentSelection
@@ -24,14 +32,20 @@ func _input(event):
 	if Input.is_action_just_pressed("menu_confirm"):
 		send_signal(currentSelection)
 	UpdateSelectionCheck()
+
 func UpdateSelectionCheck():
-	if currentSelection > (ButtonList.size() -1):
+	if currentSelection > (OptionList.size() -1):
 		currentSelection = 0
 	UpdateSelection()
 
 func UpdateSelection():
+	print(currentSelection)
+	print("should be done?")
 	ButtonList[previousSelection].set("custom_colors/font_color",Color(1,1,1))
 	ButtonList[currentSelection].set("custom_colors/font_color", Color(1,0,0))
+
+	LabelList[previousSelection].set("custom_colors/font_color",Color(1,1,1))
+	LabelList[currentSelection].set("custom_colors/font_color", Color(1,0,0))
 
 func _on_Main_visibility_changed():
 	currentSelection = 0
@@ -45,11 +59,11 @@ func _on_Main_hide():
 func send_signal(Selection):
 	match Selection:
 		0:
-			emit_signal("ResumeButtonPressed")
+			emit_signal("MusicOptionsPressed")
 		1:
-			emit_signal("OptionsButtonPressed")
+			emit_signal("InputOptionsPressed")
 		2:
-			emit_signal("QuitButtonPressed")
+			emit_signal("ReturnButtonPressed")
 
 func _on_Main_draw():
 	currentSelection = 0

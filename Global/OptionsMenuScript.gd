@@ -11,6 +11,7 @@ var currentSelection = 0
 var previousSelection = 0
 
 func _ready():
+	set_process_input(false)
 	ButtonList = ButtonContainer.get_children()
 
 func _input(event):
