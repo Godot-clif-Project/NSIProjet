@@ -39,7 +39,6 @@ func UpdateSelectionCheck():
 	UpdateSelection()
 
 func UpdateSelection():
-	print(currentSelection)
 	print("should be done?")
 	ButtonList[previousSelection].set("custom_colors/font_color",Color(1,1,1))
 	ButtonList[currentSelection].set("custom_colors/font_color", Color(1,0,0))
