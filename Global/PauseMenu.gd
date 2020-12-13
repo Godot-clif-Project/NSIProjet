@@ -48,6 +48,8 @@ func ResumeButtonPressed():
 
 func OptionsButtonPressed():
 	mainpause.hide()
+	musicoptionsmenu.hide()
+	inputoptionsmenu.hide()
 	optionsmenu.show()
 
 func QuitButtonPressed():

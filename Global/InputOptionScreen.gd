@@ -13,6 +13,7 @@ var currentSelection = 0
 var previousSelection = 0
 
 func _ready():
+	set_process_input(false)
 	OptionList = ButtonContainer.get_children()
 	for number in (OptionList.size()):
 		var ButtonSelected = find_node("Button")
@@ -20,8 +21,6 @@ func _ready():
 		ButtonList.append(ButtonSelected)
 		LabelList.append(LabelSelected)
 
-func _process(delta):
-	print(currentSelection)
 
 func _input(event):
 	previousSelection = currentSelection

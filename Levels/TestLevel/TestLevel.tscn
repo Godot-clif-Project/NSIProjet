@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Levels/TestLevel/sky.png" type="Texture" id=1]
 [ext_resource path="res://Tiles/Tiles.tscn" type="PackedScene" id=2]
@@ -7,7 +7,6 @@
 [ext_resource path="res://Actors/TestNPC/TestNPC.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Global/WhereParticlesShouldBe.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Global/Camera2D.tscn" type="PackedScene" id=7]
-[ext_resource path="res://GUI/Quirks/QuirkPlayer.gd" type="Script" id=8]
 [ext_resource path="res://Global/PauseMenu.tscn" type="PackedScene" id=9]
 
 [sub_resource type="Shader" id=1]
@@ -116,8 +115,5 @@ color = Color( 1, 1, 1, 0 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="EasterEggManager" type="Node" parent="Camera2D"]
-script = ExtResource( 8 )
 
 [node name="PauseMenu" parent="Camera2D" instance=ExtResource( 9 )]
