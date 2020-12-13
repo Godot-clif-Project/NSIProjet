@@ -118,6 +118,8 @@ const DASH_POSITION_OFFSET = 1
 
 const ROLL_FACING_LEFT_ROTATION_OFFSET = .8
 
+const ROLL_NB_OF_ANGLES = 12
+
 # Dash constants
 
 const DASH_DELAY = .1
@@ -212,7 +214,7 @@ onready var anim_hangtime = $SpriteContainer/SpriteHangtime
 onready var anim_fall = $SpriteContainer/SpriteFall
 onready var anim_dash = $SpriteContainer/SpriteDash
 onready var anim_roll = $SpriteContainer/SpriteRoll
-onready var anim_rolling = $SpriteContainer/SpriteRolling
+onready var anim_rolling = $SpriteContainer/ViewportContainer/Viewport/circle
 
 onready var anim_current
 onready var anim_list = [anim_idle, anim_run, anim_jump, anim_hangtime,
@@ -665,7 +667,10 @@ func _physics_process(delta):
 			true_rotation + ang_vel * delta,
 			2 * PI
 		)
-		anim_rolling.rotation = round(true_rotation * 4 / PI) / 4 * PI
+		anim_rolling.rotation = (
+			round(true_rotation * (ROLL_NB_OF_ANGLES / 2) / PI) /
+			(ROLL_NB_OF_ANGLES / 2) * PI
+		)
 		if facing < 0:
 			anim_rolling.rotation = PI - anim_rolling.rotation + ROLL_FACING_LEFT_ROTATION_OFFSET
 	elif rolling_visually:
@@ -824,9 +829,9 @@ func set_palette_uniform(palette_a: StreamTexture, palette_b: StreamTexture = nu
 	anim_container.material.set_shader_param("palette_a", palette_a)
 	anim_container.material.set_shader_param("palette_b", palette_b)
 	anim_container.material.set_shader_param("blend", blend)
-	anim_rolling.material.set_shader_param("palette_a", palette_a)
-	anim_rolling.material.set_shader_param("palette_b", palette_b)
-	anim_rolling.material.set_shader_param("blend", blend)
+#	anim_rolling.material.set_shader_param("palette_a", palette_a)
+#	anim_rolling.material.set_shader_param("palette_b", palette_b)
+#	anim_rolling.material.set_shader_param("blend", blend)
 
 
 func reset_rotation():

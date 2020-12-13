@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://Aseprite/Main character/UV sprites/plantchar_fall.png" type="Texture" id=1]
 [ext_resource path="res://Actors/Player/Player.gd" type="Script" id=2]
@@ -9,19 +9,24 @@
 [ext_resource path="res://Aseprite/Main character/Palette nonsense/normal_palette.png" type="Texture" id=7]
 [ext_resource path="res://Aseprite/Main character/UV sprites/plantchar_dash.png" type="Texture" id=8]
 [ext_resource path="res://Aseprite/Main character/UV sprites/plantchar_roll.png" type="Texture" id=9]
-[ext_resource path="res://Shaders/outline_and_palette.shader" type="Shader" id=10]
+[ext_resource path="res://Shaders/outline.shader" type="Shader" id=10]
 [ext_resource path="res://Shaders/palette.shader" type="Shader" id=11]
+[ext_resource path="res://Aseprite/Main character/UV sprites/roll_upsacle.png" type="Texture" id=12]
+[ext_resource path="res://Aseprite/Main character/UV sprites/circleeeee.png" type="Texture" id=13]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 11 )
 shader_param/blend = 0.0
 shader_param/palette_a = ExtResource( 7 )
 
-[sub_resource type="ShaderMaterial" id=2]
+[sub_resource type="ShaderMaterial" id=14]
 shader = ExtResource( 10 )
-shader_param/blend = 0.0
-shader_param/texture_size = Vector2( 80, 25 )
+shader_param/texture_size = Vector2( 20, 30 )
 shader_param/outline_color = Plane( 0, 0, 0, 1 )
+
+[sub_resource type="ShaderMaterial" id=15]
+shader = ExtResource( 11 )
+shader_param/blend = 0.0
 shader_param/palette_a = ExtResource( 7 )
 
 [sub_resource type="RectangleShape2D" id=3]
@@ -225,6 +230,7 @@ script = ExtResource( 2 )
 material = SubResource( 1 )
 
 [node name="SpriteIdle" type="Sprite" parent="SpriteContainer"]
+visible = false
 use_parent_material = true
 texture = ExtResource( 5 )
 offset = Vector2( 0, -2.5 )
@@ -265,6 +271,35 @@ use_parent_material = true
 texture = ExtResource( 8 )
 offset = Vector2( 0, -2.5 )
 
+[node name="ViewportContainer" type="ViewportContainer" parent="SpriteContainer"]
+material = SubResource( 14 )
+margin_left = -11.0
+margin_top = -11.0
+margin_right = 89.0
+margin_bottom = 89.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Viewport" type="Viewport" parent="SpriteContainer/ViewportContainer"]
+size = Vector2( 20, 30 )
+size_override_stretch = true
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 3
+
+[node name="circle" type="Sprite" parent="SpriteContainer/ViewportContainer/Viewport"]
+material = SubResource( 15 )
+position = Vector2( 11, 11 )
+scale = Vector2( 0.032, 0.032 )
+texture = ExtResource( 13 )
+
+[node name="Sprite" type="Sprite" parent="SpriteContainer/ViewportContainer/Viewport/circle"]
+use_parent_material = true
+scale = Vector2( 10.7419, 10.7419 )
+texture = ExtResource( 12 )
+offset = Vector2( -3, -12 )
+
 [node name="SpriteRoll" type="Sprite" parent="SpriteContainer"]
 visible = false
 use_parent_material = true
@@ -272,20 +307,6 @@ scale = Vector2( 1, 1.0014 )
 texture = ExtResource( 9 )
 offset = Vector2( 0, -2.5 )
 hframes = 4
-
-[node name="SpriteRolling" type="Sprite" parent="SpriteContainer"]
-visible = false
-material = SubResource( 2 )
-position = Vector2( 0, 3 )
-hframes = 4
-frame = 3
-
-[node name="Sprite" type="Sprite" parent="SpriteContainer/SpriteRolling"]
-use_parent_material = true
-texture = ExtResource( 9 )
-offset = Vector2( -1, -4.5 )
-hframes = 4
-frame = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 3 )

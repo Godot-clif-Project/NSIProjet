@@ -13,6 +13,6 @@ void fragment()
 		vec4 blend_color = texture(palette_b, spr_color.rg);
 		final_color = mix(final_color, blend_color, blend);
 	}
-	final_color.a = spr_color.a;
+	final_color.a = floor(spr_color.a);
 	COLOR = final_color;
 }
