@@ -262,6 +262,7 @@ func _ready():
 
 
 func _physics_process(delta):
+	print(anim_rolling.visible)
 	direction_x = (
 		int(Input.is_action_pressed("Right")) -
 		int(Input.is_action_pressed("Left"))
@@ -829,9 +830,9 @@ func set_palette_uniform(palette_a: StreamTexture, palette_b: StreamTexture = nu
 	anim_container.material.set_shader_param("palette_a", palette_a)
 	anim_container.material.set_shader_param("palette_b", palette_b)
 	anim_container.material.set_shader_param("blend", blend)
-#	anim_rolling.material.set_shader_param("palette_a", palette_a)
-#	anim_rolling.material.set_shader_param("palette_b", palette_b)
-#	anim_rolling.material.set_shader_param("blend", blend)
+	anim_rolling.material.set_shader_param("palette_a", palette_a)
+	anim_rolling.material.set_shader_param("palette_b", palette_b)
+	anim_rolling.material.set_shader_param("blend", blend)
 
 
 func reset_rotation():
