@@ -94,13 +94,20 @@
    "command": 0,
    "name": "Cool",
    "text": "Allez, rejoins-moi !",
-   "characterpos": "1",
+   "characterpos": "Pos1",
    "position": 1,
-   
  },
  {
    "ID": "TutoRouler",
-   "command": 0,
+   "command": 2,
+   "name": "Cool",
+   "text": "",
+   "characterpos": "",
+   "position": 1,
+},
+ {
+   "ID": "TutoRouler",
+   "command": 1,
    "name": "MC",
    "text": "...Mais, mais...",
    "characterpos": "",

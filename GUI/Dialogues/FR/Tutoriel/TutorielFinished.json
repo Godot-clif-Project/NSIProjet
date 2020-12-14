@@ -1,20 +1,20 @@
 [
  {
-   "ID": "TestLevel",
+   "ID": "TutoRouler",
    "command": 1,
    "name": "Cool",
    "text": "T'as réappris assez vite, c'est parfait !",
-   "animationn": "",
+   "characterpos": "",
    "position": 1,
-   "nextdialogname": ""
+
  },
  {
-   "ID": "TestLevel",
+   "ID": "TutoRouler",
    "command": 0,
    "name": "Cool",
    "text": "Bref, viens.",
-   "animationn": "",
+   "characterpos": "Pos1",
    "position": 1,
-   "nextdialogname": ""
+
  }
 ]

@@ -161,7 +161,7 @@ func DownBoxHandler(command):
 			line += 1
 func CheckIfCharacterShouldBeMoved():
 	if not JsonData[line].characterpos == "":
-		CharaPos = get_node(JsonData[line].ID+JsonData[line].characterpos).global_position
+		CharaPos = find_node(JsonData[line].ID+JsonData[line].characterpos).global_position
 		print("characterpos is not empty! Forcing movement!")
 		MoveCharacter(JsonData[line].name)
 
