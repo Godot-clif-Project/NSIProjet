@@ -105,6 +105,15 @@ const ROLL_WALLJUMP_PUSH = ROLL_MAX_SPEED
 
 const ROLL_DASH_EXIT_VEL_RATIO = .85
 
+const ROLL_BOUNCINESS_X = .7
+const ROLL_BOUNCINESS_Y = .55
+const ROLL_BOUNCE_MIN_X = 45.0
+const ROLL_BOUNCE_MIN_Y = 100.0
+
+const BOUNCE_CEILING = 200.0
+const BOUNCE_FLOOR = -320.0
+const BOUNCE_WALL = -265.0
+
 # Animation constants
 
 const RUNNING_THRESHOLD = 10.0
@@ -133,6 +142,8 @@ const DASH_DIAG_Y_EXIT_SPEED = 250.0
 const DASH_UP_EXIT_SPEED = 110.0
 const DASH_SQUEEZE_AROUND_MAX = 3
 const DASH_SQUEEZE_AROUND_CHECK_DISTANCE_MAX = 4
+
+const DASH_EXIT_TIME = 0.0
 
 # Bounce constants
 
@@ -167,9 +178,9 @@ var direction_x: int
 var direction_y: int
 var jump_timer: float
 var coyote_timer: float
-var bounce_timer: float
-var bounce_bounce_timer: float
-var bounce_dash_holder: float
+#var bounce_timer: float
+#var bounce_bounce_timer: float
+#var bounce_dash_holder: float
 
 var rolling: bool
 var rolling_visually: bool
@@ -193,6 +204,7 @@ var dash_cancel_timer: float
 var dash_waiting: bool
 var dashing: bool
 var dash_timer: float
+var dash_exit_timer: float
 var stick_to_ceiling_timer: float
 var facing: int
 
@@ -262,7 +274,6 @@ func _ready():
 
 
 func _physics_process(delta):
-	print(anim_rolling.visible)
 	direction_x = (
 		int(Input.is_action_pressed("Right")) -
 		int(Input.is_action_pressed("Left"))
@@ -510,6 +521,7 @@ func _physics_process(delta):
 	
 	if (Input.is_action_just_pressed("Cancel") and dashing_allowed and
 			dashing_refreshed and not (in_cutscene or rolling)):
+		coyote_timer = 0
 		dashing_allowed = false
 		dash_cancel_timer = DASH_DELAY
 		dash_waiting = true
@@ -612,7 +624,7 @@ func _physics_process(delta):
 	else:
 		move_and_slide(velocity, Vector2.UP)
 	var squeezed_around: bool
-	if (dashing and not Input.is_action_pressed("Accept")) or bounce_bounce_timer:
+	if (dashing and not Input.is_action_pressed("Accept")):
 		# Squeezing around corners
 		if get_slide_count():
 			var collision = get_slide_collision(0)
@@ -629,21 +641,51 @@ func _physics_process(delta):
 					squeezed_around = true
 					break
 	
+	# Reseting velocity and bouncing
+	
 	if not squeezed_around:
+		
+		var will_bounce: bool
+		if dashing or dash_exit_timer:
+			will_bounce = true
+		
 		if is_on_ceiling():
-			if velocity_conservation_timer.y > 0:
-				velocity_conservation_timer.y -= delta
-			if velocity_conservation_timer.y <= 0 and not stick_to_ceiling_timer:
-				velocity.y = 0
+			if rolling and will_bounce and dash_direction.y == --1:
+				exit_dash()
+				velocity.y = BOUNCE_CEILING
+			elif rolling and velocity.y < ROLL_BOUNCE_MIN_Y:
+				velocity.y = -velocity.y * ROLL_BOUNCINESS_Y
+			else:
+				if velocity_conservation_timer.y > 0:
+					velocity_conservation_timer.y -= delta
+				if velocity_conservation_timer.y <= 0 and not stick_to_ceiling_timer:
+					velocity.y = 0
 		else:
 			velocity_conservation_timer.y = VELOCITY_CONSERVATION_TIME
 		if is_on_floor():
-			velocity.y = 0
+			if rolling and will_bounce and dash_direction.y == 1:
+				exit_dash()
+				dashing_allowed = true
+				velocity.y = BOUNCE_FLOOR
+				coyote_timer = 0
+				grounded = false
+			elif rolling and velocity.y > ROLL_BOUNCE_MIN_Y:
+				velocity.y = -velocity.y * ROLL_BOUNCINESS_Y
+				coyote_timer = 0
+				grounded = false
+			else:
+				velocity.y = 0
 		if is_on_wall():
-			if velocity_conservation_timer.x > 0:
-				velocity_conservation_timer.x -= delta
-			if velocity_conservation_timer.x <= 0:
-				velocity.x = 0
+			if rolling and will_bounce and abs(dash_direction.x) == 1:
+				exit_dash()
+				velocity.x = dash_direction.x * BOUNCE_WALL
+			elif rolling and abs(velocity.x) > ROLL_BOUNCE_MIN_X:
+				velocity.x = -velocity.x * ROLL_BOUNCINESS_X
+			else:
+				if velocity_conservation_timer.x > 0:
+					velocity_conservation_timer.x -= delta
+				if velocity_conservation_timer.x <= 0:
+					velocity.x = 0
 		else:
 			velocity_conservation_timer.x = VELOCITY_CONSERVATION_TIME
 	
@@ -652,6 +694,10 @@ func _physics_process(delta):
 		if stick_to_ceiling_timer < 0.0:
 			stick_to_ceiling_timer = 0.0
 	
+	if dash_exit_timer:
+		dash_exit_timer -= delta
+		if dash_exit_timer < 0:
+			dash_exit_timer = 0
 	
 	# Animations
 	
@@ -740,6 +786,7 @@ func align_to_grid():
 
 
 func dash(override_other_directions: bool = true):
+	coyote_timer = 0
 	dashing_refreshed = false
 	dash_waiting = false
 	dashing = true
@@ -763,8 +810,10 @@ func exit_dash():
 		dash_cancel_timer = 0
 		dash(false)
 	
+	dashing_allowed = true
 	dashing = false
 	dash_timer = 0
+	dash_exit_timer = DASH_EXIT_TIME
 	
 	if not in_control_x:
 		no_control_x_timer = 0
@@ -772,9 +821,6 @@ func exit_dash():
 	if not apply_gravity:
 		no_gravity_timer = 0
 		apply_gravity = true
-	
-	# bouncing code
-	
 	var exit_velocity: Vector2
 	var exit_vel: Vector2
 	if dash_direction.y == -1.0:
@@ -859,16 +905,6 @@ func on_dash():
 	if dash_direction.x:
 		facing = sign(dash_direction.x)
 	Global.camera.shake(dash_direction, DASH_SHAKE_DURATION)
-
-
-func on_bounce():
-	if not rolling_visually:
-		set_anim(anim_jump, "Jump")
-	jumping = false
-	dashing = false
-	dashing_allowed = true
-	coyote_timer = 0
-	jump_timer = 0
 
 
 func refill_dash():
