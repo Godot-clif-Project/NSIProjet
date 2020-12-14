@@ -28,6 +28,13 @@ var fullscreen: bool
 var window_normal_size = Vector2(854, 480)
 
 var level_list = []
+var current_level_id = 0
+var loading_level = false
+var transition: Node
+signal transition_animation_finished()
+# 0 = starting point
+# 1 = end point
+signal entering_level(spawnpoint, player_velocity)
 
 onready var tree = get_tree()
 
@@ -41,6 +48,10 @@ func _ready():
 	rng.randomize()
 	OS.window_borderless = false
 	OS.center_window()
+	level_list = [
+		"res://Levels/Tutorial/1.tscn",
+		"res://Levels/Tutorial/2.tscn"
+	]
 
 
 func _process(delta):
@@ -68,6 +79,26 @@ func _process(delta):
 func _physics_process(delta):
 	if gameRunning:
 		ticks += 1
+
+
+func update_level(id_offset: int = 0) -> bool:
+	if (
+		current_level_id + id_offset >= 0 and
+		current_level_id + id_offset < len(level_list)
+	):
+		current_level_id += id_offset
+		return true
+	else:
+		print("Tried to put current_level_id out of range! From " +
+			  current_level_id + " to " + current_level_id + id_offset)
+		return false
+
+
+func load_level(spawnpoint: int = 0, player_velocity: Vector2 = Vector2.ZERO):
+	tree.change_scene(level_list[current_level_id])
+	print("b")
+	emit_signal("entering_level", spawnpoint, player_velocity)
+
 
 class CutscenePlayerInfo:
 	"""

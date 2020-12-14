@@ -227,7 +227,6 @@ script = ExtResource( 2 )
 material = SubResource( 1 )
 
 [node name="SpriteIdle" type="Sprite" parent="SpriteContainer"]
-visible = false
 use_parent_material = true
 texture = ExtResource( 5 )
 offset = Vector2( 0, -2.5 )
@@ -286,6 +285,7 @@ handle_input_locally = false
 render_target_update_mode = 3
 
 [node name="circle" type="Sprite" parent="SpriteContainer/ViewportContainer/Viewport"]
+visible = false
 material = SubResource( 3 )
 position = Vector2( 11, 14 )
 scale = Vector2( 0.032, 0.032 )
