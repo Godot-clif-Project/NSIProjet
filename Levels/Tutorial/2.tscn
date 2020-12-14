@@ -21,7 +21,7 @@ z_index = 1
 flip_h = true
 jsonname = "Tutoriel/TutorielRouler"
 
-[node name="Position2D" parent="Cool" index="0"]
+[node name="Position2D" parent="Cool" index="1"]
 position = Vector2( -0.530941, 10.6365 )
 
 [node name="CollisionShape2D" parent="Cool/Area2D" index="0"]
