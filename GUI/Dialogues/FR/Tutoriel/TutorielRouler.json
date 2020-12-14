@@ -1,0 +1,200 @@
+[
+ {
+   "ID": "TutoRouler",
+   "command": 1,
+   "name": "Cool",
+   "text": "Oh, t'es enfin sorti, ça faisait pas mal de temps...",
+   "characterpos": "",
+   "position": 1,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "MC",
+   "text": "Ah !!! Désolé... Je n'ai pas vu le temps passer !!",
+   "characterpos": "",
+   "position": 0,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "Cool",
+   "text": "Pas grave. Pendant que t'étais pas là, j'ai découvert",
+   "characterpos": "",
+   "position": 1,
+   
+ }, 
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "Cool",
+   "text": "quelque chose...\nd'intéressant.",
+   "characterpos": "",
+   "position": 1,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "Cool",
+   "text": "Je pense que ça t'plairait, c'est assez mystérieux.",
+   "characterpos": "",
+   "position": 1,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "MC",
+   "text": "Oh !!! J'adore les mystères !",
+   "characterpos": "",
+   "position": 0,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "MC",
+   "text": "Je me demande déjà ce que c'est !!",
+   "characterpos": "",
+   "position": 0,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "Cool",
+   "text": "C'est assez mystique.",
+   "characterpos": "",
+   "position": 1,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "Cool",
+   "text": "J'ai cru pouvoir y lire des messages...",
+   "characterpos": "",
+   "position": 1,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "Cool",
+   "text": "Bref, suis-moi !",
+   "characterpos": "",
+   "position": 1,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "Cool",
+   "text": "Allez, rejoins-moi !",
+   "characterpos": "1",
+   "position": 1,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "MC",
+   "text": "...Mais, mais...",
+   "characterpos": "",
+   "position": 0,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "Cool",
+   "text": "...Qu'est-ce qu'il y a?",
+   "characterpos": "",
+   "position": 1,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "MC",
+   "text": "Je ne sais plus comment faire...",
+   "characterpos": "",
+   "position": 0,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "Cool",
+   "text": "...Je vois. Tu sais rouler ?",
+   "characterpos": "",
+   "position": 1,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "MC",
+   "text": "Non...",
+   "characterpos": "",
+   "position": 0,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "Cool",
+   "text": "Tu sais bondir ?",
+   "characterpos": "",
+   "position": 1,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "MC",
+   "text": "Non plus...",
+   "characterpos": "",
+   "position": 0,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "Cool",
+   "text": "Bon, j'crois que le meilleur moyen d'apprendre...",
+   "characterpos": "",
+   "position": 1,
+   
+ },
+  {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "Cool",
+   "text": "Ça reste la pratique !",
+   "characterpos": "",
+   "position": 1,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "Cool",
+   "text": "Essaie de rouler, comme-moi.",
+   "characterpos": "",
+   "position": 1,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
+   "name": "MC",
+   "text": "D'accord !",
+   "characterpos": "",
+   "position": 0,
+   
+ }
+]
