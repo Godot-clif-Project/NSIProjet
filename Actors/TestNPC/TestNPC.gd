@@ -1,6 +1,7 @@
 extends AnimatedSprite
 
 export var jsonname = ""
+export(bool) var ShouldInteractAfter = false
 signal StartDialog(jsonname)
 
 var outline_shader: Shader
@@ -50,8 +51,7 @@ func _on_Area2D_body_entered(body: Node2D):
 		Global.inZone = true
 
 func _on_Area2D_body_exited(area):
-	if Global.DialogStarted == false:
-		Global.inZone = false
+	Global.inZone = false
 
 func ForcedMoveCutscene(character,xaxis):
 	match character:
