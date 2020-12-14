@@ -27,6 +27,8 @@ var rng: RandomNumberGenerator
 var fullscreen: bool
 var window_normal_size = Vector2(854, 480)
 
+var level_list = []
+
 onready var tree = get_tree()
 
 
