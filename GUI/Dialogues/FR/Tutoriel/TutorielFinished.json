@@ -1,6 +1,6 @@
 [
  {
-   "ID": "TutoRouler",
+   "ID": "TutoFinish",
    "command": 1,
    "name": "Cool",
    "text": "T'as réappris assez vite, c'est parfait !",
@@ -9,12 +9,27 @@
 
  },
  {
-   "ID": "TutoRouler",
+   "ID": "TutoFinish",
    "command": 0,
    "name": "Cool",
    "text": "Bref, viens.",
    "characterpos": "Pos1",
    "position": 1,
-
+ },
+  {
+   "ID": "TutoFinish",
+   "command": 0,
+   "name": "Cool",
+   "text": "Par ici !",
+   "characterpos": "Pos1",
+   "position": 1,
+ },
+   {
+   "ID": "TutoFinish",
+   "command": 1,
+   "name": "MC",
+   "text": "Je me demande ce qu'il a trouvé...",
+   "characterpos": "",
+   "position": 0,
  }
 ]

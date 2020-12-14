@@ -55,7 +55,7 @@ tile_data = PoolIntArray( -851967, 0, 0, -851966, 0, 1, -851965, 0, 1, -851964, 
 [node name="WhereParticlesShouldBe" parent="." instance=ExtResource( 5 )]
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
-position = Vector2( -147.987, 17.7946 )
+position = Vector2( -147.987, 33.7946 )
 collision_layer = 33
 bouncing_allowed = true
 rolling_allowed = true
