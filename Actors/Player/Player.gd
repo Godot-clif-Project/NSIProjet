@@ -215,6 +215,8 @@ var in_cutscene: bool
 var cutscene_info # Global.CutscenePlayerInfo
 var cutscene_velocity
 
+var dying: bool
+
 onready var collider = $CollisionShape2D
 
 onready var animation_player = $AnimationPlayer
@@ -288,7 +290,7 @@ func _physics_process(delta):
 	elif direction_x == sign(velocity.x) and direction_x != 0 and in_control_x:
 		facing = direction_x
 	
-	if in_cutscene:
+	if in_cutscene and not dying:
 		velocity.x = cutscene_velocity
 	else:
 		if not in_control_x:
@@ -604,7 +606,7 @@ func _physics_process(delta):
 	
 	# Apply velocity
 	
-	if in_cutscene:
+	if in_cutscene and not dying:
 		move_and_slide(Vector2(0, velocity.y), Vector2.UP)
 		if cutscene_info.set_position:
 			if grounded:
@@ -701,66 +703,67 @@ func _physics_process(delta):
 	
 	# Animations
 	
-	if rolling:
-		if not rolling_visually:
-			set_anim(anim_roll, "Roll")
-			rolling_visually = true
-		ang_vel = lerp(
-			ang_vel,
-			(velocity.x) / (2 * PI),
-			ROLLING_ROTATION_ON_GROUND if grounded else ROLLING_ROTATION_IN_AIR
-		)
-		true_rotation = fmod(
-			true_rotation + ang_vel * delta,
-			2 * PI
-		)
-		anim_rolling.rotation = (
-			round(true_rotation * (ROLL_NB_OF_ANGLES / 2) / PI) /
-			(ROLL_NB_OF_ANGLES / 2) * PI
-		)
-		if facing < 0:
-			anim_rolling.rotation = PI - anim_rolling.rotation + ROLL_FACING_LEFT_ROTATION_OFFSET
-	elif rolling_visually:
-		set_anim(anim_roll, "Unroll")
-	else:
-		if dashing:
-			set_anim(anim_dash, "Dash")
-			anim_dash.offset = (
-				anim_dash_raw_offset +
-				Vector2(int(dash_direction.x != 0), int(dash_direction.y != 0))
+	if not dying:
+		if rolling:
+			if not rolling_visually:
+				set_anim(anim_roll, "Roll")
+				rolling_visually = true
+			ang_vel = lerp(
+				ang_vel,
+				(velocity.x) / (2 * PI),
+				ROLLING_ROTATION_ON_GROUND if grounded else ROLLING_ROTATION_IN_AIR
 			)
+			true_rotation = fmod(
+				true_rotation + ang_vel * delta,
+				2 * PI
+			)
+			anim_rolling.rotation = (
+				round(true_rotation * (ROLL_NB_OF_ANGLES / 2) / PI) /
+				(ROLL_NB_OF_ANGLES / 2) * PI
+			)
+			if facing < 0:
+				anim_rolling.rotation = PI - anim_rolling.rotation + ROLL_FACING_LEFT_ROTATION_OFFSET
+		elif rolling_visually:
+			set_anim(anim_roll, "Unroll")
 		else:
-			if grounded:
-				if abs(velocity.x) > RUNNING_THRESHOLD and not wallsliding:
-					set_anim(anim_run, "Run")
-				else:
-					set_anim(anim_idle, "Idle")
+			if dashing:
+				set_anim(anim_dash, "Dash")
+				anim_dash.offset = (
+					anim_dash_raw_offset +
+					Vector2(int(dash_direction.x != 0), int(dash_direction.y != 0))
+				)
 			else:
-				if anim_current == anim_run or anim_current == anim_idle or anim_current == anim_roll:
-					set_anim(anim_idle, "Hangtime")
-				if velocity.y >= FALLING_THRESHOLD:
-					set_anim(anim_fall, "Fall")
-	
-	if anim_container.scale.x == -1:
-		if facing > 0:
-			anim_container.scale.x = 1
-	elif facing < 0:
-		anim_container.scale.x = -1
-	
-	# Change palette
-	
-	if dash_refill_anim_timer > 0:
-		set_palette_uniform(
-			palette_white_petals_texture,
-			palette_normal_texture,
-			1 - (dash_refill_anim_timer / DASH_REFILL_ANIM_DURATION) *
-			1 - (dash_refill_anim_timer / DASH_REFILL_ANIM_DURATION)
-		)
-		dash_refill_anim_timer -= delta
-	elif not dashing_refreshed:
-		set_palette_uniform(palette_dash_texture)
-	else:
-		set_palette_uniform(palette_normal_texture)
+				if grounded:
+					if abs(velocity.x) > RUNNING_THRESHOLD and not wallsliding:
+						set_anim(anim_run, "Run")
+					else:
+						set_anim(anim_idle, "Idle")
+				else:
+					if anim_current == anim_run or anim_current == anim_idle or anim_current == anim_roll:
+						set_anim(anim_idle, "Hangtime")
+					if velocity.y >= FALLING_THRESHOLD:
+						set_anim(anim_fall, "Fall")
+		
+		if anim_container.scale.x == -1:
+			if facing > 0:
+				anim_container.scale.x = 1
+		elif facing < 0:
+			anim_container.scale.x = -1
+		
+		# Change palette
+		
+		if dash_refill_anim_timer > 0:
+			set_palette_uniform(
+				palette_white_petals_texture,
+				palette_normal_texture,
+				1 - (dash_refill_anim_timer / DASH_REFILL_ANIM_DURATION) *
+				1 - (dash_refill_anim_timer / DASH_REFILL_ANIM_DURATION)
+			)
+			dash_refill_anim_timer -= delta
+		elif not dashing_refreshed:
+			set_palette_uniform(palette_dash_texture)
+		else:
+			set_palette_uniform(palette_normal_texture)
 	
 	# Particles
 	
@@ -908,7 +911,16 @@ func on_dash():
 
 
 func on_death():
-	pass
+	in_cutscene = true
+	in_control_x = false
+	in_control_y = false
+	apply_gravity = false
+	dashing_allowed = false
+	can_roll = false
+	dying = true
+	dashing = false
+	velocity = Vector2.ZERO
+	animation_player.play("Death")
 
 
 func refill_dash():
