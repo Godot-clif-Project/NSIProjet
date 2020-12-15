@@ -29,6 +29,7 @@ var window_normal_size = Vector2(854, 480)
 
 var level_list = []
 var current_level_id = 0
+var current_level: String
 var loading_level = false
 var transition: Node
 signal transition_animation_finished()
@@ -55,6 +56,8 @@ func _ready():
 		"res://Levels/Tutorial/4.tscn",
 		"res://Levels/Tutorial/5.tscn"
 	]
+	current_level_id = 0
+	current_level = level_list[current_level_id]
 
 
 func _process(delta):
@@ -98,7 +101,11 @@ func update_level(id_offset: int = 0) -> bool:
 
 
 func load_level(spawnpoint: int = 0, player_velocity: Vector2 = Vector2.ZERO):
-	tree.change_scene(level_list[current_level_id])
+	if current_level == level_list[current_level_id]:
+		tree.reload_current_scene()
+	else:
+		current_level = level_list[current_level_id]
+		tree.change_scene(current_level)
 	emit_signal("entering_level", spawnpoint, player_velocity)
 	Global.loading_level = false
 

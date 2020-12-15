@@ -907,6 +907,10 @@ func on_dash():
 	Global.camera.shake(dash_direction, DASH_SHAKE_DURATION)
 
 
+func on_death():
+	pass
+
+
 func refill_dash():
 	if dashing_allowed and not dashing_refreshed and not dashing:
 		dashing_refreshed = true
@@ -963,3 +967,18 @@ func ForcedMoveCutscene(character,xaxis):
 			pass
 		_:
 			pass
+
+
+func die():
+	if not Global.loading_level:
+		Global.loading_level = true
+		Global.connect("transition_animation_finished", self, "leaving")
+		on_death()
+		# TEMP
+		Global.transition.sprite.rotation = PI
+		Global.transition.play_backwards("OpenX")
+
+
+func death_leaving():
+	Global.disconnect("leaving_animation_finished", self, "death_leaving")
+	Global.load_level()
