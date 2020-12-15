@@ -9,8 +9,7 @@
 [ext_resource path="res://GUI/NextIndicator.png" type="Texture" id=7]
 [ext_resource path="res://GUI/Next.tres" type="Animation" id=8]
 
-[sub_resource type="Animation" id=1]
-resource_name = "Reset"
+[sub_resource type="Animation" id=10]
 length = 0.1
 loop = true
 tracks/0/type = "value"
@@ -26,7 +25,7 @@ tracks/0/keys = {
 "values": [ Vector2( 246.819, 49.8921 ) ]
 }
 
-[sub_resource type="Animation" id=2]
+[sub_resource type="Animation" id=11]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:rect_position")
@@ -41,7 +40,7 @@ tracks/0/keys = {
 "values": [ Vector2( 0, 150 ), Vector2( 0, 60 ) ]
 }
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=12]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:rect_position")
@@ -56,7 +55,7 @@ tracks/0/keys = {
 "values": [ Vector2( 0, 60 ), Vector2( 0, 150 ) ]
 }
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=6]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/path = NodePath("DownDialogBox/DownPortraitMargin:rect_position")
@@ -83,7 +82,7 @@ tracks/1/keys = {
 "values": [ Vector2( 14, -24 ) ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=7]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/path = NodePath("DownDialogBox/DownPortraitMargin:rect_position")
@@ -230,13 +229,13 @@ texture = ExtResource( 7 )
 
 [node name="IndicatorAnimation" type="AnimationPlayer" parent="DownDialogBox/NextIndicator"]
 anims/Next = ExtResource( 8 )
-anims/Reset = SubResource( 1 )
+anims/Reset = SubResource( 10 )
 
 [node name="DownAnimation" type="AnimationPlayer" parent="."]
-anims/Appear = SubResource( 2 )
-anims/Disappear = SubResource( 3 )
-anims/LeftPortrait = SubResource( 4 )
-anims/RightPortrait = SubResource( 5 )
+anims/Appear = SubResource( 11 )
+anims/Disappear = SubResource( 12 )
+anims/LeftPortrait = SubResource( 6 )
+anims/RightPortrait = SubResource( 7 )
 
 [node name="BloopSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 6 )
