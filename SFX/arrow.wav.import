@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/arrow.wav-0d0e9fca162fe1de6158cc49822ef963.sample"
+
+[deps]
+
+source_file="res://SFX/arrow.wav"
+dest_files=[ "res://.import/arrow.wav-0d0e9fca162fe1de6158cc49822ef963.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
