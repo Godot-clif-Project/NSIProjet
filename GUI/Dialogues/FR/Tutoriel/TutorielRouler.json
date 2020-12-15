@@ -91,7 +91,7 @@
  },
  {
    "ID": "TutoRouler",
-   "command": 2,
+   "command": 0,
    "name": "Cool",
    "text": "J'ai un passage secret, héhé.",
    "characterpos": "",
@@ -99,7 +99,7 @@
 },
  {
    "ID": "TutoRouler",
-   "command": 1,
+   "command": 0,
    "name": "MC",
    "text": "...Mais, mais...",
    "characterpos": "",
