@@ -20,7 +20,7 @@ var paused_update: bool
 onready var tree = get_tree()
 
 onready var thing_to_play_on_top = $LoopThingy
-
+onready var GUISFXPLAYER = $"GUI SFX"
 
 func _ready():
 #	connect("finished", self, "properly_loop")
