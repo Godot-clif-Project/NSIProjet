@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/disappear.ogg-45247912c9305bf0e0665042c42496d1.oggstr"
+
+[deps]
+
+source_file="res://SFX/disappear.ogg"
+dest_files=[ "res://.import/disappear.ogg-45247912c9305bf0e0665042c42496d1.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

@@ -972,7 +972,7 @@ func ForcedMoveCutscene(character,xaxis):
 func die():
 	if not Global.loading_level:
 		Global.loading_level = true
-		Global.connect("transition_animation_finished", self, "leaving")
+		Global.connect("transition_animation_finished", self, "death_leaving")
 		on_death()
 		# TEMP
 		Global.transition.sprite.rotation = PI

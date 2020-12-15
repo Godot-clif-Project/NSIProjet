@@ -101,11 +101,8 @@ func update_level(id_offset: int = 0) -> bool:
 
 
 func load_level(spawnpoint: int = 0, player_velocity: Vector2 = Vector2.ZERO):
-	if current_level == level_list[current_level_id]:
-		tree.reload_current_scene()
-	else:
-		current_level = level_list[current_level_id]
-		tree.change_scene(current_level)
+	current_level = level_list[current_level_id]
+	tree.change_scene(current_level)
 	emit_signal("entering_level", spawnpoint, player_velocity)
 	Global.loading_level = false
 
