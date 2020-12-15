@@ -6,15 +6,16 @@ extends Control
 # 2 : Show Animation (in progress)
 # 3 : Hide Box (to be added)
 
-onready var NextIndicator = $DownDialogBox/NextIndicator
-onready var NextAnimator = $DownDialogBox/NextIndicator/IndicatorAnimation
-onready var TextBox = $DownDialogBox/DownTextMargin/DownText
-onready var NameBox = $DownDialogBox/NinePatchRect2/DownNameMargin/DownName
-onready var Portrait = $DownDialogBox/DownPortraitMargin/DownPortraitTexture
-onready var AnimationMaster = $DownAnimation
-onready var DownTween = $DownDialogBox/Tween
-onready var BloopSound = $BloopSound
-onready var timer = $Timer
+onready var NextIndicator = find_node("NextIndicator")
+onready var NextAnimator = find_node("IndicatorAnimation")
+onready var TextBox = find_node("DownText")
+onready var NameBox = find_node("DownName")
+onready var Portrait = find_node("DownPortraitTexture")
+onready var AnimationMaster = find_node("DownAnimation")
+onready var DownTween = find_node("Tween")
+onready var DialogBox = find_node("DownDialogBox")
+onready var BloopSound = find_node("BloopSound")
+onready var TestShader = find_node("TextureRect")
 
 var HowManyCharacters = 0
 var DownTweenCompleted = true
@@ -29,7 +30,7 @@ var DoesFileExist = false
 var IsItHiddenByCode = false
 var CharaPos
 var FastForward = false
-
+var scroll_speed = 0.4
 #If we ever need to show the old sprites in use; Change MC/Cool.tres to MC/CoolOld.tres
 #Unknown didn't change through versions; so who cares about them (I do)
 
@@ -39,8 +40,8 @@ const CoolFrames = preload("res://GUI/Portraits/Cool.tres")
 const UnknownFrames = preload("res://GUI/Portraits/Unknown.tres")
 
 #Player/NPC Consts
-onready var MCEntity = get_node("/root/TestScene/Player")
-onready var CoolEntity = get_node("/root/TestScene/Cool")
+onready var MCEntity = find_node("Player")
+onready var CoolEntity = find_node("Cool")
 
 export var jsonname = "errorhandler"
 export var lang = "FR"
@@ -72,7 +73,6 @@ func _init():
 func _ready():
 	Global.connect("StartDialog",self,"StartDialogCode")
 	Global.connect("CutscenePlayerStoppedMoving",self,"init_dialog")
-	
 	load_json(jsonname)
 	hide()
 
