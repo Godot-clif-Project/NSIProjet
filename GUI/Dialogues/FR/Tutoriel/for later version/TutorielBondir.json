@@ -12,14 +12,32 @@
    "ID": "TutoBondir",
    "command": 0,
    "name": "Cool",
-   "text": "Maintenant, fais un saut mural !",
+   "text": "Maintenant, regarde-moi, et bondis--",
    "characterpos": "",
    "position": 1,
 
  },
- {
+{
    "ID": "TutoBondir",
    "command": 0,
+   "name": "Cool",
+   "text": "Comme ça !",
+   "characterpos": "Pos1",
+   "position": 1,
+
+},
+{
+   "ID": "TutoBondir",
+   "command": 2,
+   "name": "Cool",
+   "text": "",
+   "characterpos": "",
+   "position": 1,
+
+},
+ {
+   "ID": "TutoBondir",
+   "command": 1,
    "name": "MC",
    "text": "Je vais essayer !",
    "characterpos": "",

@@ -84,16 +84,24 @@
    "ID": "TutoRouler",
    "command": 0,
    "name": "Cool",
-   "text": "Bref, Je te laisse y aller; !",
+   "text": "Bref, suis-moi !",
    "characterpos": "",
    "position": 1,
    
  },
  {
    "ID": "TutoRouler",
+   "command": 0,
+   "name": "Cool",
+   "text": "Allez, rejoins-moi !",
+   "characterpos": "Pos1",
+   "position": 1,
+ },
+ {
+   "ID": "TutoRouler",
    "command": 2,
    "name": "Cool",
-   "text": "J'ai un passage secret, héhé.",
+   "text": "",
    "characterpos": "",
    "position": 1,
 },
@@ -128,7 +136,7 @@
    "ID": "TutoRouler",
    "command": 0,
    "name": "Cool",
-   "text": "...Hm... Tu sais rouler ?",
+   "text": "...Je vois. Tu sais rouler ?",
    "characterpos": "",
    "position": 1,
    
@@ -146,7 +154,7 @@
    "ID": "TutoRouler",
    "command": 0,
    "name": "Cool",
-   "text": "Tu sais faire un saut mural ?",
+   "text": "Tu sais bondir ?",
    "characterpos": "",
    "position": 1,
    
@@ -181,8 +189,17 @@
  {
    "ID": "TutoRouler",
    "command": 0,
+   "name": "Cool",
+   "text": "Essaie de rouler, comme-moi.",
+   "characterpos": "Pos2",
+   "position": 1,
+   
+ },
+ {
+   "ID": "TutoRouler",
+   "command": 0,
    "name": "MC",
-   "text": "Je vais essayer !",
+   "text": "D'accord !",
    "characterpos": "",
    "position": 0,
 }
