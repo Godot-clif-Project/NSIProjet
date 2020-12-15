@@ -915,6 +915,7 @@ func on_death():
 	in_control_x = false
 	in_control_y = false
 	apply_gravity = false
+	no_gravity_timer = 2.0
 	dashing_allowed = false
 	can_roll = false
 	dying = true

@@ -54,7 +54,16 @@ func _ready():
 		"res://Levels/Tutorial/2.tscn",
 		"res://Levels/Tutorial/3.tscn",
 		"res://Levels/Tutorial/4.tscn",
-		"res://Levels/Tutorial/5.tscn"
+		"res://Levels/Tutorial/5.tscn",
+		"res://Levels/Tutorial/6.tscn",
+		"res://Levels/Tutorial/7.tscn",
+		"res://Levels/Tutorial/8.tscn",
+		"res://Levels/Tutorial/9.tscn",
+		"res://Levels/Tutorial/10.tscn",
+		"res://Levels/Tutorial/11.tscn",
+		"res://Levels/Tutorial/12.tscn",
+		"res://Levels/Tutorial/13.tscn",
+		"res://Levels/Tutorial/14.tscn"
 	]
 	current_level_id = 0
 	current_level = level_list[current_level_id]
