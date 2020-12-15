@@ -1,0 +1,51 @@
+[
+ {
+   "ID": "TutoFinish",
+   "command": 1,
+   "name": "Cool",
+   "text": "On est enfin arrivés.",
+   "characterpos": "",
+   "position": 1,
+
+ },
+ {
+   "ID": "TutoFinish",
+   "command": 0,
+   "name": "MC",
+   "text": "Pourquoi tu n'y vas pas?",
+   "characterpos": "",
+   "position": 0,
+ },
+ {
+   "ID": "TutoFinish",
+   "command": 2,
+   "name": "Cool",
+   "text": "",
+   "characterpos": "",
+   "position": 1,
+ },
+   {
+   "ID": "TutoFinish",
+   "command": 1,
+   "name": "Cool",
+   "text": "...C'est rien.",
+   "characterpos": "",
+   "position": 1,
+ },
+  {
+   "ID": "TutoFinish",
+   "command": 0,
+   "name": "Cool",
+   "text": "Allons-y.",
+   "characterpos": "",
+   "position": 1,
+ },
+  {
+   "ID": "TutoFinish",
+   "command": 0,
+   "name": "MC",
+   "text": "...",
+   "characterpos": "",
+   "position": 0,
+ }
+]
