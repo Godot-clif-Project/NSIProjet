@@ -50,7 +50,10 @@ func _ready():
 	OS.center_window()
 	level_list = [
 		"res://Levels/Tutorial/1.tscn",
-		"res://Levels/Tutorial/2.tscn"
+		"res://Levels/Tutorial/2.tscn",
+		"res://Levels/Tutorial/3.tscn",
+		"res://Levels/Tutorial/4.tscn",
+		"res://Levels/Tutorial/5.tscn"
 	]
 
 
@@ -89,14 +92,15 @@ func update_level(id_offset: int = 0) -> bool:
 		current_level_id += id_offset
 		return true
 	else:
-		print("Tried to put current_level_id out of range! From " +
-			  current_level_id + " to " + current_level_id + id_offset)
+		print("Tried to put current_level_id out of range! From ", 
+			  current_level_id, " to ", current_level_id + id_offset)
 		return false
 
 
 func load_level(spawnpoint: int = 0, player_velocity: Vector2 = Vector2.ZERO):
 	tree.change_scene(level_list[current_level_id])
 	emit_signal("entering_level", spawnpoint, player_velocity)
+	Global.loading_level = false
 
 
 class CutscenePlayerInfo:
