@@ -6,7 +6,7 @@ var player_velocity: Vector2
 enum Direction {LEFT, RIGHT, UP, DOWN}
 export(Direction) var transition_direction
 
-enum NextOrPrevious {PREVIOUS = -1, NEXT = 1}
+enum NextOrPrevious {PREVIOUS, NEXT}
 export(NextOrPrevious) var next_or_previous
 
 
@@ -18,7 +18,7 @@ func _ready():
 func next_level(body):
 	if body.name == "Player":
 		if not Global.loading_level:
-			if Global.update_level(next_or_previous):
+			if Global.update_level(int((next_or_previous - .5) * 2)):
 				player_velocity = body.velocity
 				Global.loading_level = true
 				Global.connect("transition_animation_finished", self, "leaving")
@@ -40,4 +40,4 @@ func next_level(body):
 
 func leaving():
 	Global.disconnect("leaving_animation_finished", self, "leaving")
-	Global.load_level(int(-next_or_previous + 1 / 2), player_velocity)
+	Global.load_level(!next_or_previous, player_velocity)
