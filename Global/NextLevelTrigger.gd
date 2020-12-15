@@ -23,21 +23,21 @@ func next_level(body):
 				Global.loading_level = true
 				Global.connect("transition_animation_finished", self, "leaving")
 				if transition_direction == Direction.LEFT:
-					Global.transition.sprite.rotation = PI
-					Global.transition.play_backwards("OpenX")
-					Global.emit_signal(
-						"DialogStarted",
-						Global.CutscenePlayerInfo.new(true, 9999999)
-					)
-				if transition_direction == Direction.RIGHT:
 					Global.transition.sprite.rotation = 0
 					Global.transition.play_backwards("OpenX")
 					Global.emit_signal(
 						"DialogStarted",
 						Global.CutscenePlayerInfo.new(true, -9999999)
 					)
+				if transition_direction == Direction.RIGHT:
+					Global.transition.sprite.rotation = PI
+					Global.transition.play_backwards("OpenX")
+					Global.emit_signal(
+						"DialogStarted",
+						Global.CutscenePlayerInfo.new(true, 9999999)
+					)
 
 
 func leaving():
 	Global.disconnect("leaving_animation_finished", self, "leaving")
-	Global.load_level(int(next_or_previous + 1 / 2), player_velocity)
+	Global.load_level(int(-next_or_previous + 1 / 2), player_velocity)
