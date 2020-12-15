@@ -897,7 +897,7 @@ func on_jump():
 		exit_dash()
 	align_to_grid()
 	jumping = true
-	Music.GUISFXPLAYER.stream = load('res://SFX/jump.wav')
+	Music.GUISFXPLAYER.stream = preload('res://SFX/jump.wav')
 	Music.GUISFXPLAYER.play()
 	if not rolling_visually:
 		set_anim(anim_jump, "Jump")
@@ -907,7 +907,7 @@ func on_jump():
 
 func on_dash():
 	jumping = false
-	Music.GUISFXPLAYER.stream = load('res://SFX/arrow.wav')
+	Music.GUISFXPLAYER.stream = preload('res://SFX/arrow.wav')
 	Music.GUISFXPLAYER.play()
 	if dash_direction.x:
 		facing = sign(dash_direction.x)
@@ -922,7 +922,7 @@ func on_death():
 	no_gravity_timer = 2.0
 	dashing_allowed = false
 	can_roll = false
-	Music.GUISFXPLAYER.stream = load('res://SFX/disappear.ogg')
+	Music.GUISFXPLAYER.stream = preload('res://SFX/disappear.ogg')
 	Music.GUISFXPLAYER.play()
 	dying = true
 	dashing = false

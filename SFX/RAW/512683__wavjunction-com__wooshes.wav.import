@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/512683__wavjunction-com__wooshes.wav-c7ae0d20a169a300be62495c096f054d.sample"
+
+[deps]
+
+source_file="res://SFX/RAW/512683__wavjunction-com__wooshes.wav"
+dest_files=[ "res://.import/512683__wavjunction-com__wooshes.wav-c7ae0d20a169a300be62495c096f054d.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
